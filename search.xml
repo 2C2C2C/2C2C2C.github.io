@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>hello-test</title>
-    <url>/2020/05/03/hello-test/</url>
-    <content><![CDATA[]]></content>
+    <title>给Git上个代理试试提速</title>
+    <url>/2020/05/03/git-add-proxy/</url>
+    <content><![CDATA[<h1 id="给GIT用上代理"><a href="#给GIT用上代理" class="headerlink" title="给GIT用上代理"></a>给GIT用上代理</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在看着教程搭建这个博客的时候，我在GIT上也拖了不少的包。直连有时候真的速度慢到吐血，原因很复杂也莫得办法。<br>不过还好，我们其实可以给GIT上个代理，这样能给速度一些改善。</p>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>我是在本机器安装有代理客户端，小🛩和V2都彳亍。<br>我这边的情况是这样的，小飞机走SOCK5代理，V2走的HTTP代理。<br>因为平时我只可能开着一个，所以端口都是1080。</p>
+<h2 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h2><p>废话不多说了，直接上命令。</p>
+<p>首先我们看看已有的设置.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># 查看全局配置中的代理</span></span><br><span class="line">git config --global --get http.proxy</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看当前生效配置中的代理</span></span><br><span class="line">git config --get http.proxy</span><br></pre></td></tr></table></figure>
+<p>然后我们加上自己的代理。<br>当前我们假设的状态是本机开着小✈或者V2，且代理端口为1080的情况。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 括号中的都是可选项</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 若用的小飞机, --global 意味着应用到全局设置</span></span><br><span class="line">git config (--global) http.proxy sock5://127.0.0.1:1080</span><br><span class="line">git config (--global) https.proxy sock5://127.0.0.1:1080</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这样应用后，没开代理GIT就会抽风了，所以如果平时速度还不错的话记得用完取消代理</span></span><br><span class="line">git config (--global) --<span class="built_in">unset</span> http.proxy (sock5://127.0.0.1:1080)</span><br><span class="line">git config (--global) --<span class="built_in">unset</span> https.proxy (sock5://127.0.0.1:1080)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 若用的V2, --global 意味着应用到全局设置</span></span><br><span class="line">git config (--global) http.proxy  http://127.0.0.1:1080</span><br><span class="line">git config (--global) https.proxy https://127.0.0.1:1080</span><br><span class="line"></span><br><span class="line"><span class="comment"># 取消</span></span><br><span class="line">git config (--global) --<span class="built_in">unset</span> http.proxy  （http://127.0.0.1:1080）</span><br><span class="line">git config (--global) --<span class="built_in">unset</span> https.proxy （https://127.0.0.1:1080）</span><br></pre></td></tr></table></figure>
+<p>挂了代理真的飞速，爽到。</p>
+]]></content>
+      <categories>
+        <category>Git</category>
+        <category>常用</category>
+      </categories>
+      <tags>
+        <tag>Git</tag>
+        <tag>常用</tag>
+      </tags>
   </entry>
   <entry>
     <title>Hello World</title>
