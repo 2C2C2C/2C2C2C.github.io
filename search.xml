@@ -21,6 +21,21 @@
       </tags>
   </entry>
   <entry>
+    <title>给Unity上代理</title>
+    <url>/2020/05/18/unity-hub-w-proxy/</url>
+    <content><![CDATA[<h1 id="给Unity用上代理"><a href="#给Unity用上代理" class="headerlink" title="给Unity用上代理"></a>给Unity用上代理</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>之前有段时间公司的网络不是很稳定，从UnityHub上拖东西99%失败。自己又太菜不想安装Android Studio手动设置安卓打包的东西，于是乎只能想办法给下载加速。</p>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>首先你要有那个，就是那个你为了看PH才弄的小工具：）</p>
+<h2 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h2><p>首先默认我们的小✈代理端口是1080。<br>似乎V2可以同时有SOCK5和HTTP代理的样子，那也把HTTP代理的短卡设置成1080.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># 设置代理</span></span><br><span class="line"><span class="built_in">set</span> HTTP_PROXY=http://127.0.0.1:1080</span><br><span class="line"><span class="built_in">set</span> HTTPS_PROXY=http://127.0.0.1:1080</span><br><span class="line"></span><br><span class="line">start <span class="string">""</span> <span class="string">"your unity hub path"</span></span><br><span class="line"><span class="comment"># like path is like -&gt; D:\Unity\Unity Hub\Unity Hub.exe</span></span><br></pre></td></tr></table></figure>
+<h2 id="爆炸"><a href="#爆炸" class="headerlink" title="爆炸"></a>爆炸</h2><p>非常简单就是这样。</p>
+<p>其实东西都是从另一个博客看来的<br><a href="https://www.yomunchan.moe/archives/320" target="_blank" rel="noopener">https://www.yomunchan.moe/archives/320</a></p>
+<p>这边有蛮多游戏开发相关的文章，帮了我不少，十分感谢了。</p>
+]]></content>
+      <tags>
+        <tag>常用</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Hello World</title>
     <url>/2020/05/03/hello-world/</url>
     <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
