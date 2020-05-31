@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-05-31T02:17:28.274Z</updated>
+  <updated>2020-05-31T03:06:10.934Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>摸一个简单的 Unity Log Console (1)</title>
+    <link href="http://yoursite.com/2020/05/31/20200531-CloneUnityConsole1/"/>
+    <id>http://yoursite.com/2020/05/31/20200531-CloneUnityConsole1/</id>
+    <published>2020-05-31T02:47:16.000Z</published>
+    <updated>2020-05-31T03:06:10.934Z</updated>
+    
+    <content type="html"><![CDATA[<p>本菜狗在上周领了一个做LogManager的任务。很高兴也很慌，毕竟从来没做过编辑器开发，于是面向搜索引擎编程开始辣，找了一些教程学着做，顺便分享一下。</p><h1 id="需求分析（？"><a href="#需求分析（？" class="headerlink" title="需求分析（？"></a>需求分析（？</h1><p>组里对这个LogManager的要求是在Unity原来的Log功能上再加上根据标签和危险度(?)来筛选。<br>仔细想想还挺麻烦。需要筛选的话，那自然需要一个Console面板，似乎Unity原本的Console不方便扩展，索性跟着网上的教程重新做一个。</p><h1 id="弹出窗口"><a href="#弹出窗口" class="headerlink" title="弹出窗口"></a>弹出窗口</h1><p>首先我们先把窗口弹出来。代码很简单。</p><p>我们可以从Unity头顶的菜单栏中的Window中找到这个面板并打开。打开了是空白的，当然啦，因为还什么都没画上去。</p><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">TempConsoleWindow</span> : <span class="title">EditorWindow</span></span><br><span class="line">&#123;</span><br><span class="line">[<span class="meta">MenuItem(<span class="meta-string">"Window/Temp Console"</span>)</span>]</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">OpenWindow</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">TempConsoleWindow window = GetWindow&lt;TempConsoleWindow&gt;();</span><br><span class="line">GUIContent titleContent = <span class="keyword">new</span> GUIContent(<span class="string">"TempConsole"</span>, EditorGUIUtility.Load(<span class="string">"icons/UnityEditor.ConsoleWindow.png"</span>) <span class="keyword">as</span> Texture2D, <span class="string">"a clone sonsole"</span>);</span><br><span class="line">window.titleContent = titleContent;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h1 id="分割区块"><a href="#分割区块" class="headerlink" title="分割区块"></a>分割区块</h1><img src="/2020/05/31/20200531-CloneUnityConsole1/20200531-Unity01.png" class="" title="split">]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;本菜狗在上周领了一个做LogManager的任务。很高兴也很慌，毕竟从来没做过编辑器开发，于是面向搜索引擎编程开始辣，找了一些教程学着做，顺便分享一下。&lt;/p&gt;
+&lt;h1 id=&quot;需求分析（？&quot;&gt;&lt;a href=&quot;#需求分析（？&quot; class=&quot;headerlink&quot; tit
+      
+    
+    </summary>
+    
+    
+      <category term="UnityEditor" scheme="http://yoursite.com/categories/UnityEditor/"/>
+    
+    
+      <category term="Unity" scheme="http://yoursite.com/tags/Unity/"/>
+    
+      <category term="UnityEditor" scheme="http://yoursite.com/tags/UnityEditor/"/>
+    
+  </entry>
   
   <entry>
     <title>给Unity上代理</title>

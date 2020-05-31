@@ -1,6 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>摸一个简单的 Unity Log Console (1)</title>
+    <url>/2020/05/31/20200531-CloneUnityConsole1/</url>
+    <content><![CDATA[<p>本菜狗在上周领了一个做LogManager的任务。很高兴也很慌，毕竟从来没做过编辑器开发，于是面向搜索引擎编程开始辣，找了一些教程学着做，顺便分享一下。</p>
+<h1 id="需求分析（？"><a href="#需求分析（？" class="headerlink" title="需求分析（？"></a>需求分析（？</h1><p>组里对这个LogManager的要求是在Unity原来的Log功能上再加上根据标签和危险度(?)来筛选。<br>仔细想想还挺麻烦。需要筛选的话，那自然需要一个Console面板，似乎Unity原本的Console不方便扩展，索性跟着网上的教程重新做一个。</p>
+<h1 id="弹出窗口"><a href="#弹出窗口" class="headerlink" title="弹出窗口"></a>弹出窗口</h1><p>首先我们先把窗口弹出来。代码很简单。</p>
+<p>我们可以从Unity头顶的菜单栏中的Window中找到这个面板并打开。打开了是空白的，当然啦，因为还什么都没画上去。</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">TempConsoleWindow</span> : <span class="title">EditorWindow</span></span><br><span class="line">&#123;</span><br><span class="line">	[<span class="meta">MenuItem(<span class="meta-string">"Window/Temp Console"</span>)</span>]</span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">OpenWindow</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>	&#123;</span><br><span class="line">		TempConsoleWindow window = GetWindow&lt;TempConsoleWindow&gt;();</span><br><span class="line">		GUIContent titleContent = <span class="keyword">new</span> GUIContent(<span class="string">"TempConsole"</span>, EditorGUIUtility.Load(<span class="string">"icons/UnityEditor.ConsoleWindow.png"</span>) <span class="keyword">as</span> Texture2D, <span class="string">"a clone sonsole"</span>);</span><br><span class="line">		window.titleContent = titleContent;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="分割区块"><a href="#分割区块" class="headerlink" title="分割区块"></a>分割区块</h1><img src="/2020/05/31/20200531-CloneUnityConsole1/20200531-Unity01.png" class="" title="split">
+]]></content>
+      <categories>
+        <category>UnityEditor</category>
+      </categories>
+      <tags>
+        <tag>Unity</tag>
+        <tag>UnityEditor</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2020/05/03/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+]]></content>
+  </entry>
+  <entry>
     <title>给Git上个代理试试提速</title>
     <url>/2020/05/03/git-add-proxy/</url>
     <content><![CDATA[<h1 id="给GIT用上代理"><a href="#给GIT用上代理" class="headerlink" title="给GIT用上代理"></a>给GIT用上代理</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在看着教程搭建这个博客的时候，我在GIT上也拖了不少的包。直连有时候真的速度慢到吐血，原因很复杂也莫得办法。<br>不过还好，我们其实可以给GIT上个代理，这样能给速度一些改善。</p>
@@ -34,19 +66,5 @@
       <tags>
         <tag>常用</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/2020/05/03/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-]]></content>
   </entry>
 </search>
