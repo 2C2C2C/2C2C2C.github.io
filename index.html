@@ -213,10 +213,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-05-18 22:41:32 / 修改时间：23:01:30" itemprop="dateCreated datePublished" datetime="2020-05-18T22:41:32+08:00">2020-05-18</time>
+              <time title="创建时间：2020-05-18 22:41:32" itemprop="dateCreated datePublished" datetime="2020-05-18T22:41:32+08:00">2020-05-18</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-05-31 10:17:28" itemprop="dateModified" datetime="2020-05-31T10:17:28+08:00">2020-05-31</time>
+              </span>
 
           
 
@@ -231,10 +237,10 @@
       
           <h1 id="给Unity用上代理"><a href="#给Unity用上代理" class="headerlink" title="给Unity用上代理"></a>给Unity用上代理</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>之前有段时间公司的网络不是很稳定，从UnityHub上拖东西99%失败。自己又太菜不想安装Android Studio手动设置安卓打包的东西，于是乎只能想办法给下载加速。</p>
 <h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>首先你要有那个，就是那个你为了看PH才弄的小工具：）</p>
-<h2 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h2><p>首先默认我们的小✈代理端口是1080。<br>似乎V2可以同时有SOCK5和HTTP代理的样子，那也把HTTP代理的短卡设置成1080.</p>
+<h2 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h2><p>首先默认我们的小✈代理端口是1080。<br>似乎V2可以同时有SOCK5和HTTP代理的样子，那也把HTTP代理的端口设置成1080.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># 设置代理</span></span><br><span class="line"><span class="built_in">set</span> HTTP_PROXY=http://127.0.0.1:1080</span><br><span class="line"><span class="built_in">set</span> HTTPS_PROXY=http://127.0.0.1:1080</span><br><span class="line"></span><br><span class="line">start <span class="string">""</span> <span class="string">"your unity hub path"</span></span><br><span class="line"><span class="comment"># like path is like -&gt; D:\Unity\Unity Hub\Unity Hub.exe</span></span><br></pre></td></tr></table></figure>
 <h2 id="爆炸"><a href="#爆炸" class="headerlink" title="爆炸"></a>爆炸</h2><p>非常简单就是这样。</p>
-<p>其实东西都是从另一个博客看来的<br><a href="https://www.yomunchan.moe/archives/320" target="_blank" rel="noopener">https://www.yomunchan.moe/archives/320</a></p>
+<p>其实东西都是从有木桑博客看来的<br><a href="https://www.yomunchan.moe/archives/320" target="_blank" rel="noopener">https://www.yomunchan.moe/archives/320</a></p>
 <p>这边有蛮多游戏开发相关的文章，帮了我不少，十分感谢了。</p>
 
       
