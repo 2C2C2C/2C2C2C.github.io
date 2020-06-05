@@ -37,6 +37,77 @@
       </tags>
   </entry>
   <entry>
+    <title>UnityEditor EasyButton 简易编辑器按钮</title>
+    <url>/2020/06/05/20200605-Unity-EasyButton/</url>
+    <content><![CDATA[<p>一个比较简单但是方便的东西</p>
+<h1 id="这是啥"><a href="#这是啥" class="headerlink" title="这是啥"></a>这是啥</h1><p>我们平时些写了一些函数在MonoBehavior里想测试，这边可以整一个特性放在需要快速调用的方法上(限于无参数的函数)。<br>这边可以做一个编辑器的按钮，直接放在MonoBehavior的组件面板上。</p>
+<h1 id="上代码"><a href="#上代码" class="headerlink" title="上代码"></a>上代码</h1><p>先定义我们需要的这个特性，既然是做个按钮，那就叫Button好了。那么这个特性就应该叫做ButtonAttribute。</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line">[<span class="meta">AttributeUsage(AttributeTargets.Method)</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ButtonAttribute</span> : <span class="title">Attribute</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> m_methodName = <span class="keyword">string</span>.Empty;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ButtonAttribute</span>(<span class="params"><span class="keyword">string</span> methodName</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        m_methodName = methodName;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>既然我们要在Inspector面板上加东西，那我们也要操作一下Inspector面板。<br>我们做一个CustomEditor面板给我们的MonoBehavior，这个面板会作用于所有的MonoBehavior。</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line">[<span class="meta">CustomEditor(typeof(MonoBehaviour), true), CanEditMultipleObjects</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">BaseEditor</span> : <span class="title">Editor</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> Type m_targetType = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnInspectorGUI</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="comment">// draw default stuff</span></span><br><span class="line">        <span class="keyword">base</span>.OnInspectorGUI();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="literal">null</span> == m_targetType)</span><br><span class="line">            m_targetType = target.GetType();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (m_targetType != <span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// try find member function and static function :)</span></span><br><span class="line">            MethodInfo[] methods = m_targetType.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);</span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> method <span class="keyword">in</span> methods)</span><br><span class="line">            &#123;</span><br><span class="line">                ButtonAttribute button = method.GetCustomAttribute&lt;ButtonAttribute&gt;();</span><br><span class="line">                <span class="keyword">if</span> (button != <span class="literal">null</span> &amp;&amp; method.GetParameters().Length &gt; <span class="number">0</span>)</span><br><span class="line">                &#123;</span><br><span class="line">                    EditorGUILayout.HelpBox(<span class="string">"ButtonAttribute: method cant have parameterz."</span>, MessageType.Warning);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span> (button != <span class="literal">null</span> &amp;&amp; GUILayout.Button(button.m_methodName))</span><br><span class="line">                &#123;</span><br><span class="line">                    method.Invoke(target, <span class="keyword">new</span> <span class="keyword">object</span>[] &#123; &#125;);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            m_targetType = m_targetType.BaseType;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后新建一个MonoBehavior脚本，试试</p>
+<figure class="highlight csharp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ToxicTester</span> : <span class="title">MonoBehaviour</span></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">Button(<span class="meta-string">"try exec public method"</span>)</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ExecPublicMethod</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Debug.Log(<span class="string">"try exec public method wa"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">Button(<span class="meta-string">"try exec protected method"</span>)</span>]</span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">ExecProtectedMethod</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Debug.Log(<span class="string">"try exec protected method wa"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    [<span class="meta">Button(<span class="meta-string">"try exec private method"</span>)</span>]</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">ExecPrivateMethod</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Debug.Log(<span class="string">"try exec private method wa"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">Button(<span class="meta-string">"try exec public static method"</span>)</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">ExecPublicStaticMethod</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Debug.Log(<span class="string">"try exec public static method wa"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<img src="/2020/06/05/20200605-Unity-EasyButton/20200605-pic001.png" class="" title="split">
+<p>效果如图</p>
+]]></content>
+      <categories>
+        <category>UnityEditor</category>
+      </categories>
+      <tags>
+        <tag>Unity</tag>
+        <tag>UnityEditor</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>给Git上个代理试试提速</title>
+    <url>/2020/05/03/git-add-proxy/</url>
+    <content><![CDATA[<h1 id="给GIT用上代理"><a href="#给GIT用上代理" class="headerlink" title="给GIT用上代理"></a>给GIT用上代理</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在看着教程搭建这个博客的时候，我在GIT上也拖了不少的包。直连有时候真的速度慢到吐血，原因很复杂也莫得办法。<br>不过还好，我们其实可以给GIT上个代理，这样能给速度一些改善。</p>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>我是在本机器安装有代理客户端，小🛩和V2都彳亍。<br>我这边的情况是这样的，小飞机走SOCK5代理，V2走的HTTP代理。<br>因为平时我只可能开着一个，所以端口都是1080。</p>
+<h2 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h2><p>废话不多说了，直接上命令。</p>
+<p>首先我们看看已有的设置.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># 查看全局配置中的代理</span></span><br><span class="line">git config --global --get http.proxy</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看当前生效配置中的代理</span></span><br><span class="line">git config --get http.proxy</span><br></pre></td></tr></table></figure>
+<p>然后我们加上自己的代理。<br>当前我们假设的状态是本机开着小✈或者V2，且代理端口为1080的情况。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 括号中的都是可选项</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 若用的小飞机, --global 意味着应用到全局设置</span></span><br><span class="line">git config (--global) http.proxy sock5://127.0.0.1:1080</span><br><span class="line">git config (--global) https.proxy sock5://127.0.0.1:1080</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这样应用后，没开代理GIT就会抽风了，所以如果平时速度还不错的话记得用完取消代理</span></span><br><span class="line">git config (--global) --<span class="built_in">unset</span> http.proxy (sock5://127.0.0.1:1080)</span><br><span class="line">git config (--global) --<span class="built_in">unset</span> https.proxy (sock5://127.0.0.1:1080)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 若用的V2, --global 意味着应用到全局设置</span></span><br><span class="line">git config (--global) http.proxy  http://127.0.0.1:1080</span><br><span class="line">git config (--global) https.proxy https://127.0.0.1:1080</span><br><span class="line"></span><br><span class="line"><span class="comment"># 取消</span></span><br><span class="line">git config (--global) --<span class="built_in">unset</span> http.proxy  （http://127.0.0.1:1080）</span><br><span class="line">git config (--global) --<span class="built_in">unset</span> https.proxy （https://127.0.0.1:1080）</span><br></pre></td></tr></table></figure>
+<p>挂了代理真的飞速，爽到。</p>
+]]></content>
+      <categories>
+        <category>Git</category>
+      </categories>
+      <tags>
+        <tag>Git</tag>
+        <tag>常用</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>给Unity上代理</title>
+    <url>/2020/05/18/unity-hub-w-proxy/</url>
+    <content><![CDATA[<h1 id="给Unity用上代理"><a href="#给Unity用上代理" class="headerlink" title="给Unity用上代理"></a>给Unity用上代理</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>之前有段时间公司的网络不是很稳定，从UnityHub上拖东西99%失败。自己又太菜不想安装Android Studio手动设置安卓打包的东西，于是乎只能想办法给下载加速。</p>
+<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>首先你要有那个，就是那个你为了看PH才弄的小工具：）</p>
+<h2 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h2><p>首先默认我们的小✈代理端口是1080。<br>似乎V2可以同时有SOCK5和HTTP代理的样子，那也把HTTP代理的端口设置成1080.</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># 设置代理</span></span><br><span class="line"><span class="built_in">set</span> HTTP_PROXY=http://127.0.0.1:1080</span><br><span class="line"><span class="built_in">set</span> HTTPS_PROXY=http://127.0.0.1:1080</span><br><span class="line"></span><br><span class="line">start <span class="string">""</span> <span class="string">"your unity hub path"</span></span><br><span class="line"><span class="comment"># like path is like -&gt; D:\Unity\Unity Hub\Unity Hub.exe</span></span><br></pre></td></tr></table></figure>
+<h2 id="爆炸"><a href="#爆炸" class="headerlink" title="爆炸"></a>爆炸</h2><p>非常简单就是这样。</p>
+<p>其实东西都是从有木桑博客看来的<br><a href="https://www.yomunchan.moe/archives/320" target="_blank" rel="noopener">https://www.yomunchan.moe/archives/320</a></p>
+<p>这边有蛮多游戏开发相关的文章，帮了我不少，十分感谢了。</p>
+]]></content>
+      <tags>
+        <tag>常用</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2020/05/03/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+]]></content>
+  </entry>
+  <entry>
     <title>摸一个简单的 Unity Log Console (2)</title>
     <url>/2020/05/31/20200531-CloneUnityConsole2/</url>
     <content><![CDATA[<p>上一期我们做完了基本的面板绘制，现在我们可以往里面添加简单的内容了。</p>
@@ -60,55 +131,6 @@
       <tags>
         <tag>Unity</tag>
         <tag>UnityEditor</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/2020/05/03/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-]]></content>
-  </entry>
-  <entry>
-    <title>给Unity上代理</title>
-    <url>/2020/05/18/unity-hub-w-proxy/</url>
-    <content><![CDATA[<h1 id="给Unity用上代理"><a href="#给Unity用上代理" class="headerlink" title="给Unity用上代理"></a>给Unity用上代理</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>之前有段时间公司的网络不是很稳定，从UnityHub上拖东西99%失败。自己又太菜不想安装Android Studio手动设置安卓打包的东西，于是乎只能想办法给下载加速。</p>
-<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>首先你要有那个，就是那个你为了看PH才弄的小工具：）</p>
-<h2 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h2><p>首先默认我们的小✈代理端口是1080。<br>似乎V2可以同时有SOCK5和HTTP代理的样子，那也把HTTP代理的端口设置成1080.</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># 设置代理</span></span><br><span class="line"><span class="built_in">set</span> HTTP_PROXY=http://127.0.0.1:1080</span><br><span class="line"><span class="built_in">set</span> HTTPS_PROXY=http://127.0.0.1:1080</span><br><span class="line"></span><br><span class="line">start <span class="string">""</span> <span class="string">"your unity hub path"</span></span><br><span class="line"><span class="comment"># like path is like -&gt; D:\Unity\Unity Hub\Unity Hub.exe</span></span><br></pre></td></tr></table></figure>
-<h2 id="爆炸"><a href="#爆炸" class="headerlink" title="爆炸"></a>爆炸</h2><p>非常简单就是这样。</p>
-<p>其实东西都是从有木桑博客看来的<br><a href="https://www.yomunchan.moe/archives/320" target="_blank" rel="noopener">https://www.yomunchan.moe/archives/320</a></p>
-<p>这边有蛮多游戏开发相关的文章，帮了我不少，十分感谢了。</p>
-]]></content>
-      <tags>
-        <tag>常用</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>给Git上个代理试试提速</title>
-    <url>/2020/05/03/git-add-proxy/</url>
-    <content><![CDATA[<h1 id="给GIT用上代理"><a href="#给GIT用上代理" class="headerlink" title="给GIT用上代理"></a>给GIT用上代理</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在看着教程搭建这个博客的时候，我在GIT上也拖了不少的包。直连有时候真的速度慢到吐血，原因很复杂也莫得办法。<br>不过还好，我们其实可以给GIT上个代理，这样能给速度一些改善。</p>
-<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>我是在本机器安装有代理客户端，小🛩和V2都彳亍。<br>我这边的情况是这样的，小飞机走SOCK5代理，V2走的HTTP代理。<br>因为平时我只可能开着一个，所以端口都是1080。</p>
-<h2 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h2><p>废话不多说了，直接上命令。</p>
-<p>首先我们看看已有的设置.</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># 查看全局配置中的代理</span></span><br><span class="line">git config --global --get http.proxy</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看当前生效配置中的代理</span></span><br><span class="line">git config --get http.proxy</span><br></pre></td></tr></table></figure>
-<p>然后我们加上自己的代理。<br>当前我们假设的状态是本机开着小✈或者V2，且代理端口为1080的情况。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 括号中的都是可选项</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 若用的小飞机, --global 意味着应用到全局设置</span></span><br><span class="line">git config (--global) http.proxy sock5://127.0.0.1:1080</span><br><span class="line">git config (--global) https.proxy sock5://127.0.0.1:1080</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这样应用后，没开代理GIT就会抽风了，所以如果平时速度还不错的话记得用完取消代理</span></span><br><span class="line">git config (--global) --<span class="built_in">unset</span> http.proxy (sock5://127.0.0.1:1080)</span><br><span class="line">git config (--global) --<span class="built_in">unset</span> https.proxy (sock5://127.0.0.1:1080)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 若用的V2, --global 意味着应用到全局设置</span></span><br><span class="line">git config (--global) http.proxy  http://127.0.0.1:1080</span><br><span class="line">git config (--global) https.proxy https://127.0.0.1:1080</span><br><span class="line"></span><br><span class="line"><span class="comment"># 取消</span></span><br><span class="line">git config (--global) --<span class="built_in">unset</span> http.proxy  （http://127.0.0.1:1080）</span><br><span class="line">git config (--global) --<span class="built_in">unset</span> https.proxy （https://127.0.0.1:1080）</span><br></pre></td></tr></table></figure>
-<p>挂了代理真的飞速，爽到。</p>
-]]></content>
-      <categories>
-        <category>Git</category>
-      </categories>
-      <tags>
-        <tag>常用</tag>
-        <tag>Git</tag>
       </tags>
   </entry>
 </search>
