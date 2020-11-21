@@ -23,7 +23,7 @@
   <meta name="description" content="随便记录一些东西">
 <meta property="og:type" content="website">
 <meta property="og:title" content="FishPlayer">
-<meta property="og:url" content="http://yoursite.com/tags/UnityEditor/index.html">
+<meta property="og:url" content="http://yoursite.com/tags/unityEditor/index.html">
 <meta property="og:site_name" content="FishPlayer">
 <meta property="og:description" content="随便记录一些东西">
 <meta property="og:locale" content="zh_CN">
@@ -33,7 +33,7 @@
 <meta property="article:tag" content=" C++">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://yoursite.com/tags/UnityEditor/">
+<link rel="canonical" href="http://yoursite.com/tags/unityEditor/">
 
 
 <script id="page-configurations">
@@ -46,7 +46,7 @@
   };
 </script>
 
-  <title>标签: UnityEditor | FishPlayer</title>
+  <title>标签: unityEditor | FishPlayer</title>
   
 
 
@@ -193,7 +193,7 @@
   <div class="post-block">
     <div class="posts-collapse">
       <div class="collection-title">
-        <h2 class="collection-header">UnityEditor
+        <h2 class="collection-header">unityEditor
           <small>标签</small>
         </h2>
       </div>
@@ -208,15 +208,15 @@
 
       <div class="post-meta">
         <time itemprop="dateCreated"
-              datetime="2020-06-05T23:04:09+08:00"
-              content="2020-06-05">
-          06-05
+              datetime="2020-11-21T13:59:08+08:00"
+              content="2020-11-21">
+          11-21
         </time>
       </div>
 
       <div class="post-title">
-          <a class="post-title-link" href="/2020/06/05/20200605-Unity-EasyButton/" itemprop="url">
-            <span itemprop="name">UnityEditor EasyButton 简易编辑器按钮</span>
+          <a class="post-title-link" href="/2020/11/21/20201121-find-asset-reference/" itemprop="url">
+            <span itemprop="name">查询Unity Object在工程中的引用</span>
           </a>
       </div>
 
@@ -228,35 +228,15 @@
 
       <div class="post-meta">
         <time itemprop="dateCreated"
-              datetime="2020-05-31T18:50:56+08:00"
-              content="2020-05-31">
-          05-31
+              datetime="2020-06-26T16:24:23+08:00"
+              content="2020-06-26">
+          06-26
         </time>
       </div>
 
       <div class="post-title">
-          <a class="post-title-link" href="/2020/05/31/20200531-CloneUnityConsole2/" itemprop="url">
-            <span itemprop="name">摸一个简单的 Unity Log Console (2)</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-05-31T10:47:16+08:00"
-              content="2020-05-31">
-          05-31
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/05/31/20200531-CloneUnityConsole1/" itemprop="url">
-            <span itemprop="name">摸一个简单的 Unity Log Console (1)</span>
+          <a class="post-title-link" href="/2020/06/26/20200626-unity-editor-scrollview-pagination/" itemprop="url">
+            <span itemprop="name">UnityEditor Scrollview Pagination(分页)</span>
           </a>
       </div>
 
@@ -336,7 +316,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-count">13</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -463,6 +443,56 @@ window.addEventListener('pjax:success', () => {
     }
     if (code !== '') {
       script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+
+    </div>
+</body>
+</html>
+script.appendChild(document.createTextNode(code));
     }
     parent.appendChild(script);
   });
