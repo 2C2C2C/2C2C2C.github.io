@@ -190,6 +190,87 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/04/08/20210408-edit-commit-msg/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="2C2C2C2">
+      <meta itemprop="description" content="随便记录一些东西">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FishPlayer">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/04/08/20210408-edit-commit-msg/" class="post-title-link" itemprop="url">修改commit消息</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-04-08 20:53:35 / 修改时间：21:38:25" itemprop="dateCreated datePublished" datetime="2021-04-08T20:53:35+08:00">2021-04-08</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Git/" itemprop="url" rel="index"><span itemprop="name">Git</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>前几天打游戏太疯了，上班的时候脑子都不清醒，commit的时候输错了东西，push的时候被block了才发现。<br>结果还因为不会改commit消息，还错误地操作使得工作全没了。</p>
+<h1 id="修改当前最新的一条commit消息"><a href="#修改当前最新的一条commit消息" class="headerlink" title="修改当前最新的一条commit消息"></a>修改当前最新的一条commit消息</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># 修改当前最新的一条commit消息</span></span><br><span class="line">git commit --amend</span><br></pre></td></tr></table></figure>
+<p>非常简单，一个命令就搞定了。然后就可以正常push了。</p>
+<p>如果是需要修改已经推送到远端的commit，可以再这个命令之后尝试push —force。<br>不过我觉得这样的情景非常之少，都已经PUSH上去了为啥还需要改啊:(</p>
+<h1 id="修改往前第N条commit消息-还未推送到远端的"><a href="#修改往前第N条commit消息-还未推送到远端的" class="headerlink" title="修改往前第N条commit消息(还未推送到远端的)"></a>修改往前第N条commit消息(还未推送到远端的)</h1><img src="/2021/04/08/20210408-edit-commit-msg/20210408-edit-commit-msg-01.png" class="" title="split">
+<p>如图，我需要修改图中选定的那一个commit。从我当前位置数，是第3个commit。<br>则X就应该是3。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">git rebase -i HEAD~X</span><br><span class="line"><span class="comment"># X is the number of commits to go back</span></span><br><span class="line"><span class="comment"># Move to the line of your commit, change pick into edit,</span></span><br><span class="line"><span class="comment"># then change your commit message:</span></span><br><span class="line">git commit --amend</span><br><span class="line"><span class="comment"># Finish the rebase with:</span></span><br><span class="line">git rebase --<span class="built_in">continue</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># :D</span></span><br><span class="line">git push</span><br></pre></td></tr></table></figure>
+<p>执行rebase后，会让选择需要对哪条commit进行什么样的操作。</p>
+<img src="/2021/04/08/20210408-edit-commit-msg/20210408-edit-commit-msg-02.png" class="" title="split">
+<p>需要编辑消息则就把pick改成edit，然后保存，退出文本编辑。就可以使用 commit —amend 来修改消息了，然后再执行下一条命令完成rebase。<br>然后就是快乐push。</p>
+<p>其实也可以同时edit多条commit。这样，在使用　commit —amend　时会从最老的commit开始编辑。完成一条的编辑就需要 rebase —continue。<br>之后才能继续编辑下一条。</p>
+<img src="/2021/04/08/20210408-edit-commit-msg/20210408-edit-commit-msg-03.png" class="" title="split">
+<p>如果修改了曾经push过的commit，就需要push —force。</p>
+<img src="/2021/04/08/20210408-edit-commit-msg/20210408-edit-commit-msg-04.png" class="" title="split">
+<img src="/2021/04/08/20210408-edit-commit-msg/20210408-edit-commit-msg-05.png" class="" title="split">
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/01/31/20210131-UGUI-ScrollRect-Learn-02/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -961,83 +1042,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/05/20200605-Unity-EasyButton/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="2C2C2C2">
-      <meta itemprop="description" content="随便记录一些东西">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FishPlayer">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/06/05/20200605-Unity-EasyButton/" class="post-title-link" itemprop="url">UnityEditor EasyButton 简易编辑器按钮</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2020-06-05 23:04:09 / 修改时间：23:51:04" itemprop="dateCreated datePublished" datetime="2020-06-05T23:04:09+08:00">2020-06-05</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/UnityEditor/" itemprop="url" rel="index"><span itemprop="name">UnityEditor</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>一个比较简单但是方便的东西</p>
-<h1 id="这是啥"><a href="#这是啥" class="headerlink" title="这是啥"></a>这是啥</h1><p>我们平时些写了一些函数在MonoBehavior里想测试，这边可以整一个特性放在需要快速调用的方法上(限于无参数的函数)。<br>这边可以做一个编辑器的按钮，直接放在MonoBehavior的组件面板上。</p>
-<h1 id="上代码"><a href="#上代码" class="headerlink" title="上代码"></a>上代码</h1><p>先定义我们需要的这个特性，既然是做个按钮，那就叫Button好了。那么这个特性就应该叫做ButtonAttribute。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">AttributeUsage(AttributeTargets.Method)</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ButtonAttribute</span> : <span class="title">Attribute</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> m_methodName = <span class="keyword">string</span>.Empty;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ButtonAttribute</span>(<span class="params"><span class="keyword">string</span> methodName</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        m_methodName = methodName;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>既然我们要在Inspector面板上加东西，那我们也要操作一下Inspector面板。<br>我们做一个CustomEditor面板给我们的MonoBehavior，这个面板会作用于所有的MonoBehavior。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">CustomEditor(typeof(MonoBehaviour), true), CanEditMultipleObjects</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">BaseEditor</span> : <span class="title">Editor</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> Type m_targetType = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnInspectorGUI</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="comment">// draw default stuff</span></span><br><span class="line">        <span class="keyword">base</span>.OnInspectorGUI();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="literal">null</span> == m_targetType)</span><br><span class="line">            m_targetType = target.GetType();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (m_targetType != <span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// try find member function and static function :)</span></span><br><span class="line">            MethodInfo[] methods = m_targetType.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);</span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> method <span class="keyword">in</span> methods)</span><br><span class="line">            &#123;</span><br><span class="line">                ButtonAttribute button = method.GetCustomAttribute&lt;ButtonAttribute&gt;();</span><br><span class="line">                <span class="keyword">if</span> (button != <span class="literal">null</span> &amp;&amp; method.GetParameters().Length &gt; <span class="number">0</span>)</span><br><span class="line">                &#123;</span><br><span class="line">                    EditorGUILayout.HelpBox(<span class="string">"ButtonAttribute: method cant have parameterz."</span>, MessageType.Warning);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span> (button != <span class="literal">null</span> &amp;&amp; GUILayout.Button(button.m_methodName))</span><br><span class="line">                &#123;</span><br><span class="line">                    method.Invoke(target, <span class="keyword">new</span> <span class="keyword">object</span>[] &#123; &#125;);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            m_targetType = m_targetType.BaseType;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>然后新建一个MonoBehavior脚本，试试</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ToxicTester</span> : <span class="title">MonoBehaviour</span></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">Button(<span class="meta-string">"try exec public method"</span>)</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ExecPublicMethod</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Debug.Log(<span class="string">"try exec public method wa"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">Button(<span class="meta-string">"try exec protected method"</span>)</span>]</span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">ExecProtectedMethod</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Debug.Log(<span class="string">"try exec protected method wa"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    [<span class="meta">Button(<span class="meta-string">"try exec private method"</span>)</span>]</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">ExecPrivateMethod</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Debug.Log(<span class="string">"try exec private method wa"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">Button(<span class="meta-string">"try exec public static method"</span>)</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">ExecPublicStaticMethod</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Debug.Log(<span class="string">"try exec public static method wa"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<img src="/2020/06/05/20200605-Unity-EasyButton/20200605-pic001.png" class="" title="split">
-<p>效果如图</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1109,7 +1113,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-count">16</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

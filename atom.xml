@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2021-01-31T05:22:00.181Z</updated>
+  <updated>2021-04-08T13:38:25.620Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>修改commit消息</title>
+    <link href="http://yoursite.com/2021/04/08/20210408-edit-commit-msg/"/>
+    <id>http://yoursite.com/2021/04/08/20210408-edit-commit-msg/</id>
+    <published>2021-04-08T12:53:35.000Z</published>
+    <updated>2021-04-08T13:38:25.620Z</updated>
+    
+    <content type="html"><![CDATA[<p>前几天打游戏太疯了，上班的时候脑子都不清醒，commit的时候输错了东西，push的时候被block了才发现。<br>结果还因为不会改commit消息，还错误地操作使得工作全没了。</p><h1 id="修改当前最新的一条commit消息"><a href="#修改当前最新的一条commit消息" class="headerlink" title="修改当前最新的一条commit消息"></a>修改当前最新的一条commit消息</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># 修改当前最新的一条commit消息</span></span><br><span class="line">git commit --amend</span><br></pre></td></tr></table></figure><p>非常简单，一个命令就搞定了。然后就可以正常push了。</p><p>如果是需要修改已经推送到远端的commit，可以再这个命令之后尝试push —force。<br>不过我觉得这样的情景非常之少，都已经PUSH上去了为啥还需要改啊:(</p><h1 id="修改往前第N条commit消息-还未推送到远端的"><a href="#修改往前第N条commit消息-还未推送到远端的" class="headerlink" title="修改往前第N条commit消息(还未推送到远端的)"></a>修改往前第N条commit消息(还未推送到远端的)</h1><img src="/2021/04/08/20210408-edit-commit-msg/20210408-edit-commit-msg-01.png" class="" title="split"><p>如图，我需要修改图中选定的那一个commit。从我当前位置数，是第3个commit。<br>则X就应该是3。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">git rebase -i HEAD~X</span><br><span class="line"><span class="comment"># X is the number of commits to go back</span></span><br><span class="line"><span class="comment"># Move to the line of your commit, change pick into edit,</span></span><br><span class="line"><span class="comment"># then change your commit message:</span></span><br><span class="line">git commit --amend</span><br><span class="line"><span class="comment"># Finish the rebase with:</span></span><br><span class="line">git rebase --<span class="built_in">continue</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># :D</span></span><br><span class="line">git push</span><br></pre></td></tr></table></figure><p>执行rebase后，会让选择需要对哪条commit进行什么样的操作。</p><img src="/2021/04/08/20210408-edit-commit-msg/20210408-edit-commit-msg-02.png" class="" title="split"><p>需要编辑消息则就把pick改成edit，然后保存，退出文本编辑。就可以使用 commit —amend 来修改消息了，然后再执行下一条命令完成rebase。<br>然后就是快乐push。</p><p>其实也可以同时edit多条commit。这样，在使用　commit —amend　时会从最老的commit开始编辑。完成一条的编辑就需要 rebase —continue。<br>之后才能继续编辑下一条。</p><img src="/2021/04/08/20210408-edit-commit-msg/20210408-edit-commit-msg-03.png" class="" title="split"><p>如果修改了曾经push过的commit，就需要push —force。</p><img src="/2021/04/08/20210408-edit-commit-msg/20210408-edit-commit-msg-04.png" class="" title="split"><img src="/2021/04/08/20210408-edit-commit-msg/20210408-edit-commit-msg-05.png" class="" title="split">]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;前几天打游戏太疯了，上班的时候脑子都不清醒，commit的时候输错了东西，push的时候被block了才发现。&lt;br&gt;结果还因为不会改commit消息，还错误地操作使得工作全没了。&lt;/p&gt;
+&lt;h1 id=&quot;修改当前最新的一条commit消息&quot;&gt;&lt;a href=&quot;#修改当前最
+      
+    
+    </summary>
+    
+    
+      <category term="Git" scheme="http://yoursite.com/categories/Git/"/>
+    
+    
+      <category term="Git" scheme="http://yoursite.com/tags/Git/"/>
+    
+  </entry>
   
   <entry>
     <title>Unity UGUI ScrollRect 学习笔记 (2)</title>
