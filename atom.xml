@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2021-04-08T13:38:25.620Z</updated>
+  <updated>2021-04-23T13:48:20.194Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Git 本地忽略文件</title>
+    <link href="http://yoursite.com/2021/04/23/20210423-gitignore-locally/"/>
+    <id>http://yoursite.com/2021/04/23/20210423-gitignore-locally/</id>
+    <published>2021-04-23T13:33:14.000Z</published>
+    <updated>2021-04-23T13:48:20.194Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近在拼UI，需要建立几个临时的场景在本地。自然不能上传，但是又想手贱 git add . 还是决定在本地手动设置忽略一些文件。</p><h1 id="设置Git-exclude"><a href="#设置Git-exclude" class="headerlink" title="设置Git exclude"></a>设置Git exclude</h1><p>首先需要找到这个文件。</p><p>exclude 文件在 如图的目录中</p><img src="/2021/04/23/20210423-gitignore-locally/20210423-gitignore-locally-pic01.png" class="" title="split"><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\.git\info\</span><br></pre></td></tr></table></figure><p>找到以后以文本文件的形式打开，用法和 gitignore 差不多，我还么有深入研究，但我差不多这样用。</p><img src="/2021/04/23/20210423-gitignore-locally/20210423-gitignore-locally-pic02.png" class="" title="split"><p>把我需要忽略的本地目录填上去就可以了。<br>顺便一说，若使用这个方式忽略了某个目录，当把已经进行版本控制的文件丢进这个目录里时，Git中会生成一个delete的改动。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;最近在拼UI，需要建立几个临时的场景在本地。自然不能上传，但是又想手贱 git add . 还是决定在本地手动设置忽略一些文件。&lt;/p&gt;
+&lt;h1 id=&quot;设置Git-exclude&quot;&gt;&lt;a href=&quot;#设置Git-exclude&quot; class=&quot;headerlink&quot; t
+      
+    
+    </summary>
+    
+    
+      <category term="Git" scheme="http://yoursite.com/categories/Git/"/>
+    
+    
+      <category term="Git" scheme="http://yoursite.com/tags/Git/"/>
+    
+  </entry>
   
   <entry>
     <title>修改commit消息</title>
