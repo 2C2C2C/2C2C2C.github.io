@@ -190,6 +190,149 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/08/31/20210831-raycast-padding/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="2C2C2C2">
+      <meta itemprop="description" content="随便记录一些东西">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FishPlayer">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/08/31/20210831-raycast-padding/" class="post-title-link" itemprop="url">Unity2020 Graphic 小坑</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-08-31 21:45:42 / 修改时间：23:22:23" itemprop="dateCreated datePublished" datetime="2021-08-31T21:45:42+08:00">2021-08-31</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Unity/" itemprop="url" rel="index"><span itemprop="name">Unity</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>最近项目升级了2020.3，Graphic这边多给了一个Raycast Padding的设置。<br>我们有在用一些完全空白的图片来接受UI的点击响应，同时也有一些用图片接收点击的按钮。</p>
+<p>但很坑爹的是，我发现无论怎么设置Raycast Padding的值，场景预览中都没有显示框框，所以我其实是完全不知道这玩意儿到底怎么用的。<br>搜索一下才知道原来是padding的数值是负数的时候才是往外扩张。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">RaycastTarget</span> : <span class="title">Graphic</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// Additionally, If you need a Raycast target that is not a rectangle, you can implement bool Raycast(Vector2 sp, Camera eventCamera) method from Graphic.</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">SetMaterialDirty</span>(<span class="params"></span>)</span> &#123; <span class="keyword">return</span>; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">SetVerticesDirty</span>(<span class="params"></span>)</span> &#123; <span class="keyword">return</span>; &#125;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Probably not necessary since the chain of calls `Rebuild()`-&gt;`UpdateGeometry()`-&gt;`DoMeshGeneration()`-&gt;`OnPopulateMesh()` won't happen; so here really just as a fail-safe.</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnPopulateMesh</span>(<span class="params">VertexHelper vh</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        vh.Clear();</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> UNITY_EDITOR</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">OnDrawGizmos</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="keyword">this</span>.enabled)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        RectTransform rectTransform = <span class="keyword">this</span>.transform <span class="keyword">as</span> RectTransform;</span><br><span class="line">        Color wireColor = Color.yellow;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.isActiveAndEnabled)</span><br><span class="line">            wireColor.a *= <span class="number">0.7f</span></span><br><span class="line">        <span class="comment">// Padding to be applied to the masking</span></span><br><span class="line">        <span class="comment">// X = Left, Y = Bottom, Z = Right, W = Top</span></span><br><span class="line">        <span class="comment">// if you wanna make it bigger, then the all value shouble be negative</span></span><br><span class="line">        Vector4 padding = <span class="keyword">this</span>.raycastPadding * <span class="number">-1.0f</span>;</span><br><span class="line">        Matrix4x4 localToWorld = rectTransform.localToWorldMatrix</span><br><span class="line">        Vector3 topLeft = SomeUtils.GetOffsetLocalPosition(rectTransform, SomeUtils.UIOffsetType.TopLeft);</span><br><span class="line">        Vector3 topRight = SomeUtils.GetOffsetLocalPosition(rectTransform, SomeUtils.UIOffsetType.TopRight);</span><br><span class="line">        Vector3 bottomLeft = SomeUtils.GetOffsetLocalPosition(rectTransform, SomeUtils.UIOffsetType.BottomLeft);</span><br><span class="line">        Vector3 bottomRight = SomeUtils.GetOffsetLocalPosition(rectTransform, SomeUtils.UIOffsetType.BottomRight)</span><br><span class="line">        topLeft = localToWorld.MultiplyPoint(topLeft + (Vector3.left * padding.x) + (Vector3.up * padding.w));</span><br><span class="line">        topRight = localToWorld.MultiplyPoint(topRight + (Vector3.right * padding.z) + (Vector3.up * padding.w));</span><br><span class="line">        bottomLeft = localToWorld.MultiplyPoint(bottomLeft + (Vector3.left * padding.x) + (Vector3.down * padding.y));</span><br><span class="line">        bottomRight = localToWorld.MultiplyPoint(bottomRight + (Vector3.right * padding.z) + (Vector3.down * padding.y))</span><br><span class="line">        Color tempColor = Gizmos.color;</span><br><span class="line">        Gizmos.color = wireColor</span><br><span class="line">        Gizmos.DrawLine(topLeft, topRight);</span><br><span class="line">        Gizmos.DrawLine(topLeft, bottomLeft);</span><br><span class="line">        Gizmos.DrawLine(bottomRight, topRight);</span><br><span class="line">        Gizmos.DrawLine(bottomRight, bottomLeft);</span><br><span class="line">        Gizmos.color = tempColor</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>空白raycast target的可以在Gizmo里画，但是Image本身的不是那么好画，因为无法直接覆写原本的Editor。<br>一个笨办法就是做一个自己的Iamge然后也在Gizmo里画。<br>但其实这个是Graphic的property 不知道怎么做通用解决方案。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/06/06/20210606-UGuiInputOnScrollkeng/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="2C2C2C2">
+      <meta itemprop="description" content="随便记录一些东西">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FishPlayer">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/06/06/20210606-UGuiInputOnScrollkeng/" class="post-title-link" itemprop="url">Unity 自制 Scrollrect 小坑</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-06-06 22:33:16 / 修改时间：22:59:28" itemprop="dateCreated datePublished" datetime="2021-06-06T22:33:16+08:00">2021-06-06</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Unity/" itemprop="url" rel="index"><span itemprop="name">Unity</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="问题出现"><a href="#问题出现" class="headerlink" title="问题出现"></a>问题出现</h1><p>终于改来改去，俺做的这个循环滚动列表成功运用到了项目里的仓库UI上。但是还是被一个BUG给击垮了。</p>
+<p>UX给到的设计稿是当玩家鼠标在其中一个物品上时，要有一个小弹窗显示这个物品的一些讯息。<br>BUG的表现是当我已经’选中’一个物品后，用鼠标滚轮滚到下一行，小弹窗显示的还是上一个物品的讯息。</p>
+<h1 id="BUG原因"><a href="#BUG原因" class="headerlink" title="BUG原因"></a>BUG原因</h1><p>我在UI脚本中写了关于鼠标移动进入和离开的处理，但其实当列表滚动时候，鼠标下面的物体还是上一个物体，但是物体内的数据已经改变，却没有刷新。</p>
+<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p>其实也还算有个凑合的解决方案。导师之前重写了InputModule，所以我们决定在这边做改动。<br>当发生滚动时，我们需要重新做raycast。<br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">OnScrollWheel</span>(<span class="params">InputAction.CallbackContext context</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (IsActive())</span><br><span class="line">    &#123;</span><br><span class="line">        PointerEventData eventData = GetPointerData();</span><br><span class="line">        eventData.button = PointerEventData.InputButton.Middle;</span><br><span class="line">        eventData.Reset();</span><br><span class="line">        eventData.scrollDelta = context.ReadValue&lt;Vector2&gt;()</span><br><span class="line">        GameObject testScrollObject = ExecuteEventExecuteHierarchy(eventData.pointerCurrentRaycasgameObject, eventData, ExecuteEvents.scrollHandler)</span><br><span class="line">        <span class="keyword">if</span> (testScrollObject != <span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// to re-do the reycast cuz we may scroll a recyclscrollrect</span></span><br><span class="line">            HandlePointerExitAndEnter(eventData, <span class="literal">null</span>);</span><br><span class="line">            m_rayCastDelayFrame = SCROLL_RAYCAST_DELAY;</span><br><span class="line">            <span class="comment">// SCROLL_RAYCAST_DELAY =3 or 5, depends....</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们先清楚了事件数据所认为的鼠标悬停的物体，然后过几帧再重新发射射线进行检测。<br>因为我的循环滚动列表依赖于Unity自带的滚动视图，并且其位置也是在LateUpdate中更新的，所以我们最好在下一帧或者接下来的几帧后再做射线检测。。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// will call in update</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">Process</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    .....</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    CheckAndDoDelayRaycast();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">CheckAndDoDelayRaycast</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (m_rayCastDelayFrame &lt; <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (--m_rayCastDelayFrame == <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> eventData = GetPointerData();</span><br><span class="line">        eventSystem.RaycastAll(eventData, m_RaycastResultCache);</span><br><span class="line">        <span class="keyword">var</span> firstRaycast = FindFirstRaycast(m_RaycastResultCache)</span><br><span class="line">        eventData.pointerCurrentRaycast = firstRaycast;</span><br><span class="line">        m_RaycastResultCache.Clear()</span><br><span class="line">        <span class="keyword">var</span> temp = eventData.pointerCurrentRaycast.gameObject;</span><br><span class="line">        HandlePointerExitAndEnter(eventData, temp);</span><br><span class="line">        m_rayCastDelayFrame = <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/04/23/20210423-gitignore-locally/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -859,183 +1002,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/22/20200622-awake-enable-order/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="2C2C2C2">
-      <meta itemprop="description" content="随便记录一些东西">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FishPlayer">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/06/22/20200622-awake-enable-order/" class="post-title-link" itemprop="url">Unity函数Awake和OnEnable执行顺序小坑</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-06-22 23:48:08" itemprop="dateCreated datePublished" datetime="2020-06-22T23:48:08+08:00">2020-06-22</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-06-23 00:16:12" itemprop="dateModified" datetime="2020-06-23T00:16:12+08:00">2020-06-23</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Unity/" itemprop="url" rel="index"><span itemprop="name">Unity</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <blockquote>
-<p>Awake: This function is always called before any Start functions and also just after a prefabis instantiated. (If a GameObject is inactive during start up Awake is not called until it is made active.)</p>
-<p>OnEnable: (only called if the Object is active): This function is called just after the object is enabled. This happens when a MonoBehaviour instance is created, such as when a level is loaded or a GameObject with the script component is instantiated.</p>
-</blockquote>
-<p><a href="https://docs.unity3d.com/Manual/ExecutionOrder.html" target="_blank" rel="noopener">check the exec order here</a></p>
-<img src="/2020/06/22/20200622-awake-enable-order/20200622-pic001.png" class="" title="split">
-<p>今天做工时候遇到了一个问题，我在Mono A的 Awake 中把Mono A的实例绑定到了GameManager里，然后再Mono B的 OnEnable 中获取Mono A的实例，结果跳了个空引用异常。<br>把我惊了，原来这一年多来我一直在一个误区里。</p>
-<p>我以前一直认为是当场景里所有的 Awake 跑完才开始跑 OnEnable()。但其实不是这样的。</p>
-<p><strong>当一个Mono的 Awake 跑完以后会接着跑他的 OnEnable , 接着才去跑其他物体的 Awake 和 OnEnable。</strong></p>
-<p>随便写两行测试一下就知道了。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">TesterA1</span> : <span class="title">MonoBehaviour</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> Type m_type = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Awake</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        m_type = <span class="keyword">this</span>.GetType();</span><br><span class="line">        Debug.Log(<span class="string">$"<span class="subst">&#123;m_type.Name&#125;</span> awake"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">OnEnable</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Debug.Log(<span class="string">$"<span class="subst">&#123;m_type.Name&#125;</span> on enable"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">TesterB1</span> : <span class="title">MonoBehaviour</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// Start is called before the first frame update</span></span><br><span class="line">    <span class="keyword">private</span> Type m_type = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Awake</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        m_type = <span class="keyword">this</span>.GetType();</span><br><span class="line">        Debug.Log(<span class="string">$"<span class="subst">&#123;m_type.Name&#125;</span> awake"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">OnEnable</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Debug.Log(<span class="string">$"<span class="subst">&#123;m_type.Name&#125;</span> on enable"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">TesterC1</span> : <span class="title">MonoBehaviour</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> Type m_type = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Awake</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        m_type = <span class="keyword">this</span>.GetType();</span><br><span class="line">        Debug.Log(<span class="string">$"<span class="subst">&#123;m_type.Name&#125;</span> awake"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">OnEnable</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Debug.Log(<span class="string">$"<span class="subst">&#123;m_type.Name&#125;</span> on enable"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>都整上一样的内容，A和C绑在物体tester01上，B绑在物体tester02上。</p>
-<img src="/2020/06/22/20200622-awake-enable-order/20200622-pic002.png" class="" title="split">
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/20/20200620-unity-obj-null-check/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="2C2C2C2">
-      <meta itemprop="description" content="随便记录一些东西">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FishPlayer">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/06/20/20200620-unity-obj-null-check/" class="post-title-link" itemprop="url">UnityObject 空引用检查小测试</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-06-20 12:32:19" itemprop="dateCreated datePublished" datetime="2020-06-20T12:32:19+08:00">2020-06-20</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-06-23 00:07:15" itemprop="dateModified" datetime="2020-06-23T00:07:15+08:00">2020-06-23</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Unity/" itemprop="url" rel="index"><span itemprop="name">Unity</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <blockquote>
-<p>Classes deriving from Unity. Object inherit equality operators that change the behaviour of the == and != operators.<br>While these operators will perform standard . NET reference equality, if comparing one side to null, these operators will call native code to check if the underlying native engine object is still alive. </p>
-</blockquote>
-<p>这段解释来自Rider的提示：<br><a href="https://github.com/JetBrains/resharper-unity/wiki/Avoid-null-comparisons-against-UnityEngine.Object-subclasses" target="_blank" rel="noopener">https://github.com/JetBrains/resharper-unity/wiki/Avoid-null-comparisons-against-UnityEngine.Object-subclasses</a></p>
-<p>UnityEngine 底层是C++写的，所以说，其实我们对UnityObject的空引用检查都会再深入到里面C++那一层去再检查，这个检查是比较消耗的。<br>之前曾经遇到因为使用了 ?. 语法糖而导致的 this 指针为null的奇妙bug，大概也是因为这个原因。</p>
-<p>现在的公司是做手游的，大家对性能都比较看重，不过我也真的好奇这个检查到底有多消耗，决定跑一跑试试。</p>
-<h1 id="Test-Case"><a href="#Test-Case" class="headerlink" title="Test Case"></a>Test Case</h1><p>因为是做手游，随意干脆就在手机上测试好了。<br>大概是这样的环境:<br>Unity 2019.4 LTS</p>
-<p>移动设备这边是<br>Google Pixel Verzion(俺穷买美版)<br>Android 9 (已获取Root权限)</p>
-<p>TestCase 这边其实我都是瞎弄的。</p>
-<p>分别进行三种测试：<br>Unity Object 的空引用检查；<br>POCO Object 的空引用检查；<br>bool 的直接检查；(因为我觉得这是一个代替Unity Object空引用检查的一个方法</p>
-<p>每一种检查都有检查到true和false的两种情况，并循环跑多次。</p>
-<p>然后，上代码！</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">TempCheckTest</span></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">TempObjA</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">int</span> m_tempNum = <span class="number">56</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">NullCheckTester</span> : <span class="title">MonoBehaviour</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// unity obj null check</span></span><br><span class="line">        <span class="keyword">private</span> Transform m_emptyTransform = <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">private</span> Transform m_selfTransform = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// poco obj null check</span></span><br><span class="line">        <span class="keyword">private</span> TempObjA m_emptyObjA = <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">private</span> TempObjA m_objA = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// bool check</span></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">bool</span> m_boolTrue = <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">bool</span> m_boolFalse = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">        [<span class="meta">Header(<span class="meta-string">"test"</span>)</span>]</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">int</span> m_checkTimes = <span class="number">100000</span>;</span><br><span class="line"></span><br><span class="line">        [<span class="meta">Header(<span class="meta-string">"UI side"</span>)</span>]</span><br><span class="line">        <span class="keyword">public</span> UnityEngine.UI.Text m_outPutText = <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">public</span> UnityEngine.UI.Button m_doUnityObjTestButton = <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">public</span> UnityEngine.UI.Button m_doPocoObjTestButton = <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">public</span> UnityEngine.UI.Button m_doBoolTestButton = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> UnityEngine.UI.InputField m_inputField = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">        [<span class="meta">Button(<span class="meta-string">"init awake"</span>)</span>]</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">InitTester</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            m_emptyTransform = <span class="literal">null</span>;</span><br><span class="line">            m_selfTransform = <span class="keyword">this</span>.transform;</span><br><span class="line"></span><br><span class="line">            m_emptyObjA = <span class="literal">null</span>;</span><br><span class="line">            m_objA = <span class="keyword">new</span> TempObjA();</span><br><span class="line"></span><br><span class="line">            m_boolTrue = <span class="literal">true</span>;</span><br><span class="line">            m_boolFalse = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">            m_outPutText.text = <span class="keyword">string</span>.Empty;</span><br><span class="line"></span><br><span class="line">            m_doUnityObjTestButton.onClick.RemoveAllListeners();</span><br><span class="line">            m_doPocoObjTestButton.onClick.RemoveAllListeners();</span><br><span class="line">            m_doBoolTestButton.onClick.RemoveAllListeners();</span><br><span class="line"></span><br><span class="line">            m_doUnityObjTestButton.onClick.AddListener(DoUnityObjNullCheckTest);</span><br><span class="line">            m_doPocoObjTestButton.onClick.AddListener(DoPOCOObjNullCheckTest);</span><br><span class="line">            m_doBoolTestButton.onClick.AddListener(DoBoolObjNullCheckTest);</span><br><span class="line"></span><br><span class="line">            m_inputField.onValueChanged.RemoveAllListeners();</span><br><span class="line">            m_inputField.onValueChanged.AddListener(OnInputNumberChanged);</span><br><span class="line">            m_checkTimes = <span class="number">100000</span>;</span><br><span class="line">            m_inputField.text = m_checkTimes.ToString();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        [<span class="meta">Button(<span class="meta-string">"do unity.object null check test"</span>)</span>]</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">DoUnityObjNullCheckTest</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            System.Diagnostics.Stopwatch watcher = <span class="keyword">new</span> System.Diagnostics.Stopwatch();</span><br><span class="line">            watcher.Start();</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; m_checkTimes; i++)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (<span class="literal">null</span> == m_emptyTransform) &#123;&#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (<span class="literal">null</span> == m_selfTransform) &#123;&#125;</span><br><span class="line">            &#125;</span><br><span class="line">            watcher.Stop();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">string</span> outPut = <span class="string">$"do unity.object null check test 2*<span class="subst">&#123;m_checkTimes&#125;</span> cost <span class="subst">&#123;watcher.ElapsedMilliseconds&#125;</span>ms"</span>;</span><br><span class="line">            m_outPutText.text = outPut;</span><br><span class="line">            Debug.Log(outPut);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        [<span class="meta">Button(<span class="meta-string">"do poco object null check test"</span>)</span>]</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">DoPOCOObjNullCheckTest</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            System.Diagnostics.Stopwatch watcher = <span class="keyword">new</span> System.Diagnostics.Stopwatch();</span><br><span class="line">            watcher.Start();</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; m_checkTimes; i++)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (<span class="literal">null</span> == m_emptyObjA) &#123;&#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (<span class="literal">null</span> == m_objA) &#123;&#125;</span><br><span class="line">            &#125;</span><br><span class="line">            watcher.Stop();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">string</span> outPut = <span class="string">$"do poco object null check test 2*<span class="subst">&#123;m_checkTimes&#125;</span> cost <span class="subst">&#123;watcher.ElapsedMilliseconds&#125;</span>ms"</span>;</span><br><span class="line">            m_outPutText.text = outPut;</span><br><span class="line">            Debug.Log(outPut);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        [<span class="meta">Button(<span class="meta-string">"do bool check test"</span>)</span>]</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">DoBoolObjNullCheckTest</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            System.Diagnostics.Stopwatch watcher = <span class="keyword">new</span> System.Diagnostics.Stopwatch();</span><br><span class="line">            watcher.Start();</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; m_checkTimes; i++)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (m_boolFalse) &#123;&#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (m_boolTrue) &#123;&#125;</span><br><span class="line">            &#125;</span><br><span class="line">            watcher.Stop();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">string</span> outPut = <span class="string">$"do bool check test 2*<span class="subst">&#123;m_checkTimes&#125;</span> cost <span class="subst">&#123;watcher.ElapsedMilliseconds&#125;</span>ms"</span>;</span><br><span class="line">            m_outPutText.text = outPut;</span><br><span class="line">            Debug.Log(outPut);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">OnInputNumberChanged</span>(<span class="params"><span class="keyword">string</span> arg0</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">int</span> result = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">if</span> (!Int32.TryParse(arg0, <span class="keyword">out</span> result))</span><br><span class="line">                result = Int32.MaxValue;</span><br><span class="line"></span><br><span class="line">            m_checkTimes = result;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">#<span class="meta-keyword">region</span> mono method</span></span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Reset</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            InitTester();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Awake</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            InitTester();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">OnEnable</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">this</span>.enabled = <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">#<span class="meta-keyword">endregion</span></span></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="Test-Result"><a href="#Test-Result" class="headerlink" title="Test Result"></a>Test Result</h1><img src="/2020/06/20/20200620-unity-obj-null-check/20200620-pic001.png" class="" title="split">
-<p>分别进行10w次和100w次测试看看结果。</p>
-<p>10w次:<br>Unity Object null check 4~7ms<br>POCO Object null check 0ms<br>bool check 0ms</p>
-<p>100w次:<br>Unity Object null check 45~60ms<br>POCO Object null check 3~4ms<br>bool check 2ms</p>
-<p>当检测数量非常多的时候，Unity Object 空引用检查的性能消耗比其他两个大了很多很多。现在的项目里大部分东西其实都是POCO的。<br>似乎把UnityObject Destroy之后再手动把变量置空是个好习惯（</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1107,7 +1073,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-count">19</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
