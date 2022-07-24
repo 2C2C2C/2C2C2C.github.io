@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":true,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":5,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="随便记录一些东西">
@@ -106,7 +106,6 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger">
-        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -121,53 +120,16 @@
     <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
-        <li class="menu-item menu-item-tags">
-
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
-
-  </li>
-        <li class="menu-item menu-item-categories">
-
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
-
-  </li>
         <li class="menu-item menu-item-archives">
 
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
-      <li class="menu-item menu-item-search">
-        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
-        </a>
-      </li>
   </ul>
 </nav>
 
 
 
-  <div class="search-pop-overlay">
-    <div class="popup search-popup">
-        <div class="search-header">
-  <span class="search-icon">
-    <i class="fa fa-search"></i>
-  </span>
-  <div class="search-input-container">
-    <input autocomplete="off" autocapitalize="off"
-           placeholder="搜索..." spellcheck="false"
-           type="search" class="search-input">
-  </div>
-  <span class="popup-btn-close">
-    <i class="fa fa-times-circle"></i>
-  </span>
-</div>
-<div id="search-result">
-  <div id="no-result">
-    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
-  </div>
-</div>
-
-    </div>
-  </div>
 
 </div>
     </header>
@@ -186,6 +148,320 @@
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/04/23/20210423-gitignore-locally/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="2C2C2C2">
+      <meta itemprop="description" content="随便记录一些东西">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FishPlayer">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/04/23/20210423-gitignore-locally/" class="post-title-link" itemprop="url">Git 本地忽略文件</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-04-23 21:33:14 / 修改时间：21:48:20" itemprop="dateCreated datePublished" datetime="2021-04-23T21:33:14+08:00">2021-04-23</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Git/" itemprop="url" rel="index"><span itemprop="name">Git</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>最近在拼UI，需要建立几个临时的场景在本地。自然不能上传，但是又想手贱 git add . 还是决定在本地手动设置忽略一些文件。</p>
+<h1 id="设置Git-exclude"><a href="#设置Git-exclude" class="headerlink" title="设置Git exclude"></a>设置Git exclude</h1><p>首先需要找到这个文件。</p>
+<p>exclude 文件在 如图的目录中</p>
+<img src="/2021/04/23/20210423-gitignore-locally/20210423-gitignore-locally-pic01.png" class="" title="split">
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\.git\info\</span><br></pre></td></tr></table></figure>
+<p>找到以后以文本文件的形式打开，用法和 gitignore 差不多，我还么有深入研究，但我差不多这样用。</p>
+<img src="/2021/04/23/20210423-gitignore-locally/20210423-gitignore-locally-pic02.png" class="" title="split">
+<p>把我需要忽略的本地目录填上去就可以了。<br>顺便一说，若使用这个方式忽略了某个目录，当把已经进行版本控制的文件丢进这个目录里时，Git中会生成一个delete的改动。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/04/08/20210408-edit-commit-msg/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="2C2C2C2">
+      <meta itemprop="description" content="随便记录一些东西">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FishPlayer">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/04/08/20210408-edit-commit-msg/" class="post-title-link" itemprop="url">修改commit消息</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-04-08 20:53:35 / 修改时间：21:38:25" itemprop="dateCreated datePublished" datetime="2021-04-08T20:53:35+08:00">2021-04-08</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Git/" itemprop="url" rel="index"><span itemprop="name">Git</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>前几天打游戏太疯了，上班的时候脑子都不清醒，commit的时候输错了东西，push的时候被block了才发现。<br>结果还因为不会改commit消息，还错误地操作使得工作全没了。</p>
+<h1 id="修改当前最新的一条commit消息"><a href="#修改当前最新的一条commit消息" class="headerlink" title="修改当前最新的一条commit消息"></a>修改当前最新的一条commit消息</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># 修改当前最新的一条commit消息</span></span><br><span class="line">git commit --amend</span><br></pre></td></tr></table></figure>
+<p>非常简单，一个命令就搞定了。然后就可以正常push了。</p>
+<p>如果是需要修改已经推送到远端的commit，可以再这个命令之后尝试push —force。<br>不过我觉得这样的情景非常之少，都已经PUSH上去了为啥还需要改啊:(</p>
+<h1 id="修改往前第N条commit消息-还未推送到远端的"><a href="#修改往前第N条commit消息-还未推送到远端的" class="headerlink" title="修改往前第N条commit消息(还未推送到远端的)"></a>修改往前第N条commit消息(还未推送到远端的)</h1><img src="/2021/04/08/20210408-edit-commit-msg/20210408-edit-commit-msg-01.png" class="" title="split">
+<p>如图，我需要修改图中选定的那一个commit。从我当前位置数，是第3个commit。<br>则X就应该是3。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">git rebase -i HEAD~X</span><br><span class="line"><span class="comment"># X is the number of commits to go back</span></span><br><span class="line"><span class="comment"># Move to the line of your commit, change pick into edit,</span></span><br><span class="line"><span class="comment"># then change your commit message:</span></span><br><span class="line">git commit --amend</span><br><span class="line"><span class="comment"># Finish the rebase with:</span></span><br><span class="line">git rebase --<span class="built_in">continue</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># :D</span></span><br><span class="line">git push</span><br></pre></td></tr></table></figure>
+<p>执行rebase后，会让选择需要对哪条commit进行什么样的操作。</p>
+<img src="/2021/04/08/20210408-edit-commit-msg/20210408-edit-commit-msg-02.png" class="" title="split">
+<p>需要编辑消息则就把pick改成edit，然后保存，退出文本编辑。就可以使用 commit —amend 来修改消息了，然后再执行下一条命令完成rebase。<br>然后就是快乐push。</p>
+<p>其实也可以同时edit多条commit。这样，在使用　commit —amend　时会从最老的commit开始编辑。完成一条的编辑就需要 rebase —continue。<br>之后才能继续编辑下一条。</p>
+<img src="/2021/04/08/20210408-edit-commit-msg/20210408-edit-commit-msg-03.png" class="" title="split">
+<p>如果修改了曾经push过的commit，就需要push —force。</p>
+<img src="/2021/04/08/20210408-edit-commit-msg/20210408-edit-commit-msg-04.png" class="" title="split">
+<img src="/2021/04/08/20210408-edit-commit-msg/20210408-edit-commit-msg-05.png" class="" title="split">
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/20/20201220-delete-douban-post/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="2C2C2C2">
+      <meta itemprop="description" content="随便记录一些东西">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FishPlayer">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/12/20/20201220-delete-douban-post/" class="post-title-link" itemprop="url">JS脚本删除豆瓣广播</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-12-20 22:23:02" itemprop="dateCreated datePublished" datetime="2020-12-20T22:23:02+08:00">2020-12-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-12-21 01:03:51" itemprop="dateModified" datetime="2020-12-21T01:03:51+08:00">2020-12-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="JS脚本删除豆瓣广播"><a href="#JS脚本删除豆瓣广播" class="headerlink" title="JS脚本删除豆瓣广播"></a>JS脚本删除豆瓣广播</h1><p>很久以前为了清理自己SPAM在微博的东西，找过批量删除微博的脚本。现在也想顺手清理一下豆瓣的，不过没找到比较好用的。<br>不过完全不会WEB开发，也只能自己拼凑一下。</p>
+<p>直接上代码吧</p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>豆瓣有保护机制的，如果在短时间内疯狂发送请求，会在一定时间内被BAN IP（亲身经历）。<br>所以我们可以试着用随机等待的方式来避免这个问题。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// I steal this from somewhere</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sleepWait</span>(<span class="params">waitMsec</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> startMsec = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">    <span class="keyword">while</span> (<span class="keyword">new</span> <span class="built_in">Date</span>() - startMsec &lt; waitMsec);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">execTest</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> step = <span class="number">0</span>; step &lt; <span class="number">10</span>; step++) &#123;</span><br><span class="line">        location.reload();</span><br><span class="line">        <span class="keyword">var</span> waitDuration = (<span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * <span class="number">10</span>) + <span class="number">1</span>) * <span class="number">10000</span>;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'test log, next exec in'</span> + waitDuration + <span class="string">'ms'</span>);</span><br><span class="line">        sleepWait(waitDuration);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>删除的代码是我白嫖来的，在 我的广播 的页面里执行这个函数大概可以删除当前页面中的所有广播。<br>不过转发好像不一定能删除，之后还得找别的方法。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// I steal this from somewhere</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">execDelTest</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> a = <span class="function"><span class="keyword">function</span>(<span class="params">c</span>) </span>&#123; $.post_withck(<span class="string">"/j/status/delete"</span>, &#123; <span class="attr">sid</span>: c &#125;) &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> b = <span class="function"><span class="keyword">function</span>(<span class="params">c</span>) </span>&#123; $.post_withck(<span class="string">"/j/status/unreshare"</span>, &#123; <span class="attr">sid</span>: c &#125;) &#125;;</span><br><span class="line"></span><br><span class="line">    $(<span class="string">"a[data-reshare-id]"</span>).each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        b($(<span class="keyword">this</span>).attr(<span class="string">"data-reshare-id"</span>));</span><br><span class="line">        $(<span class="keyword">this</span>).hide()</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    $(<span class="string">"div[data-sid]"</span>).each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        a($(<span class="keyword">this</span>).attr(<span class="string">"data-sid"</span>));</span><br><span class="line">        $(<span class="keyword">this</span>).hide()</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>完整代码如下，不过真的怕被BAN IP 可以把随机等待的时间设定得长一些</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// I steal this from somewhere</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sleepWait</span>(<span class="params">waitMsec</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> startMsec = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">    <span class="keyword">while</span> (<span class="keyword">new</span> <span class="built_in">Date</span>() - startMsec &lt; waitMsec);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// I steal this from somewhere</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">execDelTest</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> a = <span class="function"><span class="keyword">function</span>(<span class="params">c</span>) </span>&#123; $.post_withck(<span class="string">"/j/status/delete"</span>, &#123; <span class="attr">sid</span>: c &#125;) &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> b = <span class="function"><span class="keyword">function</span>(<span class="params">c</span>) </span>&#123; $.post_withck(<span class="string">"/j/status/unreshare"</span>, &#123; <span class="attr">sid</span>: c &#125;) &#125;;</span><br><span class="line"></span><br><span class="line">    $(<span class="string">"a[data-reshare-id]"</span>).each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        b($(<span class="keyword">this</span>).attr(<span class="string">"data-reshare-id"</span>));</span><br><span class="line">        $(<span class="keyword">this</span>).hide()</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    $(<span class="string">"div[data-sid]"</span>).each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        a($(<span class="keyword">this</span>).attr(<span class="string">"data-sid"</span>));</span><br><span class="line">        $(<span class="keyword">this</span>).hide()</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">execDelLoop</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> step = <span class="number">0</span>; step &lt; <span class="number">10</span>; step++) &#123;</span><br><span class="line">        location.reload();</span><br><span class="line">        <span class="keyword">var</span> waitDuration = (<span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * <span class="number">10</span>) + <span class="number">1</span>) * <span class="number">10000</span>;</span><br><span class="line">        sleepWait(waitDuration);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// finally execute deletion :D</span></span><br><span class="line">execDelLoop();</span><br></pre></td></tr></table></figure>
+<h2 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h2><p>感觉web这边可以做蛮多方便日常生活用的脚本，改天真的要开始学一学才行。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/11/21/20201121-find-asset-reference/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="2C2C2C2">
+      <meta itemprop="description" content="随便记录一些东西">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FishPlayer">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/11/21/20201121-find-asset-reference/" class="post-title-link" itemprop="url">查询Unity Object在工程中的引用</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-11-21 13:59:08 / 修改时间：15:55:10" itemprop="dateCreated datePublished" datetime="2020-11-21T13:59:08+08:00">2020-11-21</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/UnityEditor/" itemprop="url" rel="index"><span itemprop="name">UnityEditor</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>上周把bug修得差不多了，这周稍微有点空闲时间了，就把以前想做的一些东西大概看了一下。<br>之前因为清理文件没有及时清除相关引用，结果项目跑起来的时候有各种沙雕报错。只能再一个个物体检查，好麻烦。<br>于是想试试能不能查到某个物体被其它哪些物体引用。</p>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>好在 Unity提供了这个函数 AssetDatabase.GetDependencies() ,可以获得某个 asset 的依赖项。<br><a href="https://docs.unity3d.com/ScriptReference/AssetDatabase.GetDependencies.html" target="_blank" rel="noopener">AssetDatabase.GetDependencies()</a></p>
+<p>假设我们需要知道物体 A 被哪些其他的物体引用。那就遍历所有物体的依赖项，把依赖项中包含物体 A 的物体筛选出来即可。</p>
+<h1 id="上代码"><a href="#上代码" class="headerlink" title="上代码"></a>上代码</h1><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// to find the reference of the target unity object</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">FindReferencesInProject</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">bool</span> <span class="title">TryFindReferenceOfUobject</span>(<span class="params">UnityEngine.Object uobject</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">bool</span> result = <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">string</span> path = AssetDatabase.GetAssetPath(uobject);</span><br><span class="line">        <span class="keyword">if</span> (AssetDatabase.IsValidFolder(path))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// dun do it for a folder :)</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        FindObjectReference(uobject);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// why the order is like this?</span></span><br><span class="line">    [<span class="meta">MenuItem(<span class="meta-string">"Assets/Find References In Project"</span>)</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">FindSelectedObjectReferences</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="literal">null</span> != Selection.activeObject)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">string</span> path = AssetDatabase.GetAssetPath(Selection.activeObject);</span><br><span class="line">            <span class="keyword">if</span> (!AssetDatabase.IsValidFolder(path))</span><br><span class="line">            &#123;</span><br><span class="line">                FindObjectReference(Selection.activeObject);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">FindObjectReference</span>(<span class="params">UnityEngine.Object uobject</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        System.Diagnostics.Stopwatch stopWatcher = <span class="keyword">new</span> System.Diagnostics.Stopwatch();</span><br><span class="line">        stopWatcher.Start();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">string</span> targetPath = AssetDatabase.GetAssetPath(uobject);</span><br><span class="line">        List&lt;<span class="keyword">string</span>&gt; referencesPaths = <span class="keyword">new</span> List&lt;<span class="keyword">string</span>&gt;();</span><br><span class="line">        Dictionary&lt;<span class="keyword">string</span>, List&lt;<span class="keyword">string</span>&gt;&gt; referenceCache = <span class="keyword">new</span> Dictionary&lt;<span class="keyword">string</span>, List&lt;<span class="keyword">string</span>&gt;&gt;();</span><br><span class="line">        <span class="keyword">string</span>[] assetGuids = AssetDatabase.FindAssets(<span class="string">""</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; assetGuids.Length; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">string</span> assetPath = AssetDatabase.GUIDToAssetPath(assetGuids[i]);</span><br><span class="line">            <span class="keyword">string</span>[] dependencies = AssetDatabase.GetDependencies(assetPath, <span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; dependencies.Length; j++)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (dependencies[j] == targetPath)</span><br><span class="line">                &#123;</span><br><span class="line">                    referencesPaths.Add(assetPath);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        FindReferencesInProjectEditor.OpenWindow();</span><br><span class="line">        FindReferencesInProjectEditor window = FindReferencesInProjectEditor.GetWindow();</span><br><span class="line">        window.SetPaths(referencesPaths.ToArray());</span><br><span class="line">        window.SetTargetUobject(uobject);</span><br><span class="line"></span><br><span class="line">        stopWatcher.Stop();</span><br><span class="line">        Debug.Log(<span class="string">$"search references for <span class="subst">&#123;uobject.name&#125;</span> cost <span class="subst">&#123;stopWatcher.ElapsedMilliseconds&#125;</span>ms"</span>);</span><br><span class="line"></span><br><span class="line">        referenceCache.Clear();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// a simple window to show the result, and also we can ping those result object :D</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">FindReferencesInProjectEditor</span> : <span class="title">EditorWindow</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> Rect m_viewportRect = <span class="keyword">default</span>;</span><br><span class="line">    <span class="keyword">private</span> Rect m_listRect = <span class="keyword">default</span>;</span><br><span class="line">    <span class="keyword">private</span> Rect m_bottomRect = <span class="keyword">default</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">float</span> m_scrollPosition = <span class="keyword">default</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">string</span>[] m_targetPaths = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">const</span> <span class="keyword">float</span> ELEMENT_HEIGHT = <span class="number">20.0f</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">const</span> <span class="keyword">float</span> ELEMENT_ICON_SIZE = <span class="number">20.0f</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">const</span> <span class="keyword">float</span> SCROLLER_WIDTH = <span class="number">15.0f</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">bool</span> m_hasGetGUIStyle = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> GUIStyle m_scrollerStyle = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">private</span> GUIStyle m_buttonElementStyle = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> UnityEngine.Object m_selectedUnityObject = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">private</span> System.Type m_uobjType = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">OpenWindow</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        FindReferencesInProjectEditor window = GetWindow&lt;FindReferencesInProjectEditor&gt;();</span><br><span class="line">        Texture2D icon = EditorGUIUtility.Load(<span class="string">"icons/UnityEditor.ConsoleWindow.png"</span>) <span class="keyword">as</span> Texture2D;</span><br><span class="line">        window.titleContent = <span class="keyword">new</span> GUIContent(<span class="string">"reference find result"</span>, icon);</span><br><span class="line">        Vector2 minSize = <span class="keyword">new</span> Vector2(<span class="number">500.0f</span>, <span class="number">300.0f</span>);</span><br><span class="line">        window.minSize = minSize;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> FindReferencesInProjectEditor <span class="title">GetWindow</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> GetWindow&lt;FindReferencesInProjectEditor&gt;();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">SetPaths</span>(<span class="params"><span class="keyword">in</span> <span class="keyword">string</span>[] paths</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        m_targetPaths = paths;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">SetTargetUobject</span>(<span class="params">UnityEngine.Object uobject</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        m_selectedUnityObject = uobject;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">DrawContent</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="comment">// only use half space of this shit window</span></span><br><span class="line">        m_viewportRect = <span class="keyword">new</span> Rect(<span class="number">0.0f</span>, <span class="number">0.0f</span>, <span class="keyword">this</span>.position.width - SCROLLER_WIDTH, <span class="keyword">this</span>.position.height * <span class="number">0.8f</span>);</span><br><span class="line">        m_listRect = <span class="keyword">new</span> Rect(<span class="number">0.0f</span>, <span class="number">0.0f</span>, m_viewportRect.width, m_viewportRect.height);</span><br><span class="line">        <span class="keyword">int</span> elementCount = m_targetPaths.Length;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (elementCount &lt; <span class="number">1</span>)</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">        GUI.BeginClip(m_listRect); <span class="comment">// to clip the overflow stuff</span></span><br><span class="line">        <span class="keyword">int</span> indexOffset = Mathf.FloorToInt(m_scrollPosition / ELEMENT_HEIGHT);</span><br><span class="line">        <span class="keyword">int</span> showCount = Mathf.CeilToInt(m_listRect.height / ELEMENT_HEIGHT);</span><br><span class="line">        showCount = showCount &gt; elementCount ? elementCount : showCount;</span><br><span class="line">        <span class="keyword">float</span> startPosY = (indexOffset * ELEMENT_HEIGHT) - m_scrollPosition;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; showCount; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            Rect elementRect = <span class="keyword">new</span> Rect(<span class="number">0</span>, <span class="number">0</span> + startPosY + i * ELEMENT_HEIGHT, m_listRect.width, ELEMENT_HEIGHT);</span><br><span class="line">            DrawElement(elementRect, indexOffset + i);</span><br><span class="line">        &#125;</span><br><span class="line">        GUI.EndClip();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">DrawElement</span>(<span class="params">Rect elementRect, <span class="keyword">int</span> dataIndex</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (dataIndex &lt; m_targetPaths.Length &amp;&amp; GUI.Button(elementRect, <span class="string">$"path <span class="subst">&#123;m_targetPaths[dataIndex]&#125;</span> ;"</span>, m_buttonElementStyle))</span><br><span class="line">        &#123;</span><br><span class="line">            Debug.Log(<span class="string">$"<span class="subst">&#123;m_targetPaths[dataIndex]&#125;</span>"</span>);</span><br><span class="line">            UnityEngine.Object targetObj = AssetDatabase.LoadAssetAtPath&lt;UnityEngine.Object&gt;(m_targetPaths[dataIndex]);</span><br><span class="line">            EditorGUIUtility.PingObject(targetObj);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">DrawScroller</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="comment">// draw scroller on the right correctly</span></span><br><span class="line">        <span class="keyword">int</span> elementCount = m_targetPaths.Length;</span><br><span class="line">        <span class="keyword">float</span> fullElementHeight = elementCount * ELEMENT_HEIGHT;</span><br><span class="line"></span><br><span class="line">        Rect scrollbarRect = <span class="keyword">new</span> Rect(m_viewportRect.x + m_viewportRect.width, m_viewportRect.y, SCROLLER_WIDTH, m_viewportRect.height);</span><br><span class="line">        m_scrollPosition = Mathf.Max(<span class="number">0</span>, GUI.VerticalScrollbar(scrollbarRect, m_scrollPosition, m_listRect.height, <span class="number">0</span>, Mathf.Max(fullElementHeight, m_listRect.height)));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> controlId = GUIUtility.GetControlID(FocusType.Passive);</span><br><span class="line">        <span class="keyword">float</span> scrollSensitivity = ELEMENT_HEIGHT;</span><br><span class="line">        <span class="keyword">float</span> maxScrollPos = (fullElementHeight &gt; m_listRect.height) ? (fullElementHeight - m_listRect.height) : <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (EventType.ScrollWheel == Event.current.GetTypeForControl(controlId))</span><br><span class="line">        &#123;</span><br><span class="line">            m_scrollPosition = Mathf.Clamp(m_scrollPosition + Event.current.delta.y * scrollSensitivity, <span class="number">0</span>, maxScrollPos);</span><br><span class="line">            Event.current.Use();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">GetGUIStyle</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="comment">// scroller</span></span><br><span class="line">        m_scrollerStyle = <span class="keyword">new</span> GUIStyle(GUI.skin.verticalScrollbar);</span><br><span class="line">        m_scrollerStyle.stretchWidth = <span class="literal">false</span>;</span><br><span class="line">        m_scrollerStyle.fixedWidth = SCROLLER_WIDTH;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// button element</span></span><br><span class="line">        m_buttonElementStyle = <span class="keyword">new</span> GUIStyle(GUI.skin.button);</span><br><span class="line">        m_buttonElementStyle.alignment = TextAnchor.MiddleLeft;</span><br><span class="line"></span><br><span class="line">        m_uobjType = <span class="keyword">typeof</span>(UnityEngine.Object);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">DrawBottom</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        m_bottomRect = <span class="keyword">new</span> Rect(<span class="number">0.0f</span>, <span class="keyword">this</span>.position.height * <span class="number">0.8f</span>, <span class="keyword">this</span>.position.width, <span class="keyword">this</span>.position.height * <span class="number">0.2f</span>);</span><br><span class="line">        Rect fieldRect = <span class="keyword">new</span> Rect(<span class="number">10.0f</span>, m_bottomRect.y + <span class="number">10.0f</span>, <span class="number">100.0f</span>, <span class="number">20.0f</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="literal">null</span> == m_uobjType)</span><br><span class="line">            m_uobjType = <span class="keyword">typeof</span>(UnityEngine.Object);</span><br><span class="line"></span><br><span class="line">        m_selectedUnityObject = EditorGUI.ObjectField(fieldRect, m_selectedUnityObject, m_uobjType, <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">        Rect buttonRect = <span class="keyword">new</span> Rect(<span class="number">150.0f</span>, m_bottomRect.y, <span class="number">200.0f</span>, <span class="number">40.0f</span>);</span><br><span class="line">        <span class="keyword">if</span> (GUI.Button(buttonRect, <span class="string">"try find reference"</span>))</span><br><span class="line">        &#123;</span><br><span class="line">            FindObjectReference();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">FindObjectReference</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="literal">null</span> == m_selectedUnityObject)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Clear();</span><br><span class="line">        FindReferencesInProject.TryFindReferenceOfUobject(m_selectedUnityObject);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Clear</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        m_targetPaths = System.Array.Empty&lt;<span class="keyword">string</span>&gt;();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">OnGUI</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (!m_hasGetGUIStyle)</span><br><span class="line">        &#123;</span><br><span class="line">            GetGUIStyle();</span><br><span class="line">            m_hasGetGUIStyle = <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        DrawContent();</span><br><span class="line">        DrawScroller();</span><br><span class="line">        DrawBottom();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<img src="/2020/11/21/20201121-find-asset-reference/20201121-pic001.png" class="" title="split">
+<img src="/2020/11/21/20201121-find-asset-reference/20201121-pic002.png" class="" title="split">
+<p>搜索结果我选择使用一个简单的 editor window 来显示。<br>同时还能填入新的目标物体再做一次搜索。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>最近都没有做编辑器这边的开发，感觉直接退回了起点。感觉Unity编辑器的文档没有想象中那么详细，很多时候反而没有问同事来得方便。可能该提高自己的英文水平了。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -697,336 +973,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/31/20200531-CloneUnityConsole2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="2C2C2C2">
-      <meta itemprop="description" content="随便记录一些东西">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FishPlayer">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/05/31/20200531-CloneUnityConsole2/" class="post-title-link" itemprop="url">摸一个简单的 Unity Log Console (2)</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2020-05-31 18:50:56 / 修改时间：19:02:34" itemprop="dateCreated datePublished" datetime="2020-05-31T18:50:56+08:00">2020-05-31</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/UnityEditor/" itemprop="url" rel="index"><span itemprop="name">UnityEditor</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>上一期我们做完了基本的面板绘制，现在我们可以往里面添加简单的内容了。</p>
-<h1 id="定义显示单位"><a href="#定义显示单位" class="headerlink" title="定义显示单位"></a>定义显示单位</h1><p>既然我们要显示Log，那就定义一些数据结构用于存储这些Log。因为这些东西在我们的console中只需要显示就行了，我们只需要定义只读的数据就可以，或许还能提高性能。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">LogItem</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">bool</span> IsSelected &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">readonly</span> <span class="keyword">string</span> LogInfo = <span class="keyword">string</span>.Empty; <span class="comment">// Log简要信息</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">readonly</span> <span class="keyword">string</span> LogMessage = <span class="keyword">string</span>.Empty; <span class="comment">// Log 调用栈！</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">readonly</span> LogType GetLogType = LogType.Log;</span><br><span class="line">	</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LogItem</span>(<span class="params"><span class="keyword">bool</span> isSelected, <span class="keyword">string</span> info, <span class="keyword">string</span> message, LogType type</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        IsSelected = isSelected;</span><br><span class="line">        <span class="comment">// 记得加上时间！！！</span></span><br><span class="line">        LogInfo = <span class="keyword">string</span>.Format(<span class="string">"[&#123;0&#125;] &#123;1&#125;"</span>, System.DateTime.Now.ToLongTimeString(), info);</span><br><span class="line">        LogMessage = message;</span><br><span class="line">        GetLogType = type;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">TempConsoleWindow</span> : <span class="title">EditorWindow</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">LogMessageReceived</span>(<span class="params"><span class="keyword">string</span> condition, <span class="keyword">string</span> stackTrace, LogType type</span>)</span></span><br><span class="line"><span class="function"></span>	&#123;</span><br><span class="line">            LogItem log = <span class="keyword">new</span> LogItem(<span class="literal">false</span>, condition, stackTrace, type);</span><br><span class="line">            m_logItems.Add(log);</span><br><span class="line">            <span class="keyword">switch</span> (type)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">case</span> LogType.Error:</span><br><span class="line">                    m_errorLogCount++;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> LogType.Assert:</span><br><span class="line">                    m_errorLogCount++;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> LogType.Warning:</span><br><span class="line">                    m_warningLogCount++;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> LogType.Log:</span><br><span class="line">                    m_normalLogCount++;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">case</span> LogType.Exception:</span><br><span class="line">                    m_errorLogCount++;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">default</span>:</span><br><span class="line">                    m_errorLogCount++;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 主动刷新，因为当此窗口没有焦点时似乎无法走 OnGUI() 刷新。</span></span><br><span class="line">            Repaint();</span><br><span class="line">            <span class="comment">//GUI.changed = true;</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">OnEnable</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>	&#123;</span><br><span class="line">		<span class="comment">// ....</span></span><br><span class="line">		<span class="comment">// 监听此事件，当Debug.Log("")被调用的时候就会响应</span></span><br><span class="line">		Application.logMessageReceived += LogMessageReceived;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">OnDestroy</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>	&#123;</span><br><span class="line">		<span class="comment">// ....</span></span><br><span class="line">		Application.logMessageReceived -= LogMessageReceived;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="在上部面板显示Log"><a href="#在上部面板显示Log" class="headerlink" title="在上部面板显示Log"></a>在上部面板显示Log</h1><p>像原本Unity Console一样，每一条Log以一个方条item的形式显示在上半部分面板。<br>我们先把这个item画出来。<br>m_selectedLogItem 是我们选中的 LogItem。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">bool</span> <span class="title">DrawLogBox</span>(<span class="params"><span class="keyword">in</span> <span class="keyword">string</span> content, LogType logType, <span class="keyword">bool</span> isOdd, <span class="keyword">bool</span> isSelected</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (isSelected)</span><br><span class="line">    &#123;</span><br><span class="line">        m_boxItemStyle.normal.background = m_boxBgSelected;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (isOdd)</span><br><span class="line">        &#123;</span><br><span class="line">            m_boxItemStyle.normal.background = m_boxBgOdd;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            m_boxItemStyle.normal.background = m_boxBgEven;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">switch</span> (logType)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">case</span> LogType.Error:</span><br><span class="line">            m_boxIcon = m_errorIcon;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> LogType.Assert:</span><br><span class="line">            m_boxIcon = m_errorIcon;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> LogType.Warning:</span><br><span class="line">            m_boxIcon = m_warningIcon;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> LogType.Log:</span><br><span class="line">            m_boxIcon = m_infoIcon;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> LogType.Exception:</span><br><span class="line">            m_boxIcon = m_errorIcon;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 这个按钮是因为这条box item是可以被点击选择的！！！</span></span><br><span class="line">    <span class="keyword">return</span> GUILayout.Button(<span class="keyword">new</span> GUIContent(content, m_boxIcon), m_boxItemStyle, GUILayout.ExpandWidth(<span class="literal">true</span>), GUILayout.Height(<span class="number">30.0f</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">DrawUpperPanel</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    m_upperPanel = <span class="keyword">new</span> Rect(<span class="number">0</span>, MENU_BAR_HEIGHT, <span class="keyword">this</span>.position.width, (<span class="keyword">this</span>.position.height - MENU_BAR_HEIGHT) * m_upperSizeRatio);</span><br><span class="line">    GUILayout.BeginArea(m_upperPanel, m_panelStyle);</span><br><span class="line">    GUILayout.Label(<span class="string">"Log"</span>, m_panelLabelStyle);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在scrollview里填充log，unity</span></span><br><span class="line">    m_upperPanelScroll = GUILayout.BeginScrollView(m_upperPanelScroll);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; m_logItems.Count; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (m_logTypeForUnshow.Contains(m_logItems[i].GetLogType))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 画的时候，顺便接受item的点击的结果</span></span><br><span class="line">        <span class="keyword">if</span> (DrawLogBox(m_logItems[i].LogInfo, m_logItems[i].GetLogType, i % <span class="number">2</span> == <span class="number">0</span>, m_logItems[i].IsSelected))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="literal">null</span> != m_selectedLogItem)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (m_logItems[i] == m_selectedLogItem)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="comment">// click a some one, open code</span></span><br><span class="line">                    <span class="comment">// JumpToCurrentLogPos(); // 跳转到你点击的Log的顶部的代码文件（如果可以</span></span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                &#123;</span><br><span class="line">                    m_selectedLogItem.IsSelected = <span class="literal">false</span>;</span><br><span class="line">                    m_selectedLogItem = m_logItems[i];</span><br><span class="line">                    m_selectedLogItem.IsSelected = <span class="literal">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                m_selectedLogItem = m_logItems[i];</span><br><span class="line">                m_selectedLogItem.IsSelected = <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 准备刷新</span></span><br><span class="line">            GUI.changed = <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    GUILayout.EndScrollView();</span><br><span class="line">    GUILayout.EndArea();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">OnGUI</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// .....</span></span><br><span class="line">    <span class="keyword">if</span> (GUI.changed)</span><br><span class="line">    &#123;</span><br><span class="line">        Repaint();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="显示Log详情以及调用栈"><a href="#显示Log详情以及调用栈" class="headerlink" title="显示Log详情以及调用栈"></a>显示Log详情以及调用栈</h1><p>由于我脑子不好使，我不知道如何完美复刻Unity Console的详情，Unity自带Console中显示的代码链接既可以复制也可以点击跳转，我只做了简单的跳转。如果有比较熟悉编辑器开发的朋友，可以提供修改的方法。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">DrawLowerPanel</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">float</span> yPos = PanelGroupHeight * m_upperSizeRatio + MENU_BAR_HEIGHT + RESIZER_HEIGHT;</span><br><span class="line">    m_lowerPanel = <span class="keyword">new</span> Rect(<span class="number">0</span>, yPos, <span class="keyword">this</span>.position.width, PanelGroupHeight * (<span class="number">1.0f</span> - m_upperSizeRatio));</span><br><span class="line">    GUILayout.BeginArea(m_lowerPanel, m_panelStyle);</span><br><span class="line">    GUILayout.Label(<span class="string">"Log Detail"</span>, m_panelLabelStyle);</span><br><span class="line"></span><br><span class="line">    m_lowerPanelScroll = GUILayout.BeginScrollView(m_lowerPanelScroll);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">string</span> logDetail = <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">string</span>[] logDetailMutiLine = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// TODO : code clean here</span></span><br><span class="line">    <span class="keyword">string</span> pathline = <span class="string">""</span>;</span><br><span class="line">    <span class="keyword">string</span> tempCase = <span class="string">".cs:"</span>;</span><br><span class="line">    <span class="keyword">string</span> path = <span class="keyword">string</span>.Empty;</span><br><span class="line">    <span class="keyword">int</span> line = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> splitwa = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="literal">null</span> != m_selectedLogItem)</span><br><span class="line">    &#123;</span><br><span class="line">        logDetail = m_selectedLogItem.LogMessage;</span><br><span class="line">        GUILayout.TextArea(<span class="keyword">string</span>.Format(<span class="string">"&#123;0&#125;\n"</span>, m_selectedLogItem.LogInfo), m_textAreaStyle);</span><br><span class="line"></span><br><span class="line">        logDetailMutiLine = logDetail.Split(<span class="string">'\n'</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; logDetailMutiLine.Length; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// Regex match 'at xxx'</span></span><br><span class="line">            Match matches = Regex.Match(logDetailMutiLine[i], <span class="string">@"\(at (.+)\)"</span>, RegexOptions.Multiline);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (matches.Success)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">while</span> (matches.Success)</span><br><span class="line">                &#123;</span><br><span class="line">                    pathline = matches.Groups[<span class="number">1</span>].Value;</span><br><span class="line">                    <span class="keyword">if</span> (pathline.Contains(tempCase))</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="keyword">int</span> splitIndex = pathline.LastIndexOf(<span class="string">":"</span>);</span><br><span class="line">                        path = pathline.Substring(<span class="number">0</span>, splitIndex);</span><br><span class="line">                        line = Convert.ToInt32(pathline.Substring(splitIndex + <span class="number">1</span>));</span><br><span class="line">                        <span class="keyword">string</span> fullpath = Application.dataPath.Substring(<span class="number">0</span>, Application.dataPath.LastIndexOf(<span class="string">"Assets"</span>));</span><br><span class="line">                        fullpath = fullpath + path;</span><br><span class="line">                        splitwa = logDetailMutiLine[i].LastIndexOf(<span class="string">"("</span>);</span><br><span class="line">                        logDetailMutiLine[i] = logDetailMutiLine[i].Substring(<span class="number">0</span>, splitwa);</span><br><span class="line"></span><br><span class="line">                        GUILayout.BeginHorizontal();</span><br><span class="line">                        GUILayout.TextArea(<span class="keyword">string</span>.Format(<span class="string">" (at : &#123;0&#125;)\n"</span>, logDetailMutiLine[i]), m_textAreaStyle);</span><br><span class="line">                        <span class="keyword">if</span> (GUILayout.Button(<span class="keyword">string</span>.Format(<span class="string">" ( &#123;0&#125; )\n"</span>, pathline), m_labelButtonStyle))</span><br><span class="line">                        &#123;</span><br><span class="line">                            <span class="comment">// 打开文件的魔法</span></span><br><span class="line">                            UnityEditorInternal.InternalEditorUtility.OpenFileAtLineExternal(fullpath.Replace(<span class="string">'/'</span>, <span class="string">'\\'</span>), line);</span><br><span class="line">                        &#125;</span><br><span class="line">                        GUILayout.FlexibleSpace();</span><br><span class="line">                        GUILayout.EndHorizontal();</span><br><span class="line">                        <span class="keyword">break</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                GUILayout.TextArea(logDetailMutiLine[i], m_textAreaStyle);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    GUILayout.EndScrollView();</span><br><span class="line">    GUILayout.EndArea();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这边用了正则表达式去匹配去寻找代码文件，是从网上查到的，我用着还不太熟练。所以写得很乱，后续会在工程中更新干净些的版本。</p>
-<h1 id="完善菜单栏功能"><a href="#完善菜单栏功能" class="headerlink" title="完善菜单栏功能"></a>完善菜单栏功能</h1><p>既然我们能显示Log了，那就别忘了补上清除Log的功能。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ClearLogs</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="literal">null</span> != m_selectedLogItem)</span><br><span class="line">    &#123;</span><br><span class="line">        m_selectedLogItem.IsSelected = <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    m_selectedLogItem = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    m_normalLogCount = <span class="number">0</span>;</span><br><span class="line">    m_warningLogCount = <span class="number">0</span>;</span><br><span class="line">    m_errorLogCount = <span class="number">0</span>;</span><br><span class="line">    m_logItems.Clear();</span><br><span class="line">    GUI.changed = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">DrawMenuUpperBar</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// .....</span></span><br><span class="line">    <span class="keyword">if</span> (GUILayout.Button(<span class="keyword">new</span> GUIContent(<span class="string">"Clear"</span>), EditorStyles.toolbarButton, GUILayout.Width(<span class="number">40.0f</span>)))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 用于清空所有的 log</span></span><br><span class="line">        ClearLogs();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// .....</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这一期就到这里。感觉工具开发也有点搬砖，但是会用到各种各样的搬砖工具去搬运契合不同的砖，能接触到很多东西，还蛮有趣的。<br>下一期我会尝试把当前这个乞丐Log Console的功能都补齐。<br>代码有缺漏可以先参考工程。</p>
-<hr>
-<p>完整工程链接</p>
-<p><a href="https://github.com/2C2C2C/TempUnityLogConsoleClone" target="_blank" rel="noopener">https://github.com/2C2C2C/TempUnityLogConsoleClone</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/31/20200531-CloneUnityConsole1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="2C2C2C2">
-      <meta itemprop="description" content="随便记录一些东西">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FishPlayer">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/05/31/20200531-CloneUnityConsole1/" class="post-title-link" itemprop="url">摸一个简单的 Unity Log Console (1)</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-05-31 10:47:16" itemprop="dateCreated datePublished" datetime="2020-05-31T10:47:16+08:00">2020-05-31</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-06-05 23:08:44" itemprop="dateModified" datetime="2020-06-05T23:08:44+08:00">2020-06-05</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/UnityEditor/" itemprop="url" rel="index"><span itemprop="name">UnityEditor</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>本菜狗在上周领了一个做LogManager的任务。很高兴也很慌，毕竟从来没做过编辑器开发，于是面向搜索引擎编程开始辣，找了一些教程学着做，顺便分享一下。</p>
-<h1 id="需求分析（？"><a href="#需求分析（？" class="headerlink" title="需求分析（？"></a>需求分析（？</h1><p>组里对这个LogManager的要求是在Unity原来的Log功能上再加上根据标签和危险度(?)来筛选。<br>仔细想想还挺麻烦。需要筛选的话，那自然需要一个Console面板，似乎Unity原本的Console不方便扩展，索性跟着网上的教程重新做一个。</p>
-<h1 id="弹出窗口"><a href="#弹出窗口" class="headerlink" title="弹出窗口"></a>弹出窗口</h1><p>首先我们先把窗口弹出来。代码很简单。</p>
-<p>我们可以从Unity头顶的菜单栏中的Window中找到这个面板并打开。打开了是空白的，当然啦，因为还什么都没画上去。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">TempConsoleWindow</span> : <span class="title">EditorWindow</span></span><br><span class="line">&#123;</span><br><span class="line">	[<span class="meta">MenuItem(<span class="meta-string">"Window/Temp Console"</span>)</span>]</span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">OpenWindow</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>	&#123;</span><br><span class="line">		TempConsoleWindow window = GetWindow&lt;TempConsoleWindow&gt;();</span><br><span class="line">		GUIContent titleContent = <span class="keyword">new</span> GUIContent(<span class="string">"TempConsole"</span>, EditorGUIUtility.Load(<span class="string">"icons/UnityEditor.ConsoleWindow.png"</span>) <span class="keyword">as</span> Texture2D, <span class="string">"a clone sonsole"</span>);</span><br><span class="line">		window.titleContent = titleContent;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="分割区块"><a href="#分割区块" class="headerlink" title="分割区块"></a>分割区块</h1><img src="/2020/05/31/20200531-CloneUnityConsole1/20200531-Unity01.png" class="" title="split">
-<p>我们把原本的面板分成4块：1.菜单栏；2. Log区；3. 调整棒(上下移动调整区域大小)；4. 详情区。于是乎我们给这个4个区创建响应的变量为了方便绘制。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> Rect m_menuUpperBar = <span class="keyword">default</span>;</span><br><span class="line"><span class="keyword">private</span> Rect m_upperPanel = <span class="keyword">default</span>;</span><br><span class="line"><span class="keyword">private</span> Rect m_lowerPanel = <span class="keyword">default</span>;</span><br><span class="line"><span class="keyword">private</span> Rect m_resizer = <span class="keyword">default</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">readonly</span> <span class="keyword">float</span> MENU_BAR_HEIGHT = <span class="number">20.0f</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">float</span> m_upperSizeRatio = <span class="number">0.5f</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">readonly</span> <span class="keyword">float</span> RESIZER_HEIGHT = <span class="number">4.0f</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">float</span> PanelGroupHeight =&gt; position.height - MENU_BAR_HEIGHT;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">bool</span> m_isResizing = <span class="literal">false</span>;</span><br></pre></td></tr></table></figure>
-<h1 id="偷皮"><a href="#偷皮" class="headerlink" title="偷皮"></a>偷皮</h1><p>Unity的绘制GUI方法中可以填写风格参数，我们绘制四个区块的时候自然也需要为区块准备皮和文字颜色。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// log区风格以及log区的标题风格</span></span><br><span class="line"><span class="keyword">private</span> GUIStyle m_panelLabelStyle = <span class="keyword">default</span>;</span><br><span class="line"><span class="keyword">private</span> GUIStyle m_panelStyle = <span class="keyword">default</span>;</span><br><span class="line"><span class="comment">// 调整棒儿的风格</span></span><br><span class="line"><span class="keyword">private</span> GUIStyle m_resizerStyle = <span class="keyword">default</span>;</span><br><span class="line"><span class="comment">// box item 其实是在log区显示的每一个log item</span></span><br><span class="line"><span class="keyword">private</span> GUIStyle m_boxItemStyle = <span class="keyword">default</span>;</span><br><span class="line"><span class="comment">// 这是 log详情的文字风格</span></span><br><span class="line"><span class="keyword">private</span> GUIStyle m_textAreaStyle = <span class="keyword">default</span>;</span><br><span class="line"><span class="comment">// 这是一个无边框的按钮风格，为代码跳转准备</span></span><br><span class="line"><span class="keyword">private</span> GUIStyle m_labelButtonStyle = <span class="keyword">default</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 各种图标</span></span><br><span class="line"><span class="keyword">private</span> Texture2D m_infoIcon = <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">private</span> Texture2D m_infoIconSmall = <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">private</span> Texture2D m_warningIcon = <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">private</span> Texture2D m_warningIconSmall = <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">private</span> Texture2D m_errorIcon = <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">private</span> Texture2D m_errorIconSmall = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> Texture2D m_boxBgOdd = <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">private</span> Texture2D m_boxBgEven = <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">private</span> Texture2D m_boxBgSelected = <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">private</span> Texture2D m_boxIcon = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取各种皮</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">GetAssets</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    m_panelLabelStyle = <span class="keyword">new</span> GUIStyle();</span><br><span class="line">    m_panelLabelStyle.fixedHeight = <span class="number">30.0f</span>;</span><br><span class="line">    m_panelLabelStyle.richText = <span class="literal">true</span>;</span><br><span class="line">    m_panelLabelStyle.normal.textColor = Color.white;</span><br><span class="line">    m_panelLabelStyle.fontSize = <span class="number">20</span>;</span><br><span class="line"></span><br><span class="line">    m_infoIcon = EditorGUIUtility.Load(<span class="string">"icons/console.infoicon.png"</span>) <span class="keyword">as</span> Texture2D;</span><br><span class="line">    m_infoIconSmall = EditorGUIUtility.Load(<span class="string">"icons/console.infoicon.sml.png"</span>) <span class="keyword">as</span> Texture2D;</span><br><span class="line">    m_warningIcon = EditorGUIUtility.Load(<span class="string">"icons/console.warnicon.png"</span>) <span class="keyword">as</span> Texture2D;</span><br><span class="line">    m_warningIconSmall = EditorGUIUtility.Load(<span class="string">"icons/console.warnicon.sml.png"</span>) <span class="keyword">as</span> Texture2D;</span><br><span class="line">    m_errorIcon = EditorGUIUtility.Load(<span class="string">"icons/console.erroricon.png"</span>) <span class="keyword">as</span> Texture2D;</span><br><span class="line">    m_errorIconSmall = EditorGUIUtility.Load(<span class="string">"icons/console.erroricon.sml.png"</span>) <span class="keyword">as</span> Texture2D;</span><br><span class="line"></span><br><span class="line">    m_resizerStyle = <span class="keyword">new</span> GUIStyle();</span><br><span class="line"></span><br><span class="line">    m_panelStyle = <span class="keyword">new</span> GUIStyle();</span><br><span class="line">    m_panelStyle.normal.background = EditorGUIUtility.Load(<span class="string">"builtin skins/darkskin/images/projectbrowsericonareabg.png"</span>) <span class="keyword">as</span> Texture2D;</span><br><span class="line">    <span class="comment">// 这行是同事告诉我的，但是不知道为什么不管用，直接用会有空引用报错，要在GUI里用</span></span><br><span class="line">    <span class="comment">// m_panelStyle.normal.background = GUI.skin.window.normal.background; </span></span><br><span class="line"></span><br><span class="line">    m_boxItemStyle = <span class="keyword">new</span> GUIStyle();</span><br><span class="line">    m_boxItemStyle.normal.textColor = <span class="keyword">new</span> Color(<span class="number">0.7f</span>, <span class="number">0.7f</span>, <span class="number">0.7f</span>);</span><br><span class="line"></span><br><span class="line">    m_boxBgOdd = EditorGUIUtility.Load(<span class="string">"builtin skins/darkskin/images/cn entrybackodd.png"</span>) <span class="keyword">as</span> Texture2D;</span><br><span class="line">    m_boxBgEven = EditorGUIUtility.Load(<span class="string">"builtin skins/darkskin/images/cnentrybackeven.png"</span>) <span class="keyword">as</span> Texture2D;</span><br><span class="line">    m_boxBgSelected = EditorGUIUtility.Load(<span class="string">"builtin skins/darkskin/images/menuitemhover.png"</span>) <span class="keyword">as</span> Texture2D;</span><br><span class="line"></span><br><span class="line">    m_textAreaStyle = <span class="keyword">new</span> GUIStyle();</span><br><span class="line">    m_textAreaStyle.normal.textColor = <span class="keyword">new</span> Color(<span class="number">0.9f</span>, <span class="number">0.9f</span>, <span class="number">0.9f</span>);</span><br><span class="line">    m_textAreaStyle.normal.background = EditorGUIUtility.Load(<span class="string">"builtin skins/darkskin/images/projectbrowsericonareabg.png"</span>) <span class="keyword">as</span> Texture2D;</span><br><span class="line"></span><br><span class="line">    m_labelButtonStyle = <span class="keyword">new</span> GUIStyle();</span><br><span class="line">    m_labelButtonStyle.normal.textColor = Color.green;</span><br><span class="line">    m_labelButtonStyle.normal.background = m_textAreaStyle.normal.background;</span><br><span class="line">    m_labelButtonStyle.alignment = TextAnchor.MiddleLeft;</span><br><span class="line">    m_labelButtonStyle.stretchWidth = <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">var</span> b = m_labelButtonStyle.border;</span><br><span class="line">    b.left = <span class="number">0</span>;</span><br><span class="line">    b.right = <span class="number">0</span>;</span><br><span class="line">    b.top = <span class="number">0</span>;</span><br><span class="line">    b.bottom = <span class="number">0</span>;</span><br><span class="line">    m_labelButtonStyle.border = b;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">OnEnable</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    GetAssets();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>获取图像的参数都是magic number，这里不多提。图标浏览和获取参数可以参考下面两个页面。当然你也可以准备自己的素材。</p>
-<p><a href="https://unitylist.com/p/5c3/Unity-editor-icons" target="_blank" rel="noopener">https://unitylist.com/p/5c3/Unity-editor-icons</a><br><a href="https://gist.github.com/rus89/375e107ed8c6db79d0c41b8612e5dbf3" target="_blank" rel="noopener">https://gist.github.com/rus89/375e107ed8c6db79d0c41b8612e5dbf3</a></p>
-<h1 id="绘制菜单栏"><a href="#绘制菜单栏" class="headerlink" title="绘制菜单栏"></a>绘制菜单栏</h1><p>菜单栏上有几个按钮，我们把最常用的如清理，Play开始清除以及右边三个Filter选项。除了’Clear’是Button，其它的都是Toggle。所以得准备一些布尔变量。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">bool</span> m_isClearOnPlay = <span class="literal">false</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">bool</span> m_isClearOnBuild = <span class="literal">false</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">bool</span> IsClearOnBuild =&gt; m_isClearOnBuild;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">bool</span> m_isErrorPause = <span class="literal">false</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">bool</span> m_isShowLog = <span class="literal">true</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">bool</span> m_isShowWarning = <span class="literal">true</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">bool</span> m_isShowError = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> m_normalLogCount = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> m_warningLogCount = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> m_errorLogCount = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">private</span> HashSet&lt;LogType&gt; m_logTypeForUnshow = <span class="literal">null</span>;</span><br></pre></td></tr></table></figure>
-<p>准备好了，那么就可以开始绘制菜单栏了。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">DrawMenuUpperBar</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    m_menuUpperBar = <span class="keyword">new</span> Rect(<span class="number">0.0f</span>, <span class="number">0.0f</span>, <span class="keyword">this</span>.position.width, MENU_BAR_HEIGHT);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 开始绘制</span></span><br><span class="line">    GUILayout.BeginArea(m_menuUpperBar, EditorStyles.toolbar);</span><br><span class="line">    <span class="comment">// 横向绘制！！！</span></span><br><span class="line">    GUILayout.BeginHorizontal();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (GUILayout.Button(<span class="keyword">new</span> GUIContent(<span class="string">"Clear"</span>), EditorStyles.toolbarButton, GUILayout.Width(<span class="number">40.0f</span>)))</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 用于清空所有的 log</span></span><br><span class="line">        ClearLogs();</span><br><span class="line">    &#125;</span><br><span class="line">    GUILayout.Space(<span class="number">5.0f</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// m_isCollapse = GUILayout.Toggle(m_isCollapse, new GUIContent("Collapse"), EditorStyles.toolbarButton, GUILayout.Width(55.0f));</span></span><br><span class="line">    m_isClearOnPlay = GUILayout.Toggle(m_isClearOnPlay, <span class="keyword">new</span> GUIContent(<span class="string">"Clear On Play"</span>), EditorStyles.toolbarButton, GUILayout.Width(<span class="number">80.0f</span>));</span><br><span class="line">    m_isClearOnBuild = GUILayout.Toggle(m_isClearOnBuild, <span class="keyword">new</span> GUIContent(<span class="string">"Clear On Build"</span>), EditorStyles.toolbarButton, GUILayout.Width(<span class="number">85.0f</span>));</span><br><span class="line">    m_isErrorPause = GUILayout.Toggle(m_isErrorPause, <span class="keyword">new</span> GUIContent(<span class="string">"Error Pause"</span>), EditorStyles.toolbarButton, GUILayout.Width(<span class="number">70.0f</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 弹性空白，我不太清楚应该怎么描述，但是它可以把后面的几个Toggle都尽可能往后面推</span></span><br><span class="line">    GUILayout.FlexibleSpace();</span><br><span class="line"></span><br><span class="line">    m_normalLogCount = Mathf.Clamp(m_normalLogCount, <span class="number">0</span>, <span class="number">100</span>);</span><br><span class="line">    m_warningLogCount = Mathf.Clamp(m_warningLogCount, <span class="number">0</span>, <span class="number">100</span>);</span><br><span class="line">    m_errorLogCount = Mathf.Clamp(m_errorLogCount, <span class="number">0</span>, <span class="number">100</span>);</span><br><span class="line">    m_isShowLog = GUILayout.Toggle(m_isShowLog, <span class="keyword">new</span> GUIContent(m_numStrs[m_normalLogCount], m_infoIconSmall), EditorStyles.toolbarButton, GUILayout.Width(<span class="number">30.0f</span>));</span><br><span class="line">    m_isShowWarning = GUILayout.Toggle(m_isShowWarning, <span class="keyword">new</span> GUIContent(m_numStrs[m_warningLogCount], m_warningIconSmall), EditorStyles.toolbarButton, GUILayout.Width(<span class="number">30.0f</span>));</span><br><span class="line">    m_isShowError = GUILayout.Toggle(m_isShowError, <span class="keyword">new</span> GUIContent(m_numStrs[m_errorLogCount], m_errorIconSmall), EditorStyles.toolbarButton, GUILayout.Width(<span class="number">30.0f</span>));</span><br><span class="line"></span><br><span class="line">    m_logTypeForUnshow.Clear();</span><br><span class="line">    <span class="keyword">if</span> (!m_isShowLog)</span><br><span class="line">    &#123;</span><br><span class="line">        m_logTypeForUnshow.Add(LogType.Log);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!m_isShowWarning)</span><br><span class="line">    &#123;</span><br><span class="line">        m_logTypeForUnshow.Add(LogType.Warning);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!m_isShowError)</span><br><span class="line">    &#123;</span><br><span class="line">        m_logTypeForUnshow.Add(LogType.Error);</span><br><span class="line">        m_logTypeForUnshow.Add(LogType.Assert);</span><br><span class="line">        m_logTypeForUnshow.Add(LogType.Exception);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 横向绘制结束</span></span><br><span class="line">    GUILayout.EndHorizontal();</span><br><span class="line">    <span class="comment">// 区域绘制结束</span></span><br><span class="line">    GUILayout.EndArea();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 实际调用绘制</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">OnGUI</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    DrawMenuUpperBar();</span><br><span class="line">    <span class="comment">//DrawUpperPanel();</span></span><br><span class="line">    <span class="comment">//DrawLowerPanel();</span></span><br><span class="line">    <span class="comment">//DrawResizer();</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这样就把菜单栏绘制好了。</p>
-<h1 id="简单绘制上下区栏"><a href="#简单绘制上下区栏" class="headerlink" title="简单绘制上下区栏"></a>简单绘制上下区栏</h1><p>接下来再绘制调整棒之前先简单绘制上下区，待会儿做好调整棒之后就能直接测试效果。要注意给菜单栏以及调整版预留的高度，不然会得到错误的区域大小，添加调整棒后会更会出现奇怪现象。<br>现在只需要给上下区绘制空白就可以了。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">DrawUpperPanel</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    m_upperPanel = <span class="keyword">new</span> Rect(<span class="number">0</span>, MENU_BAR_HEIGHT, <span class="keyword">this</span>.position.width, (<span class="keyword">this</span>.position.height - MENU_BAR_HEIGHT) * m_upperSizeRatio);</span><br><span class="line">    GUILayout.BeginArea(m_upperPanel, m_panelStyle);</span><br><span class="line">    GUILayout.Label(<span class="string">"Log"</span>, m_panelLabelStyle);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 为了画log item而准备的 ScrollView</span></span><br><span class="line">    m_upperPanelScroll = GUILayout.BeginScrollView(m_upperPanelScroll);</span><br><span class="line">    GUILayout.EndScrollView();</span><br><span class="line"></span><br><span class="line">    GUILayout.EndArea();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">DrawLowerPanel</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">float</span> yPos = PanelGroupHeight * m_upperSizeRatio + MENU_BAR_HEIGHT + RESIZER_HEIGHT;</span><br><span class="line">    m_lowerPanel = <span class="keyword">new</span> Rect(<span class="number">0</span>, yPos, <span class="keyword">this</span>.position.width, PanelGroupHeight * (<span class="number">1.0f</span> - m_upperSizeRatio));</span><br><span class="line">    GUILayout.BeginArea(m_lowerPanel, m_panelStyle);</span><br><span class="line">    GUILayout.Label(<span class="string">"Log Detail"</span>, m_panelLabelStyle);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 为 log详情准备的 ScrollView</span></span><br><span class="line">    m_lowerPanelScroll = GUILayout.BeginScrollView(m_lowerPanelScroll);</span><br><span class="line">    GUILayout.EndScrollView();</span><br><span class="line"></span><br><span class="line">    GUILayout.EndArea();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 实际调用绘制</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">OnGUI</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    DrawMenuUpperBar();</span><br><span class="line">    DrawUpperPanel();</span><br><span class="line">    DrawLowerPanel();</span><br><span class="line">    <span class="comment">//DrawResizer();</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="绘制调整棒-添加区域调整"><a href="#绘制调整棒-添加区域调整" class="headerlink" title="绘制调整棒 添加区域调整"></a>绘制调整棒 添加区域调整</h1><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">DrawResizer</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">float</span> yPos = (<span class="keyword">this</span>.position.height - MENU_BAR_HEIGHT) * m_upperSizeRatio + MENU_BAR_HEIGHT;</span><br><span class="line">    m_resizer = <span class="keyword">new</span> Rect(<span class="number">0</span>, yPos, <span class="keyword">this</span>.position.width, RESIZER_HEIGHT);</span><br><span class="line"></span><br><span class="line">    GUILayout.BeginArea(<span class="keyword">new</span> Rect(m_resizer.position + (Vector2.up * RESIZER_HEIGHT), <span class="keyword">new</span> Vector2(<span class="keyword">this</span>.position.width, <span class="number">2.0f</span>)), m_resizerStyle);</span><br><span class="line">    GUILayout.EndArea();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 把 m_resizer 区域内的光标换成拉伸指示光标</span></span><br><span class="line">    EditorGUIUtility.AddCursorRect(m_resizer, MouseCursor.ResizeVertical);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Resize</span>(<span class="params">Event currentEvent</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (m_isResizing)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 通过鼠标位置改变调整棒位置</span></span><br><span class="line">        <span class="keyword">float</span> pos = currentEvent.mousePosition.y - MENU_BAR_HEIGHT;</span><br><span class="line"></span><br><span class="line">        m_upperSizeRatio = pos / PanelGroupHeight;</span><br><span class="line">        m_upperSizeRatio = Mathf.Clamp(m_upperSizeRatio, <span class="number">0.5f</span>, <span class="number">0.8f</span>);</span><br><span class="line">        <span class="comment">//Debug.Log($"next upper ratio &#123;m_upperSizeRatio&#125;");</span></span><br><span class="line">        Repaint();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">ProcessEvents</span>(<span class="params">Event currentEvent</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (EventType.MouseDown == currentEvent.type)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// if press mouse left in resizer</span></span><br><span class="line">        m_isResizing = (<span class="number">0</span> == currentEvent.button &amp;&amp; m_resizer.Contains(currentEvent.mousePosition));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (EventType.MouseUp == currentEvent.type)</span><br><span class="line">    &#123;</span><br><span class="line">        m_isResizing = <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Resize(currentEvent);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>其实感觉编辑器开发挺麻烦的，除了区域绘制要注意，还有一堆API不好查不会用。下一期将会将Log信息捕获并显示在我们自己的这个Console上。</p>
-<hr>
-<p>完整工程链接(持续更新中) :<br><a href="https://github.com/2C2C2C/TempUnityLogConsoleClone" target="_blank" rel="noopener">https://github.com/2C2C2C/TempUnityLogConsoleClone</a></p>
-<p>P.S : 我在做的时候是参考了某个游戏工作室发布的教程，我也顺便把这个教程分享出来。<br><a href="https://gram.gs/gramlog/creating-editor-windows-in-unity/" target="_blank" rel="noopener">https://gram.gs/gramlog/creating-editor-windows-in-unity/</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/18/20200518-unity-hub-w-proxy/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="2C2C2C2">
-      <meta itemprop="description" content="随便记录一些东西">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FishPlayer">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/05/18/20200518-unity-hub-w-proxy/" class="post-title-link" itemprop="url">给Unity上代理</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-05-18 22:41:32" itemprop="dateCreated datePublished" datetime="2020-05-18T22:41:32+08:00">2020-05-18</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-05-31 10:17:28" itemprop="dateModified" datetime="2020-05-31T10:17:28+08:00">2020-05-31</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="给Unity用上代理"><a href="#给Unity用上代理" class="headerlink" title="给Unity用上代理"></a>给Unity用上代理</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>之前有段时间公司的网络不是很稳定，从UnityHub上拖东西99%失败。自己又太菜不想安装Android Studio手动设置安卓打包的东西，于是乎只能想办法给下载加速。</p>
-<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>首先你要有那个，就是那个你为了看PH才弄的小工具：）</p>
-<h2 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h2><p>首先默认我们的小✈代理端口是1080。<br>似乎V2可以同时有SOCK5和HTTP代理的样子，那也把HTTP代理的端口设置成1080.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># 设置代理</span></span><br><span class="line"><span class="built_in">set</span> HTTP_PROXY=http://127.0.0.1:1080</span><br><span class="line"><span class="built_in">set</span> HTTPS_PROXY=http://127.0.0.1:1080</span><br><span class="line"></span><br><span class="line">start <span class="string">""</span> <span class="string">"your unity hub path"</span></span><br><span class="line"><span class="comment"># like path is like -&gt; D:\Unity\Unity Hub\Unity Hub.exe</span></span><br></pre></td></tr></table></figure>
-<h2 id="爆炸"><a href="#爆炸" class="headerlink" title="爆炸"></a>爆炸</h2><p>非常简单就是这样。</p>
-<p>其实东西都是从有木桑博客看来的<br><a href="https://www.yomunchan.moe/archives/320" target="_blank" rel="noopener">https://www.yomunchan.moe/archives/320</a></p>
-<p>这边有蛮多游戏开发相关的文章，帮了我不少，十分感谢了。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/03/20200503-git-add-proxy/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="2C2C2C2">
-      <meta itemprop="description" content="随便记录一些东西">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FishPlayer">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/05/03/20200503-git-add-proxy/" class="post-title-link" itemprop="url">给Git上个代理试试提速</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-05-03 17:34:08" itemprop="dateCreated datePublished" datetime="2020-05-03T17:34:08+08:00">2020-05-03</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-05-31 11:14:50" itemprop="dateModified" datetime="2020-05-31T11:14:50+08:00">2020-05-31</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Git/" itemprop="url" rel="index"><span itemprop="name">Git</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="给GIT用上代理"><a href="#给GIT用上代理" class="headerlink" title="给GIT用上代理"></a>给GIT用上代理</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在看着教程搭建这个博客的时候，我在GIT上也拖了不少的包。直连有时候真的速度慢到吐血，原因很复杂也莫得办法。<br>不过还好，我们其实可以给GIT上个代理，这样能给速度一些改善。</p>
-<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>我是在本机器安装有代理客户端，小🛩和V2都彳亍。<br>我这边的情况是这样的，小飞机走SOCK5代理，V2走的HTTP代理。<br>因为平时我只可能开着一个，所以端口都是1080。</p>
-<h2 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h2><p>废话不多说了，直接上命令。</p>
-<p>首先我们看看已有的设置.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># 查看全局配置中的代理</span></span><br><span class="line">git config --global --get http.proxy</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看当前生效配置中的代理</span></span><br><span class="line">git config --get http.proxy</span><br></pre></td></tr></table></figure>
-<p>然后我们加上自己的代理。<br>当前我们假设的状态是本机开着小✈或者V2，且代理端口为1080的情况。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 括号中的都是可选项</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 若用的小飞机, --global 意味着应用到全局设置</span></span><br><span class="line">git config (--global) http.proxy sock5://127.0.0.1:1080</span><br><span class="line">git config (--global) https.proxy sock5://127.0.0.1:1080</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这样应用后，没开代理GIT就会抽风了，所以如果平时速度还不错的话记得用完取消代理</span></span><br><span class="line">git config (--global) --<span class="built_in">unset</span> http.proxy (sock5://127.0.0.1:1080)</span><br><span class="line">git config (--global) --<span class="built_in">unset</span> https.proxy (sock5://127.0.0.1:1080)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 若用的V2, --global 意味着应用到全局设置</span></span><br><span class="line">git config (--global) http.proxy  http://127.0.0.1:1080</span><br><span class="line">git config (--global) https.proxy https://127.0.0.1:1080</span><br><span class="line"></span><br><span class="line"><span class="comment"># 取消</span></span><br><span class="line">git config (--global) --<span class="built_in">unset</span> http.proxy  （http://127.0.0.1:1080）</span><br><span class="line">git config (--global) --<span class="built_in">unset</span> https.proxy （https://127.0.0.1:1080）</span><br></pre></td></tr></table></figure>
-<p>挂了代理真的飞速，爽到。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1098,27 +1044,25 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-count">24</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-          
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
-          
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
 </div>
   <div class="links-of-author motion-element">
       <span class="links-of-author-item">
-        <a href="https://github.com/2C2C2C" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;2C2C2C" rel="noopener" target="_blank"><i class="fab fa-gi thub fa-fw"></i>GitHub</a>
+        <a href="https://github.com/2C2C2C" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;2C2C2C" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
       </span>
   </div>
 
@@ -1149,7 +1093,7 @@
   </span>
   <span class="author" itemprop="copyrightHolder">2C2C2C2</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
   </div>
 
         
@@ -1167,8 +1111,6 @@
 
   
   <script src="/lib/anime.min.js"></script>
-  <script src="/lib/pjax/pjax.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/pangu@4/dist/browser/pangu.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
 
@@ -1177,70 +1119,11 @@
 <script src="/js/motion.js"></script>
 
 
-<script src="/js/schemes/pisces.js"></script>
+<script src="/js/schemes/muse.js"></script>
 
 
 <script src="/js/next-boot.js"></script>
 
-  <script>
-var pjax = new Pjax({
-  selectors: [
-    'head title',
-    '#page-configurations',
-    '.content-wrap',
-    '.post-toc-wrap',
-    '.languages',
-    '#pjax'
-  ],
-  switches: {
-    '.post-toc-wrap': Pjax.switches.innerHTML
-  },
-  analytics: false,
-  cacheBust: false,
-  scrollTo : !CONFIG.bookmark.enable
-});
-
-window.addEventListener('pjax:success', () => {
-  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
-    var code = element.text || element.textContent || element.innerHTML || '';
-    var parent = element.parentNode;
-    parent.removeChild(element);
-    var script = document.createElement('script');
-    if (element.id) {
-      script.id = element.id;
-    }
-    if (element.className) {
-      script.className = element.className;
-    }
-    if (element.type) {
-      script.type = element.type;
-    }
-    if (element.src) {
-      script.src = element.src;
-      // Force synchronous loading of peripheral JS.
-      script.async = false;
-    }
-    if (element.dataset.pjax !== undefined) {
-      script.dataset.pjax = '';
-    }
-    if (code !== '') {
-      script.appendChild(document.createTextNode(code));
-    }
-    parent.appendChild(script);
-  });
-  NexT.boot.refresh();
-  // Define Motion Sequence & Bootstrap Motion.
-  if (CONFIG.motion.enable) {
-    NexT.motion.integrator
-      .init()
-      .add(NexT.motion.middleWares.subMenu)
-      .add(NexT.motion.middleWares.postList)
-      .bootstrap();
-  }
-  NexT.utils.updateSidebarPosition();
-});
-</script>
-
 
 
 
@@ -1249,8 +1132,6 @@ window.addEventListener('pjax:success', () => {
 
 
 
-  
-<script src="/js/local-search.js"></script>
 
 
 
@@ -1261,16 +1142,10 @@ window.addEventListener('pjax:success', () => {
 
 
 
-
-
-
-    <div id="pjax">
-  
 
   
 
   
 
-    </div>
 </body>
 </html>
