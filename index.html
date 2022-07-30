@@ -152,6 +152,77 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/07/30/20220730-unity-editor-stateobj/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="2C2C2C2">
+      <meta itemprop="description" content="随便记录一些东西">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FishPlayer">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/07/30/20220730-unity-editor-stateobj/" class="post-title-link" itemprop="url">使用 State Object 暂存 property drawer 的状态。</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-07-30 17:55:21 / 修改时间：19:46:50" itemprop="dateCreated datePublished" datetime="2022-07-30T17:55:21+08:00">2022-07-30</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/UnityEditor/" itemprop="url" rel="index"><span itemprop="name">UnityEditor</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>最近在做红点功能，path是用string挂在UI物体上的。UI同学那边想要一个按钮可以切换path在inspector是可编辑或不可编辑的状态。<br>最开始毫无思路，因为本身path是一个string，我自然不可以它身上记录这个编辑与否的状态。后来想着能不能把这个状态存在path的protperty drawer上。问了下导师，可行，但是没法直接存。</p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>创建一个object存储这个状态，这个object存入editor的state object里。<br>在Property drawer进行绘制的时候获取/更新这个object。</p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>代码很简单</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">UITagDrawer</span> : <span class="title">PropertyDrawer</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// the object for string state</span></span><br><span class="line">    <span class="keyword">class</span> <span class="title">EditingState</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">bool</span> IsEditing = <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnGUI</span>(<span class="params">Rect position, SerializedProperty property, GUIContent label</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="comment">/***/</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// get state object</span></span><br><span class="line">        EditingState state = GUIUtility.GetStateObject(<span class="keyword">typeof</span>(EditingState), GUIUtility.GetControlID(FocusType.Passive)) <span class="keyword">as</span> EditingState;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">using</span> (<span class="keyword">new</span> EditorGUILayout.HorizontalScope(style))</span><br><span class="line">        &#123;</span><br><span class="line">            Rect editButtonRect = <span class="keyword">new</span> Rect(position.x, position.y, <span class="number">16f</span>, <span class="number">16f</span>);</span><br><span class="line">            <span class="keyword">if</span> (GUI.Button(editButtonRect, <span class="string">"E"</span>))</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">// well since it's a class we dun need to set it back :&gt;</span></span><br><span class="line">                state.IsEditing = !state.IsEditing;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (GUILayout.Button(<span class="string">"X"</span>, GUILayout.Width(<span class="number">18</span>)))</span><br><span class="line">            &#123;</span><br><span class="line">                state.IsEditing = !state.IsEditing;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (state.IsEditing)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">// show text field</span></span><br><span class="line">                tagStr = EditorGUILayout.TextField(tagStr);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">// show lable</span></span><br><span class="line">                EditorGUILayout.LabelField(tagStr);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/07/24/20220724-find-script-reference/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -876,78 +947,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/06/06/20210606-UGuiInputOnScrollkeng/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="2C2C2C2">
-      <meta itemprop="description" content="随便记录一些东西">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FishPlayer">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/06/06/20210606-UGuiInputOnScrollkeng/" class="post-title-link" itemprop="url">Unity 自制 Scrollrect 小坑</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-06-06 22:33:16 / 修改时间：22:59:28" itemprop="dateCreated datePublished" datetime="2021-06-06T22:33:16+08:00">2021-06-06</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Unity/" itemprop="url" rel="index"><span itemprop="name">Unity</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="问题出现"><a href="#问题出现" class="headerlink" title="问题出现"></a>问题出现</h1><p>终于改来改去，俺做的这个循环滚动列表成功运用到了项目里的仓库UI上。但是还是被一个BUG给击垮了。</p>
-<p>UX给到的设计稿是当玩家鼠标在其中一个物品上时，要有一个小弹窗显示这个物品的一些讯息。<br>BUG的表现是当我已经’选中’一个物品后，用鼠标滚轮滚到下一行，小弹窗显示的还是上一个物品的讯息。</p>
-<h1 id="BUG原因"><a href="#BUG原因" class="headerlink" title="BUG原因"></a>BUG原因</h1><p>我在UI脚本中写了关于鼠标移动进入和离开的处理，但其实当列表滚动时候，鼠标下面的物体还是上一个物体，但是物体内的数据已经改变，却没有刷新。</p>
-<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p>其实也还算有个凑合的解决方案。导师之前重写了InputModule，所以我们决定在这边做改动。<br>当发生滚动时，我们需要重新做raycast。<br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">OnScrollWheel</span>(<span class="params">InputAction.CallbackContext context</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (IsActive())</span><br><span class="line">    &#123;</span><br><span class="line">        PointerEventData eventData = GetPointerData();</span><br><span class="line">        eventData.button = PointerEventData.InputButton.Middle;</span><br><span class="line">        eventData.Reset();</span><br><span class="line">        eventData.scrollDelta = context.ReadValue&lt;Vector2&gt;()</span><br><span class="line">        GameObject testScrollObject = ExecuteEventExecuteHierarchy(eventData.pointerCurrentRaycasgameObject, eventData, ExecuteEvents.scrollHandler)</span><br><span class="line">        <span class="keyword">if</span> (testScrollObject != <span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// to re-do the reycast cuz we may scroll a recyclscrollrect</span></span><br><span class="line">            HandlePointerExitAndEnter(eventData, <span class="literal">null</span>);</span><br><span class="line">            m_rayCastDelayFrame = SCROLL_RAYCAST_DELAY;</span><br><span class="line">            <span class="comment">// SCROLL_RAYCAST_DELAY =3 or 5, depends....</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>我们先清楚了事件数据所认为的鼠标悬停的物体，然后过几帧再重新发射射线进行检测。<br>因为我的循环滚动列表依赖于Unity自带的滚动视图，并且其位置也是在LateUpdate中更新的，所以我们最好在下一帧或者接下来的几帧后再做射线检测。。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// will call in update</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">Process</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    .....</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    CheckAndDoDelayRaycast();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">CheckAndDoDelayRaycast</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (m_rayCastDelayFrame &lt; <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (--m_rayCastDelayFrame == <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> eventData = GetPointerData();</span><br><span class="line">        eventSystem.RaycastAll(eventData, m_RaycastResultCache);</span><br><span class="line">        <span class="keyword">var</span> firstRaycast = FindFirstRaycast(m_RaycastResultCache)</span><br><span class="line">        eventData.pointerCurrentRaycast = firstRaycast;</span><br><span class="line">        m_RaycastResultCache.Clear()</span><br><span class="line">        <span class="keyword">var</span> temp = eventData.pointerCurrentRaycast.gameObject;</span><br><span class="line">        HandlePointerExitAndEnter(eventData, temp);</span><br><span class="line">        m_rayCastDelayFrame = <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1019,7 +1018,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-count">25</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
