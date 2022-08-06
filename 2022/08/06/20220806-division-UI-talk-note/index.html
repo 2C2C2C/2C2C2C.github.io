@@ -20,21 +20,20 @@
     var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="问题出现终于改来改去，俺做的这个循环滚动列表成功运用到了项目里的仓库UI上。但是还是被一个BUG给击垮了。 UX给到的设计稿是当玩家鼠标在其中一个物品上时，要有一个小弹窗显示这个物品的一些讯息。BUG的表现是当我已经’选中’一个物品后，用鼠标滚轮滚到下一行，小弹窗显示的还是上一个物品的讯息。 BUG原因我在UI脚本中写了关于鼠标移动进入和离开的处理，但其实当列表滚动时候，鼠标下面的物体还是上一个物">
+  <meta name="description" content="Well just ignore dat weird tag. :D Here is muy notes dat I learn from the Divsion UI talk. The key is iteration, threading and data. Iterate your stuff to make it better. Threading and data driven mak">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Unity 自制 Scrollrect 小坑">
-<meta property="og:url" content="http://yoursite.com/2021/06/06/20210606-UGuiInputOnScrollkeng/index.html">
+<meta property="og:title" content="notes dat I took from the Divsion UI talk">
+<meta property="og:url" content="http://yoursite.com/2022/08/06/20220806-division-UI-talk-note/index.html">
 <meta property="og:site_name" content="FishPlayer">
-<meta property="og:description" content="问题出现终于改来改去，俺做的这个循环滚动列表成功运用到了项目里的仓库UI上。但是还是被一个BUG给击垮了。 UX给到的设计稿是当玩家鼠标在其中一个物品上时，要有一个小弹窗显示这个物品的一些讯息。BUG的表现是当我已经’选中’一个物品后，用鼠标滚轮滚到下一行，小弹窗显示的还是上一个物品的讯息。 BUG原因我在UI脚本中写了关于鼠标移动进入和离开的处理，但其实当列表滚动时候，鼠标下面的物体还是上一个物">
+<meta property="og:description" content="Well just ignore dat weird tag. :D Here is muy notes dat I learn from the Divsion UI talk. The key is iteration, threading and data. Iterate your stuff to make it better. Threading and data driven mak">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-06-06T14:33:16.000Z">
-<meta property="article:modified_time" content="2021-06-06T14:59:28.187Z">
+<meta property="article:published_time" content="2022-08-06T02:55:21.000Z">
+<meta property="article:modified_time" content="2022-08-06T06:03:13.620Z">
 <meta property="article:author" content="2C2C2C2">
 <meta property="article:tag" content="Unity">
-<meta property="article:tag" content="UGUI">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://yoursite.com/2021/06/06/20210606-UGuiInputOnScrollkeng/">
+<link rel="canonical" href="http://yoursite.com/2022/08/06/20220806-division-UI-talk-note/">
 
 
 <script id="page-configurations">
@@ -47,7 +46,7 @@
   };
 </script>
 
-  <title>Unity 自制 Scrollrect 小坑 | FishPlayer</title>
+  <title>notes dat I took from the Divsion UI talk | FishPlayer</title>
   
 
 
@@ -154,7 +153,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/06/06/20210606-UGuiInputOnScrollkeng/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/08/06/20220806-division-UI-talk-note/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.png">
@@ -167,7 +166,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Unity 自制 Scrollrect 小坑
+          notes dat I took from the Divsion UI talk
         </h1>
 
         <div class="post-meta">
@@ -178,7 +177,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2021-06-06 22:33:16 / 修改时间：22:59:28" itemprop="dateCreated datePublished" datetime="2021-06-06T22:33:16+08:00">2021-06-06</time>
+              <time title="创建时间：2022-08-06 10:55:21 / 修改时间：14:03:13" itemprop="dateCreated datePublished" datetime="2022-08-06T10:55:21+08:00">2022-08-06</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -201,12 +200,120 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="问题出现"><a href="#问题出现" class="headerlink" title="问题出现"></a>问题出现</h1><p>终于改来改去，俺做的这个循环滚动列表成功运用到了项目里的仓库UI上。但是还是被一个BUG给击垮了。</p>
-<p>UX给到的设计稿是当玩家鼠标在其中一个物品上时，要有一个小弹窗显示这个物品的一些讯息。<br>BUG的表现是当我已经’选中’一个物品后，用鼠标滚轮滚到下一行，小弹窗显示的还是上一个物品的讯息。</p>
-<h1 id="BUG原因"><a href="#BUG原因" class="headerlink" title="BUG原因"></a>BUG原因</h1><p>我在UI脚本中写了关于鼠标移动进入和离开的处理，但其实当列表滚动时候，鼠标下面的物体还是上一个物体，但是物体内的数据已经改变，却没有刷新。</p>
-<h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p>其实也还算有个凑合的解决方案。导师之前重写了InputModule，所以我们决定在这边做改动。<br>当发生滚动时，我们需要重新做raycast。<br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">OnScrollWheel</span>(<span class="params">InputAction.CallbackContext context</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (IsActive())</span><br><span class="line">    &#123;</span><br><span class="line">        PointerEventData eventData = GetPointerData();</span><br><span class="line">        eventData.button = PointerEventData.InputButton.Middle;</span><br><span class="line">        eventData.Reset();</span><br><span class="line">        eventData.scrollDelta = context.ReadValue&lt;Vector2&gt;()</span><br><span class="line">        GameObject testScrollObject = ExecuteEventExecuteHierarchy(eventData.pointerCurrentRaycasgameObject, eventData, ExecuteEvents.scrollHandler)</span><br><span class="line">        <span class="keyword">if</span> (testScrollObject != <span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// to re-do the reycast cuz we may scroll a recyclscrollrect</span></span><br><span class="line">            HandlePointerExitAndEnter(eventData, <span class="literal">null</span>);</span><br><span class="line">            m_rayCastDelayFrame = SCROLL_RAYCAST_DELAY;</span><br><span class="line">            <span class="comment">// SCROLL_RAYCAST_DELAY =3 or 5, depends....</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>我们先清楚了事件数据所认为的鼠标悬停的物体，然后过几帧再重新发射射线进行检测。<br>因为我的循环滚动列表依赖于Unity自带的滚动视图，并且其位置也是在LateUpdate中更新的，所以我们最好在下一帧或者接下来的几帧后再做射线检测。。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// will call in update</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">Process</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    .....</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    CheckAndDoDelayRaycast();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">CheckAndDoDelayRaycast</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (m_rayCastDelayFrame &lt; <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (--m_rayCastDelayFrame == <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> eventData = GetPointerData();</span><br><span class="line">        eventSystem.RaycastAll(eventData, m_RaycastResultCache);</span><br><span class="line">        <span class="keyword">var</span> firstRaycast = FindFirstRaycast(m_RaycastResultCache)</span><br><span class="line">        eventData.pointerCurrentRaycast = firstRaycast;</span><br><span class="line">        m_RaycastResultCache.Clear()</span><br><span class="line">        <span class="keyword">var</span> temp = eventData.pointerCurrentRaycast.gameObject;</span><br><span class="line">        HandlePointerExitAndEnter(eventData, temp);</span><br><span class="line">        m_rayCastDelayFrame = <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <p>Well just ignore dat weird tag. :D</p>
+<p>Here is muy notes dat I learn from the Divsion UI talk.</p>
+<p>The key is iteration, threading and data.</p>
+<p>Iterate your stuff to make it better.</p>
+<p>Threading and data driven make the work efficient.</p>
+<p><a href="https://www.youtube.com/watch?v=H1MLtML0np0" target="_blank" rel="noopener">video</a>.</p>
+<h1 id="Snop-drop-UI"><a href="#Snop-drop-UI" class="headerlink" title="Snop drop UI"></a>Snop drop UI</h1><ul>
+<li>No canvas</li>
+<li>Immediate Mode<ul>
+<li>Constant cost (maybe it’s more statble?).</li>
+</ul>
+</li>
+<li>Vector Graphics<ul>
+<li>Shapes(sacle friendly, dun rely on resolution) over textures masks.</li>
+<li>Save GPU load by only rendering the pixels gonna be used.</li>
+<li>Artist can play with it.</li>
+</ul>
+</li>
+</ul>
+<h1 id="Game-Data-amp-Node-graph"><a href="#Game-Data-amp-Node-graph" class="headerlink" title="Game Data &amp; Node graph"></a>Game Data &amp; Node graph</h1><ul>
+<li><p>Lots of data getter (get pure data?) (in graph node), used in UI and also game play.</p>
+</li>
+<li><p>Auto conversion to save some performance.</p>
+</li>
+<li><p>custom UI logic components.</p>
+</li>
+<li><p>custom reusable compounds.</p>
+</li>
+</ul>
+<h1 id="Iteration"><a href="#Iteration" class="headerlink" title="Iteration"></a>Iteration</h1><h2 id="For-coder"><a href="#For-coder" class="headerlink" title="For coder"></a>For coder</h2><h3 id="Reduce-complie-time"><a href="#Reduce-complie-time" class="headerlink" title="Reduce complie time"></a>Reduce complie time</h3><ul>
+<li>Blob builds(idk what does this mean).</li>
+<li>Header file reduction.</li>
+<li>Keep refactoring code to make it efficient.</li>
+<li>Remove nolonger used code.</li>
+</ul>
+<h3 id="Reduce-startup-time-and-Load-time"><a href="#Reduce-startup-time-and-Load-time" class="headerlink" title="Reduce startup time and Load time"></a>Reduce startup time and Load time</h3><ul>
+<li>Only load needed stuff.</li>
+<li>UI preview with live data for easy iteration.</li>
+<li>Well some debug UI will also help :).</li>
+</ul>
+<p>(for my unity project)</p>
+<ul>
+<li>Have a UI preview scene (UI only, we can preview states and transitions).</li>
+<li>Have simple a gym dat provide gameplay with enough content.</li>
+</ul>
+<h3 id="Coder-to-Artist"><a href="#Coder-to-Artist" class="headerlink" title="Coder to Artist"></a>Coder to Artist</h3><ul>
+<li><p>Coder work with artist (react fast to feedback).</p>
+</li>
+<li><p>Resable compounds, arist can directly use.</p>
+</li>
+</ul>
+<h2 id="Drawback-of-iteration"><a href="#Drawback-of-iteration" class="headerlink" title="Drawback of iteration"></a>Drawback of iteration</h2><ul>
+<li>Hard to stop.</li>
+<li>Set clear goals and deadlines. (do not waste time)</li>
+<li>Greate for prototyping, risk for delivering. (need a lead to shut down iteration, make the decision)</li>
+</ul>
+<h1 id="Building-blocks-of-UI"><a href="#Building-blocks-of-UI" class="headerlink" title="Building blocks of UI"></a>Building blocks of UI</h1><p>To let arist and designers to have full(or more) control?</p>
+<h2 id="Widget-and-Graphics"><a href="#Widget-and-Graphics" class="headerlink" title="Widget and Graphics"></a>Widget and Graphics</h2><p>Widget define space, accept input. Graphic improve widget, relative size, also accept input?</p>
+<h2 id="5-Basic-widgets-with-a-few-variations"><a href="#5-Basic-widgets-with-a-few-variations" class="headerlink" title="5 Basic widgets with a few variations."></a>5 Basic widgets with a few variations.</h2><p>Use basic widgets, and use them to build functionalities.</p>
+<ul>
+<li><p>Window</p>
+<ul>
+<li>2D and 3D (anchoring functionalities, pixels or percentage; prepare some options for different auto scaling and apply to different UI widgets/graphic and situations).</li>
+<li>Vertical Stack (stack the (children)widgets)</li>
+<li>Layering ()</li>
+</ul>
+</li>
+<li><p>Text</p>
+<ul>
+<li>JIT font generaion (wtf, keep memory down)</li>
+<li>Fich text formatting lib to build customize text(icon, color …).</li>
+<li>Auto clip (no idea why and how)</li>
+</ul>
+</li>
+<li><p>Image</p>
+<ul>
+<li>Use color/gradient more. (looks good with vector graphic)</li>
+<li>Texture and loose image(ikd this, no border image?) into sprite sheet.</li>
+</ul>
+</li>
+<li><p>Stack container</p>
+<ul>
+<li>For sorting elements.</li>
+<li>Spacing and padding (how to do it with stack)</li>
+<li>Invert for quick right to left language fixes (wtf)</li>
+</ul>
+</li>
+<li><p>Scroll Box</p>
+<ul>
+<li>Fixed size(viewport size) with a virtual inner space(content).</li>
+</ul>
+</li>
+</ul>
+<h2 id="7-Graphics-nodes"><a href="#7-Graphics-nodes" class="headerlink" title="7 Graphics (nodes)"></a>7 Graphics (nodes)</h2><ul>
+<li>Text with effects.</li>
+<li>Images(basic) with more shapes, flat or curved.</li>
+<li>Lines(strait, curved list???, 3d)</li>
+<li>Points, single point or large squares(for effects?)</li>
+<li>Shapes </li>
+<li>Sector (why for their style?)</li>
+<li>Custom graphics</li>
+</ul>
+<h1 id="Simply-Ui-workflow"><a href="#Simply-Ui-workflow" class="headerlink" title="Simply Ui workflow"></a>Simply Ui workflow</h1><ul>
+<li>Complex and powerful (lots of resuable compounds, and threading stuff)</li>
+<li>Documentation and examples(I guess examples are better and save time)</li>
+</ul>
+<h2 id="For-coder-1"><a href="#For-coder-1" class="headerlink" title="For coder"></a>For coder</h2><ul>
+<li>Simple code; Less code, less bugs </li>
+<li>Simple Tools; Do not overthink. Simple base, complex behaviour.</li>
+</ul>
+<h2 id="For-UI-artist-designer"><a href="#For-UI-artist-designer" class="headerlink" title="For UI artist/designer"></a>For UI artist/designer</h2><ul>
+<li>Communicate to avoid merge conflicts, get ahead of it (cuz yaml merge wont help u all the time).</li>
+</ul>
+
     </div>
 
     
@@ -216,7 +323,6 @@
       <footer class="post-footer">
           <div class="post-tags">
               <a href="/tags/Unity/" rel="tag"># Unity</a>
-              <a href="/tags/UGUI/" rel="tag"># UGUI</a>
           </div>
 
         
@@ -225,13 +331,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/04/23/20210423-gitignore-locally/" rel="prev" title="Git 本地忽略文件">
-      <i class="fa fa-chevron-left"></i> Git 本地忽略文件
+    <a href="/2022/07/30/20220730-unity-editor-stateobj/" rel="prev" title="使用 State Object 暂存 property drawer 的状态。">
+      <i class="fa fa-chevron-left"></i> 使用 State Object 暂存 property drawer 的状态。
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/08/31/20210831-raycast-padding/" rel="next" title="Unity2020 Graphic 小坑">
-      Unity2020 Graphic 小坑 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -290,7 +393,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#问题出现"><span class="nav-number">1.</span> <span class="nav-text">问题出现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#BUG原因"><span class="nav-number">2.</span> <span class="nav-text">BUG原因</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#解决方案"><span class="nav-number">3.</span> <span class="nav-text">解决方案</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Snop-drop-UI"><span class="nav-number">1.</span> <span class="nav-text">Snop drop UI</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Game-Data-amp-Node-graph"><span class="nav-number">2.</span> <span class="nav-text">Game Data &amp; Node graph</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Iteration"><span class="nav-number">3.</span> <span class="nav-text">Iteration</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#For-coder"><span class="nav-number">3.1.</span> <span class="nav-text">For coder</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Reduce-complie-time"><span class="nav-number">3.1.1.</span> <span class="nav-text">Reduce complie time</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Reduce-startup-time-and-Load-time"><span class="nav-number">3.1.2.</span> <span class="nav-text">Reduce startup time and Load time</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Coder-to-Artist"><span class="nav-number">3.1.3.</span> <span class="nav-text">Coder to Artist</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Drawback-of-iteration"><span class="nav-number">3.2.</span> <span class="nav-text">Drawback of iteration</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Building-blocks-of-UI"><span class="nav-number">4.</span> <span class="nav-text">Building blocks of UI</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Widget-and-Graphics"><span class="nav-number">4.1.</span> <span class="nav-text">Widget and Graphics</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-Basic-widgets-with-a-few-variations"><span class="nav-number">4.2.</span> <span class="nav-text">5 Basic widgets with a few variations.</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-Graphics-nodes"><span class="nav-number">4.3.</span> <span class="nav-text">7 Graphics (nodes)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Simply-Ui-workflow"><span class="nav-number">5.</span> <span class="nav-text">Simply Ui workflow</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#For-coder-1"><span class="nav-number">5.1.</span> <span class="nav-text">For coder</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#For-UI-artist-designer"><span class="nav-number">5.2.</span> <span class="nav-text">For UI artist&#x2F;designer</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
