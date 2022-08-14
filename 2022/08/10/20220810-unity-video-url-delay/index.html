@@ -20,15 +20,15 @@
     var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="这周赶版本，接到了一个前同事留下来的bug。是说UI上的教程视频一直不播放。我看了一下，代码如下。 12345678910111213141516171819void OnEnable()&amp;#123;    m_player.prepareCompleted +&#x3D; OnPrepareCompleted;&amp;#125;void OnPrepareCompleted(VideoPlayer source">
+  <meta name="description" content="这周赶版本，接到了一个前同事留下来的bug。是说UI上的教程视频一直不播放。我们的视频资源是在 StreamingAssets 下的，用path进行加载。播放相关的代码如下。 12345678910111213141516171819void OnEnable()&amp;#123;    m_player.prepareCompleted +&#x3D; OnPrepareCompleted;&amp;#125;void">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Unity Video Url source 赋值小坑">
 <meta property="og:url" content="http://yoursite.com/2022/08/10/20220810-unity-video-url-delay/index.html">
 <meta property="og:site_name" content="FishPlayer">
-<meta property="og:description" content="这周赶版本，接到了一个前同事留下来的bug。是说UI上的教程视频一直不播放。我看了一下，代码如下。 12345678910111213141516171819void OnEnable()&amp;#123;    m_player.prepareCompleted +&#x3D; OnPrepareCompleted;&amp;#125;void OnPrepareCompleted(VideoPlayer source">
+<meta property="og:description" content="这周赶版本，接到了一个前同事留下来的bug。是说UI上的教程视频一直不播放。我们的视频资源是在 StreamingAssets 下的，用path进行加载。播放相关的代码如下。 12345678910111213141516171819void OnEnable()&amp;#123;    m_player.prepareCompleted +&#x3D; OnPrepareCompleted;&amp;#125;void">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-08-10T02:55:21.000Z">
-<meta property="article:modified_time" content="2022-08-10T15:49:17.574Z">
+<meta property="article:modified_time" content="2022-08-11T14:12:40.314Z">
 <meta property="article:author" content="2C2C2C2">
 <meta property="article:tag" content="Unity">
 <meta name="twitter:card" content="summary">
@@ -175,10 +175,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-08-10 10:55:21 / 修改时间：23:49:17" itemprop="dateCreated datePublished" datetime="2022-08-10T10:55:21+08:00">2022-08-10</time>
+              <time title="创建时间：2022-08-10 10:55:21" itemprop="dateCreated datePublished" datetime="2022-08-10T10:55:21+08:00">2022-08-10</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-08-11 22:12:40" itemprop="dateModified" datetime="2022-08-11T22:12:40+08:00">2022-08-11</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -200,12 +206,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>这周赶版本，接到了一个前同事留下来的bug。是说UI上的教程视频一直不播放。我看了一下，代码如下。</p>
+        <p>这周赶版本，接到了一个前同事留下来的bug。是说UI上的教程视频一直不播放。<br>我们的视频资源是在 StreamingAssets 下的，用path进行加载。<br>播放相关的代码如下。</p>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">OnEnable</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    m_player.prepareCompleted += OnPrepareCompleted;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">OnPrepareCompleted</span>(<span class="params">VideoPlayer source</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Debug.Log(<span class="string">"OnPrepareCompleted"</span>);</span><br><span class="line">    m_player.Play();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">SetVideo</span>(<span class="params"><span class="keyword">string</span> path</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    m_player.source = VideoSource.Url;</span><br><span class="line">    <span class="comment">// I guess this process may not be finished now.</span></span><br><span class="line">    m_player.url = path;</span><br><span class="line">    m_player.Prepare();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>查了一下，发现在调用了 SetVideo 之后，OnPrepareCompleted没有被调用，意思是 VideoPlayer的prepareCompleted事件没有触发。<br>我猜发生这个情况的原因是，当我们使用url来设置视频资源的那一帧，VideoPlayer还没能获取到视频资源的一些属性，或是上一个视频资源还在占用着当前的播放器，所以这个时候如果调用PrePare，其实是没有用的。</p>
-<p>所以我使用的Hacky Fix是在设置完资源的URL之后，等一帧再调用Prepare。</p>
-<p>顺便在网上查了一下，也有些人遇到类似的问题，说是赋值URL之后不知道视频资源什么时候才能正确播放。<br>论坛里有个人给出的解决方法是去检查 VideoPlayer.isPrepared 的这个属性。</p>
-<p>之后我也试一试好了。</p>
+<p>所以我使用的Hacky Fix是在设置完资源的URL之后，等一帧再调用Prepare，然后等待 prepareCompleted 事件。</p>
+<p>顺便在网上查了一下，也有些人遇到类似的问题，说是赋值URL之后不知道视频资源什么时候才能正确播放。<br>论坛里有个人给出的解决方法是去检查 VideoPlayer.isPrepared 的这个属性。但赋值URL之后这个值并不会在某一时刻变成true。</p>
 
     </div>
 
@@ -227,7 +232,10 @@
     <a href="/2022/08/06/20220806-division-UI-talk-note/" rel="prev" title="notes dat I took from the Divsion UI talk">
       <i class="fa fa-chevron-left"></i> notes dat I took from the Divsion UI talk
     </a></div>
-      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2022/08/14/20220814-unity-recttransform/" rel="next" title="Unity RectTransform 小笔记">
+      Unity RectTransform 小笔记 <i class="fa fa-chevron-right"></i>
+    </a></div>
     </div>
       </footer>
     
@@ -301,7 +309,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-count">28</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
