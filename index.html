@@ -152,6 +152,173 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/10/05/20221005-rapid-UGUI-creation-note/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="2C2C2C2">
+      <meta itemprop="description" content="随便记录一些东西">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FishPlayer">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/10/05/20221005-rapid-UGUI-creation-note/" class="post-title-link" itemprop="url">Rapid UI Creation Note</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-10-05 10:55:21 / 修改时间：17:11:20" itemprop="dateCreated datePublished" datetime="2022-10-05T10:55:21+08:00">2022-10-05</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Unity/" itemprop="url" rel="index"><span itemprop="name">Unity</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>When I searching some articles about MVC and MVVM, I see this talk.<br>Basiclly they does same stuff as my current project, but we still have some differences on our implementation.<br>I’d like to share it and take some notes :D</p>
+<p>Here is the talk abour UGUI implementation.<br><a href="https://www.youtube.com/watch?v=uDQU_dlO-ZM" target="_blank" rel="noopener">video</a>.<br><a href="https://www.gdcvault.com/play/1024453/Data-Binding-Architectures-for-Rapid" target="_blank" rel="noopener">ppt</a>.<br><a href="https://stackoverflow.com/questions/667781/what-is-the-difference-between-mvc-and-mvvm" target="_blank" rel="noopener">temp</a>.</p>
+<h1 id="Main-note"><a href="#Main-note" class="headerlink" title="Main note"></a>Main note</h1><h2 id="Architecture-in-lt-Lost-Survivor-gt"><a href="#Architecture-in-lt-Lost-Survivor-gt" class="headerlink" title="Architecture in &lt; Lost Survivor &gt;"></a>Architecture in &lt; Lost Survivor &gt;</h2><ul>
+<li>Artist works directly in Unity (Creating prefabs, setup aniamtions; well that’s what I my current project does, so I guess they did the same)</li>
+<li>Dev works on GameLogic and UILogic</li>
+<li>Dev/Art work decoupled</li>
+<li>Dev/Art work parallel (This happens a lot in iteration)</li>
+</ul>
+<h2 id="The-Pattern-used-in-lt-Lost-Survivor-gt"><a href="#The-Pattern-used-in-lt-Lost-Survivor-gt" class="headerlink" title="The Pattern used in &lt; Lost Survivor &gt;"></a>The Pattern used in &lt; Lost Survivor &gt;</h2><h3 id="MVCVM-they-choose-this"><a href="#MVCVM-they-choose-this" class="headerlink" title="MVCVM (they choose this)"></a>MVCVM (they choose this)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">                                                                                                                               </span><br><span class="line">                                                        +---------------------------------------+                              </span><br><span class="line">                                                        |                data binding           |                              </span><br><span class="line">                                                        |                    &lt;-&gt;                |                              </span><br><span class="line">                                                        |                                       |                              </span><br><span class="line">                                                        |                                       |                              </span><br><span class="line">+------------------------------+                        |                                       |                              </span><br><span class="line">|                              | +----------------------|-------+    +------------------------------+ +-----------------------+</span><br><span class="line">----------Controller------------ |         Model                |    |        View Model            | |    View (UGUI View)   |</span><br><span class="line">|                              | --------------------------------    -------------------------------- -------------------------</span><br><span class="line">| void GainXP();               | |      int XP;                 |    |                              | | Text XP;              |</span><br><span class="line">| void LevelUp();              | |      int Level;              |    |                              | | Text Attribute;       |</span><br><span class="line">|                              | |                              |    |                              | | Button ReAllocate;    |</span><br><span class="line">|                              | +--------------&#x2F;---------------+    +---------------\--------------+ | int WeaponATK;        |</span><br><span class="line">+---------------\--------------+              &#x2F;-                                      -\              |                       |</span><br><span class="line">                 \                          &#x2F;-                                          -\            +-----------&#x2F;-----------+</span><br><span class="line">                  -\                      &#x2F;-                                              \                      |             </span><br><span class="line">                    \                   &#x2F;-                                                 -\                    &#x2F;             </span><br><span class="line">            +---------------------------------------------------------------------------------------------------|-------+      </span><br><span class="line">            |                                                                                                           |      </span><br><span class="line">            |                                               Message Bus                                                 |      </span><br><span class="line">            +-----------------------------------------------------|-----------------------------------------------------+      </span><br><span class="line">                                                                  |                                                            </span><br><span class="line">                                                                  |                                                            </span><br><span class="line">                                                                  |                                                            </span><br><span class="line">                                                    +-------------|------------+                                               </span><br><span class="line">                                                    |                          |                                               </span><br><span class="line">                                                    |      server backend      |                                               </span><br><span class="line">                                                    |                          |                                               </span><br><span class="line">                                                    +--------------------------+</span><br></pre></td></tr></table></figure>
+<p>This is the pattern they use for their project.<br>The one thing that I cant understand is that the View will receive events from MessageBus. IDK why they did like this, cuz the view and receive notifications from ViewModel.</p>
+<h3 id="MVC"><a href="#MVC" class="headerlink" title="MVC"></a>MVC</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">                                                                                                                                                                                                   </span><br><span class="line">                                   +------------------------------+                                    </span><br><span class="line">                                   |          Controller          |                                    </span><br><span class="line">+---------------------------------------------------------------------------------------------+        </span><br><span class="line">|         user action -&gt;           |  void GainXp();              |       update -&gt;           |        </span><br><span class="line">|                                  |  Void LevelUp();             |                           |        </span><br><span class="line">|                                  |  int GetAttribute(type);     |                           |        </span><br><span class="line">|                                  |                              |                           |        </span><br><span class="line">|                                  |                              |                           |        </span><br><span class="line">|                                  +-------|--------------|-------+                           |        </span><br><span class="line">|                                          |              |                                   |        </span><br><span class="line">|------------------------------+           |              |            +----------------------|-------+</span><br><span class="line">|    Character View            |           |              |            |         Model                |</span><br><span class="line">--------------------------------           |              |            --------------------------------</span><br><span class="line">| Text XP;                     |           |              |            | int AmountXp;                |</span><br><span class="line">| Text Attribute;              ------------+              |            | int AttributeTypeA;          |</span><br><span class="line">| Button ReAllocate;           | &lt;- update                |            | int AttributeTypeB;          |</span><br><span class="line">|                              |                          +-------------                              |</span><br><span class="line">|                              |                     &lt;- notify change? |                              |</span><br><span class="line">+------------------------------+                                       +------------------------------+</span><br></pre></td></tr></table></figure>
+<p>I’m sure this pattern is kind of useful. I use this a lot when I did the first version of some UI pages. But later the Controller become a giant class.<br>And also I think the View and Controller in this pattern is not very reusable.</p>
+<h3 id="MVVM"><a href="#MVVM" class="headerlink" title="MVVM"></a>MVVM</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">                                                                                                                            </span><br><span class="line">                                                                                            +------------------------------+</span><br><span class="line">                                                                                            |         Model Character      |</span><br><span class="line">                                                                            +-----------------------------------------------</span><br><span class="line">                                                                            |               | int AmountXp;                |</span><br><span class="line">                                                                            |               | int AttributeTypeA;          |</span><br><span class="line">                                                                            |               | int AttributeTypeB;          |</span><br><span class="line">                                                                            |               |                              |</span><br><span class="line">                                                                            |               |                              |</span><br><span class="line">                                                                            |               +------------------------------+</span><br><span class="line">+------------------------------+                     +----------------------|-------+                                       </span><br><span class="line">|      Character View          |   data binding &lt;-&gt;  |        View Model            |                                       </span><br><span class="line">--------------------------------   notifications &lt;-  --------------------------------                                       </span><br><span class="line">| Text XP;                     |   command -&gt;        |int AmountXP;                 |                                       </span><br><span class="line">| Text Attribute;              ----------------------+int WeaponATK;                |                                       </span><br><span class="line">| Button ReAllocate;           |                     |int WeaponLevel;              |       +------------------------------+</span><br><span class="line">| int WeaponATK;               |                     |                              |       |         Model Weapon         |</span><br><span class="line">|                              |                     |                              |       --------------------------------</span><br><span class="line">+------------------------------+                     +----------------------|-------+       | int ATK;                     |</span><br><span class="line">                                                                            |               | int Level;                   |</span><br><span class="line">                                                                            +----------------                              |</span><br><span class="line">                                                                                            +------------------------------+</span><br></pre></td></tr></table></figure>
+<ul>
+<li>ViewModel serves the View</li>
+<li>One ViewModel per View</li>
+<li>Based on Data Binding</li>
+</ul>
+<p>After a few iterations, I find this pattern is also a good solutions. And I feel that we can even use CompositePattern in ViewModel to create big ViewModel for some big views(resuable).</p>
+<p>In my current project, for the UI-View, we create some basic view that can receive similar types of data. And the good thing from this pattern is that the VM can send notificaiton to View to update, then I dun need to have lots of update method from Controller to update different data (cuz some data update need aniamtion, I cant just update all).</p>
+<h2 id="Problems"><a href="#Problems" class="headerlink" title="Problems"></a>Problems</h2><p>Previously it says that separating UIPrefabs creation and UILogic code may solve “Not my problem attitude”. But actually not.<br>In production state, everyone is busy, and we are iterating View-Scripts and VM-Scripts together. Sometimes it is diffcult to tell that is code issues or setup issues. Unless we have solid View-Scripts.</p>
+<h2 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h2><p>This talk has lots of similiar content as the DivisionUI talk. And I also realise that the game development has lots of unknow shit. It’s very difficult to have some resuable components that always works. Even the thougts are similar, the implementation can be different. A solution can be that having some solid, simple, basic and resuable compoents.</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/08/14/20220912-unity-findref-guid/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="2C2C2C2">
+      <meta itemprop="description" content="随便记录一些东西">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FishPlayer">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/08/14/20220912-unity-findref-guid/" class="post-title-link" itemprop="url">查询Asset在工程中的引用(GUID)</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-08-14 10:55:21" itemprop="dateCreated datePublished" datetime="2022-08-14T10:55:21+08:00">2022-08-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-09-12 17:26:43" itemprop="dateModified" datetime="2022-09-12T17:26:43+08:00">2022-09-12</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/UnityEditor/" itemprop="url" rel="index"><span itemprop="name">UnityEditor</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>之前我用Unity自带的API去查询一些物体的引用，结果当然是超超超超超级慢，对于那些把项目工程放在辣鸡机械盘上的同事，这个工具根本是没法好好用的。而且因为要用Unity的APi，自然是没办法使用async的。</p>
+<p>最近导师拿到QA那边提供的一个类似的工具，改了一下，做了一个超级快的版本。</p>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>思路其实是非常简单的。我们知道Unity Asset会有一个唯一的GUID，那我们就可以用这个GUID去查询其引用。<br>查询的时候我们也不需要使用Unity API去检查引用，而是把我们的各种Asset都当成文本文件直接读取，然后直接在这些文本里去匹配我们需要查询的GUID。</p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// guidRegex just contains the asset guid</span></span><br><span class="line"><span class="function">List&lt;<span class="keyword">string</span>&gt; <span class="title">GetResult</span>(<span class="params"><span class="keyword">string</span>[] folders, Regex guidRegex</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">string</span>[] files = folders.SelectMany(folder =&gt; Directory.GetFiles(folder, <span class="string">"*"</span>SearchOption.AllDirectories)).ToArray();</span><br><span class="line">    List&lt;<span class="keyword">string</span>&gt; result = <span class="keyword">new</span> List&lt;<span class="keyword">string</span>&gt;(<span class="number">200</span>);</span><br><span class="line">    <span class="keyword">int</span> count = files.Length;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">string</span> filePath = files[i];</span><br><span class="line">        <span class="keyword">if</span> (ChecKFile(filePath, guidRegex))</span><br><span class="line">        &#123;</span><br><span class="line">            result.Add(filePath);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">ChecKFile</span>(<span class="params"><span class="keyword">string</span> filepath, Regex fileContent</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">string</span> assetText = File.ReadAllText(filepath);</span><br><span class="line">    MatchCollection matches = fileContent.Matches(assetText);</span><br><span class="line">    <span class="keyword">return</span> matches.Count &gt; <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>关键代码和Unity API毫无关系，可以避免长时间的卡死，而且我们也能加入取消搜索的功能之类的。如果在乎性能的话可以还可以在读文件检查这边做优化。不过感觉这样已经比之前快了许多了。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/08/14/20220814-unity-recttransform/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -234,84 +401,6 @@
 <p>rect.position指的是以Pivot为原点，UI元素左下角的坐标。(right,up 为正方向)</p>
 <h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a href="https://zhuanlan.zhihu.com/p/194317677" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/194317677</a><br><a href="https://blog.csdn.net/jmu201521121014/article/details/105725175" target="_blank" rel="noopener">https://blog.csdn.net/jmu201521121014/article/details/105725175</a></p>
 <p>顺便推荐一下在线画图小工具，不方便贴图的时候用这个还挺不错的。<br><a href="https://asciiflow.com/#/" target="_blank" rel="noopener">https://asciiflow.com/#/</a><br><a href="https://textik.com/" target="_blank" rel="noopener">https://textik.com/</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/08/14/20220912-unity-findref-guid/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="2C2C2C2">
-      <meta itemprop="description" content="随便记录一些东西">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FishPlayer">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/08/14/20220912-unity-findref-guid/" class="post-title-link" itemprop="url">查询Asset在工程中的引用(GUID)</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-08-14 10:55:21" itemprop="dateCreated datePublished" datetime="2022-08-14T10:55:21+08:00">2022-08-14</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-09-12 17:26:43" itemprop="dateModified" datetime="2022-09-12T17:26:43+08:00">2022-09-12</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/UnityEditor/" itemprop="url" rel="index"><span itemprop="name">UnityEditor</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>之前我用Unity自带的API去查询一些物体的引用，结果当然是超超超超超级慢，对于那些把项目工程放在辣鸡机械盘上的同事，这个工具根本是没法好好用的。而且因为要用Unity的APi，自然是没办法使用async的。</p>
-<p>最近导师拿到QA那边提供的一个类似的工具，改了一下，做了一个超级快的版本。</p>
-<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>思路其实是非常简单的。我们知道Unity Asset会有一个唯一的GUID，那我们就可以用这个GUID去查询其引用。<br>查询的时候我们也不需要使用Unity API去检查引用，而是把我们的各种Asset都当成文本文件直接读取，然后直接在这些文本里去匹配我们需要查询的GUID。</p>
-<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// guidRegex just contains the asset guid</span></span><br><span class="line"><span class="function">List&lt;<span class="keyword">string</span>&gt; <span class="title">GetResult</span>(<span class="params"><span class="keyword">string</span>[] folders, Regex guidRegex</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">string</span>[] files = folders.SelectMany(folder =&gt; Directory.GetFiles(folder, <span class="string">"*"</span>SearchOption.AllDirectories)).ToArray();</span><br><span class="line">    List&lt;<span class="keyword">string</span>&gt; result = <span class="keyword">new</span> List&lt;<span class="keyword">string</span>&gt;(<span class="number">200</span>);</span><br><span class="line">    <span class="keyword">int</span> count = files.Length;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">string</span> filePath = files[i];</span><br><span class="line">        <span class="keyword">if</span> (ChecKFile(filePath, guidRegex))</span><br><span class="line">        &#123;</span><br><span class="line">            result.Add(filePath);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">ChecKFile</span>(<span class="params"><span class="keyword">string</span> filepath, Regex fileContent</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">string</span> assetText = File.ReadAllText(filepath);</span><br><span class="line">    MatchCollection matches = fileContent.Matches(assetText);</span><br><span class="line">    <span class="keyword">return</span> matches.Count &gt; <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>关键代码和Unity API毫无关系，可以避免长时间的卡死，而且我们也能加入取消搜索的功能之类的。如果在乎性能的话可以还可以在读文件检查这边做优化。不过感觉这样已经比之前快了许多了。</p>
 
       
     </div>
@@ -440,7 +529,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-08-10 23:55:28" itemprop="dateModified" datetime="2022-08-10T23:55:28+08:00">2022-08-10</time>
+                <time title="修改时间：2022-10-05 14:48:07" itemprop="dateModified" datetime="2022-10-05T14:48:07+08:00">2022-10-05</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -469,7 +558,7 @@
 <p>Iterate your stuff to make it better.</p>
 <p>Threading and data driven make the work efficient.</p>
 <p><a href="https://www.youtube.com/watch?v=H1MLtML0np0" target="_blank" rel="noopener">video</a>.</p>
-<h1 id="Snop-drop-UI"><a href="#Snop-drop-UI" class="headerlink" title="Snop drop UI"></a>Snop drop UI</h1><ul>
+<h1 id="Snow-drop-UI"><a href="#Snow-drop-UI" class="headerlink" title="Snow drop UI"></a>Snow drop UI</h1><ul>
 <li>No canvas</li>
 <li>Immediate Mode<ul>
 <li>Constant cost (maybe it’s more statble?).</li>
@@ -982,91 +1071,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/04/16/20220416-odin-custom-value-drawer/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="2C2C2C2">
-      <meta itemprop="description" content="随便记录一些东西">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FishPlayer">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/16/20220416-odin-custom-value-drawer/" class="post-title-link" itemprop="url">Unity Odin CustomValueDrawer 小坑</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-04-16 10:20:26" itemprop="dateCreated datePublished" datetime="2022-04-16T10:20:26+08:00">2022-04-16</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-05-15 14:11:17" itemprop="dateModified" datetime="2022-05-15T14:11:17+08:00">2022-05-15</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Unity/" itemprop="url" rel="index"><span itemprop="name">Unity</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>为了方便策划在 scriptable object 上配置我们的任务以及事件相关的文本，我做了一个简单的 struct 。里面包含了 I2 的 Lockey 和一个参数数组。<br>既然要方便策划配置，那肯定要做一个简单的预览，这样策划就能知道自己配置的文本参数是否正确。</p>
-<p>既然要做预览，那肯定得得自己复写一下他的 property drawer了。对一个字段的编辑器绘制重写有两种方式，一种是继承 OdinValueDrawer class， 还有一种是 CustomValueDrawer Attribute.</p>
-<p><a href="https://odininspector.com/tutorials/how-to-create-custom-drawers-using-odin/how-to-create-a-custom-value-drawer" target="_blank" rel="noopener">https://odininspector.com/tutorials/how-to-create-custom-drawers-using-odin/how-to-create-a-custom-value-drawer</a><br><a href="https://odininspector.com/attributes/custom-value-drawer-attribute" target="_blank" rel="noopener">https://odininspector.com/attributes/custom-value-drawer-attribute</a></p>
-<h1 id="踩坑"><a href="#踩坑" class="headerlink" title="踩坑"></a>踩坑</h1><p>我定义的结构是这样的。</p>
-<p>在默认情况下他已经能在 inspector上画出我的 Lockey 和我的参数数组。<br>因为考虑到给整个结构做 OdinValueDrawer 需要自己画数组有点麻烦，所以我选择用 CustomValueDrawer 只重新画 LocalizedString。</p>
-<p>LocalizedString 的重画我直接照搬了同事的，但是我发现了一个非常奇怪的问题。</p>
-<p>我创建了一个下拉选框，然后在用户选中一个新的 lockey 的时候我对结构体中的 lockey 进行更新。但我发现在下拉选框的选中事件触发后进行赋值，绘制完成再返回新的结构，得到的是没有被更改的结果。<br>但是同样的绘制代码，在 OdinValueDrawer 中却能得到正确的结果！！！CustomValueDrawer 和 OdinValueDrawer 的原理是不一样的。</p>
-<p>OdinValueDrawer 就是相当于一个更先进的 Property Drawer, 在这个绘制器里是可以获取到原本的实际的字段值的。</p>
-<p>CustomValueDrawer 则像是一个函数，里面包含了绘制的方法，但是不能够直接操作原本的字段，需要最后把你更新到的值返回出去，这才能够赋值给实际的那个字段。</p>
-<p>代码给出，有问题的地方使用注释标明了。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[<span class="meta">Serializable</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">struct</span> LocalizationStringParmPack</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">CustomValueDrawer(<span class="meta-string">"DrawPreviewText"</span>)</span>]</span><br><span class="line">    <span class="keyword">public</span> LocalizedString TextLoc;</span><br><span class="line">    <span class="keyword">public</span> LocalizationParamsManager.ParamValue[] ParmsArray;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">string</span> <span class="title">ToString</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.GetRawEnglishString();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> UNITY_EDITOR</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> GUIStyle m_previewStyle;</span><br><span class="line">    <span class="keyword">static</span> GUIStyle PreviewStyle</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">get</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (m_previewStyle == <span class="literal">null</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                m_previewStyle = <span class="keyword">new</span> GUIStyle(EditorStyles.textArea);</span><br><span class="line">                m_previewStyle.wordWrap = <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> m_previewStyle;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// use hacky stuff to get selected new lockey</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">string</span> s_wtfKey = <span class="keyword">string</span>.Empty;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">bool</span> s_hasChanged = <span class="literal">false</span>;</span><br><span class="line">    <span class="function">LocalizedString <span class="title">DrawPreviewText</span>(<span class="params">LocalizedString <span class="keyword">value</span>, GUIContent label</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">using</span> (<span class="keyword">new</span> EditorGUILayout.VerticalScope(UnityEditor.EditorStyles.helpBox))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// draw lockey</span></span><br><span class="line">            <span class="keyword">using</span> (<span class="keyword">new</span> EditorGUILayout.HorizontalScope())</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (label != <span class="literal">null</span>)</span><br><span class="line">                &#123;</span><br><span class="line">                    EditorGUILayout.LabelField(label, GUILayout.Width(EditorGUIUtility.labelWidth));</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="comment">// weird stuff happin in dropdown</span></span><br><span class="line">                <span class="keyword">if</span> (EditorGUILayout.DropdownButton(<span class="keyword">new</span> GUIContent(<span class="keyword">value</span>.mTerm), FocusType.Keyboard))</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">var</span> terms = LocalizationManager.GetTermsList();</span><br><span class="line">                    <span class="keyword">var</span> selector = <span class="keyword">new</span> GenericSelector&lt;<span class="keyword">string</span>&gt;(<span class="string">"Select Term"</span>, terms);</span><br><span class="line">                    selector.EnableSingleClickToSelect();</span><br><span class="line">                    selector.SelectionConfirmed += s =&gt;</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="keyword">if</span> (s.Any())</span><br><span class="line">                        &#123;</span><br><span class="line">                            s_wtfKey = s.First();</span><br><span class="line">                            <span class="comment">// WEIRD STUFF HERE</span></span><br><span class="line">                            <span class="comment">/* if I do  </span></span><br><span class="line"><span class="comment">                            LocalizedString next = new LocalizedString(s.First());</span></span><br><span class="line"><span class="comment">                            and return 'next' and the end of method, it just doesnt work!!!</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">                            cuz the GenericSelector is actually a editor window, and</span></span><br><span class="line"><span class="comment">                            */</span></span><br><span class="line">                            s_hasChanged = <span class="literal">true</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;;</span><br><span class="line">                    selector.ShowInPopup();</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">int</span> mask = (<span class="keyword">value</span>.mRTL_IgnoreArabicFix ? <span class="number">0</span> : <span class="number">1</span>) +</span><br><span class="line">                           (<span class="keyword">value</span>.mRTL_ConvertNumbers ? <span class="number">0</span> : <span class="number">2</span>) +</span><br><span class="line">                           (<span class="keyword">value</span>.m_DontLocalizeParameters ? <span class="number">0</span> : <span class="number">4</span>);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">using</span> (<span class="keyword">var</span> changed = <span class="keyword">new</span> EditorGUI.ChangeCheckScope())</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">int</span> newMask = EditorGUILayout.MaskField(mask, <span class="keyword">new</span> <span class="keyword">string</span>[] &#123; <span class="string">"Arabic Fix"</span>, <span class="string">"Ignore Numbers in RTL"</span>, <span class="string">"Localize Parameters"</span> &#125;, GUILayout.Width(<span class="number">30</span>));</span><br><span class="line">                    <span class="keyword">if</span> (newMask != mask)</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="keyword">value</span>.mRTL_IgnoreArabicFix = (newMask &amp; <span class="number">1</span>) == <span class="number">0</span>;</span><br><span class="line">                        <span class="keyword">value</span>.mRTL_ConvertNumbers = (newMask &amp; <span class="number">2</span>) == <span class="number">0</span>;</span><br><span class="line">                        <span class="keyword">value</span>.m_DontLocalizeParameters = (newMask &amp; <span class="number">4</span>) == <span class="number">0</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (GUILayout.Button(<span class="string">$"Clear"</span>))</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="comment">/* this will also work</span></span><br><span class="line"><span class="comment">                    LocalizedString next = new LocalizedString("[NULL]");</span></span><br><span class="line"><span class="comment">                    */</span></span><br><span class="line">                    s_wtfKey = <span class="string">"[NULL]"</span>;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            LocalizedString next = s_hasChanged ? <span class="keyword">new</span> LocalizedString(s_wtfKey) : <span class="keyword">value</span>;</span><br><span class="line">            s_hasChanged = <span class="literal">false</span>;</span><br><span class="line">            <span class="comment">/*</span></span><br><span class="line"><span class="comment">            draw preview</span></span><br><span class="line"><span class="comment">            draw preview</span></span><br><span class="line"><span class="comment">            draw preview</span></span><br><span class="line"><span class="comment">            */</span></span><br><span class="line">            <span class="keyword">return</span> next;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">string</span> <span class="title">GetParamValue</span>(<span class="params"><span class="keyword">string</span> key</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; ParmsArray.Length; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (ParmsArray[i].Name == key)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">string</span>.IsNullOrEmpty(ParmsArray[i].Value) ? key : ParmsArray[i].Value;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> key;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="又踩坑"><a href="#又踩坑" class="headerlink" title="又踩坑"></a>又踩坑</h1><p>因为这边使用了静态字段，所以如果需要同时绘制这个字段两次，那就会出问题。所以最后我还是换回OdinValueDrawer。<br>静态字段最好还是别在这种情况下使用吧。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1138,7 +1142,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-count">30</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
