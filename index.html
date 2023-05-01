@@ -152,6 +152,81 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2023/05/01/20230501-list-pass-predicate/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="2C2C2C2">
+      <meta itemprop="description" content="随便记录一些东西">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FishPlayer">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/05/01/20230501-list-pass-predicate/" class="post-title-link" itemprop="url">传入Predicate的小事</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-05-01 14:16:03 / 修改时间：14:47:56" itemprop="dateCreated datePublished" datetime="2023-05-01T14:16:03+08:00">2023-05-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/CSharp/" itemprop="url" rel="index"><span itemprop="name">CSharp</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>现在依旧是在项目里负责一些UI业务的编写。前段时间需要需要给游戏中的 popup提示 做一些简单的重构，正好发现了我一直以来都误解的一个小点，决定记下来。</p>
+<p>业务的要求就是做那种会弹出来一会儿再消失的提示，比如道具获取之类的UI。</p>
+<p>我的做法就是用一个list去存着当前的提示，并 tick 检查它们是否结束，然后移除已经结束的相关数据。<br>大概的用法如下。</p>
+<img src="/2023/05/01/20230501-list-pass-predicate/20230501-pic001.png" class="" title="split">
+<p>但其实啊，这个做法在 tick 是非常不好的。同事很快地通过 JetBrainsRider 查看 IL Code ，并告诉我，直接这样传入会每次都 new obj 。有比较大的消耗。<br>所以在这种需要<strong>经常</strong> tick 并且条件<strong>比较固定</strong>的情况下。我们可以创建好 predicate 然后直接重复使用(可以存在成员变量里，这里演示就直接存在本地变量里了)。</p>
+<img src="/2023/05/01/20230501-list-pass-predicate/20230501-pic002.png" class="" title="split">
+<p>最后附上测试代码和结果 测试 count 为 100000</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">PredicateTempTest</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">struct</span> TempPack</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">int</span> tempValue;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> Random s_random = <span class="keyword">new</span> Random(DateTime.Now.Millisecond);</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> TempPack <span class="title">CreateTempPack</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            TempPack pack = <span class="keyword">default</span>;</span><br><span class="line">            <span class="keyword">if</span> (s_random == <span class="literal">null</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                s_random = <span class="keyword">new</span> Random(DateTime.Now.Millisecond);</span><br><span class="line">            &#125;</span><br><span class="line">            pack.tempValue = s_random.Next(<span class="number">0</span>, <span class="number">10</span>);</span><br><span class="line">            <span class="keyword">return</span> pack;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> List&lt;List&lt;TempPack&gt;&gt; s_tempListContainer = <span class="keyword">new</span> List&lt;List&lt;TempPack&gt;&gt;(<span class="number">10000</span>);</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">DoTest</span>(<span class="params"><span class="keyword">int</span> tempCount</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        FillTestData(tempCount);</span><br><span class="line">        DoTestLambda();</span><br><span class="line">        DoTestPassMethod();</span><br><span class="line">        DoTestPassExistPredicate();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">FillTestData</span>(<span class="params"><span class="keyword">int</span> tempCount</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        s_tempListContainer.Clear();</span><br><span class="line">        s_tempListContainer.Capacity = tempCount;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; tempCount; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            List&lt;TempPack&gt; tempList = <span class="keyword">new</span> List&lt;TempPack&gt;(tempCount);</span><br><span class="line">            s_tempListContainer.Add(tempList);</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; tempCount; j++)</span><br><span class="line">            &#123;</span><br><span class="line">                tempList.Add(TempPack.CreateTempPack());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">DoTestLambda</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Console.WriteLine(<span class="string">""</span>);</span><br><span class="line">        Console.WriteLine(<span class="string">"TestLambda start"</span>);</span><br><span class="line">        Stopwatch stopWatch = <span class="keyword">new</span> Stopwatch();</span><br><span class="line">        stopWatch.Start();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>, containerSize = s_tempListContainer.Count; i &lt; containerSize; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            List&lt;TempPack&gt; tempList = s_tempListContainer[i];</span><br><span class="line">            tempList.Find((existPack) =&gt; existPack.tempValue % <span class="number">5</span> == <span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        stopWatch.Stop();</span><br><span class="line">        Console.WriteLine(<span class="string">$"TestLambda end, result_<span class="subst">&#123;stopWatch.ElapsedMilliseconds&#125;</span>ms"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">DoTestPassMethod</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Console.WriteLine(<span class="string">""</span>);</span><br><span class="line">        Console.WriteLine(<span class="string">"PassMethod start"</span>);</span><br><span class="line">        Stopwatch stopWatch = <span class="keyword">new</span> Stopwatch();</span><br><span class="line">        stopWatch.Start();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>, containerSize = s_tempListContainer.Count; i &lt; containerSize; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            List&lt;TempPack&gt; tempList = s_tempListContainer[i];</span><br><span class="line">            tempList.Find(CheckPack);</span><br><span class="line">        &#125;</span><br><span class="line">        stopWatch.Stop();</span><br><span class="line">        Console.WriteLine(<span class="string">$"PassMethod end, result_<span class="subst">&#123;stopWatch.ElapsedMilliseconds&#125;</span>ms"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">DoTestPassExistPredicate</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Console.WriteLine(<span class="string">""</span>);</span><br><span class="line">        Console.WriteLine(<span class="string">"PassExistPredicate start"</span>);</span><br><span class="line">        Stopwatch stopWatch = <span class="keyword">new</span> Stopwatch();</span><br><span class="line">        stopWatch.Start();</span><br><span class="line">        Predicate&lt;TempPack&gt; predicate = <span class="keyword">new</span> Predicate&lt;TempPack&gt;(CheckPack);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>, containerSize = s_tempListContainer.Count; i &lt; containerSize; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            List&lt;TempPack&gt; tempList = s_tempListContainer[i];</span><br><span class="line">            tempList.Find(predicate);</span><br><span class="line">        &#125;</span><br><span class="line">        stopWatch.Stop();</span><br><span class="line">        Console.WriteLine(<span class="string">$"PassExistPredicate end, result_<span class="subst">&#123;stopWatch.ElapsedMilliseconds&#125;</span>ms"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">bool</span> <span class="title">CheckPack</span>(<span class="params">TempPack pack</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> pack.tempValue % <span class="number">5</span> == <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">        </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<img src="/2023/05/01/20230501-list-pass-predicate/20230501-pic003.png" class="" title="split">
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2023/03/26/20230326-ui-element-positioning/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -175,9 +250,24 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2023-03-26 13:55:12 / 修改时间：14:21:20" itemprop="dateCreated datePublished" datetime="2023-03-26T13:55:12+08:00">2023-03-26</time>
+              <time title="创建时间：2023-03-26 13:55:12" itemprop="dateCreated datePublished" datetime="2023-03-26T13:55:12+08:00">2023-03-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-05-01 14:20:26" itemprop="dateModified" datetime="2023-05-01T14:20:26+08:00">2023-05-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Unity/" itemprop="url" rel="index"><span itemprop="name">Unity</span></a>
+                </span>
             </span>
 
           
@@ -342,7 +432,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-10-05 17:18:36" itemprop="dateModified" datetime="2022-10-05T17:18:36+08:00">2022-10-05</time>
+                <time title="修改时间：2023-05-01 14:22:03" itemprop="dateModified" datetime="2023-05-01T14:22:03+08:00">2023-05-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -777,10 +867,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-07-30 17:55:21 / 修改时间：19:46:50" itemprop="dateCreated datePublished" datetime="2022-07-30T17:55:21+08:00">2022-07-30</time>
+              <time title="创建时间：2022-07-30 17:55:21" itemprop="dateCreated datePublished" datetime="2022-07-30T17:55:21+08:00">2022-07-30</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-05-01 14:21:54" itemprop="dateModified" datetime="2023-05-01T14:21:54+08:00">2023-05-01</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -848,10 +944,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-07-24 17:55:21 / 修改时间：18:21:40" itemprop="dateCreated datePublished" datetime="2022-07-24T17:55:21+08:00">2022-07-24</time>
+              <time title="创建时间：2022-07-24 17:55:21" itemprop="dateCreated datePublished" datetime="2022-07-24T17:55:21+08:00">2022-07-24</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-05-01 14:21:48" itemprop="dateModified" datetime="2023-05-01T14:21:48+08:00">2023-05-01</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -971,97 +1073,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/05/15/20220515-hyperv-vpn-inside/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="2C2C2C2">
-      <meta itemprop="description" content="随便记录一些东西">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FishPlayer">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/15/20220515-hyperv-vpn-inside/" class="post-title-link" itemprop="url">Hyperv 虚拟机共享VPN给宿主机</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-05-15 17:55:21 / 修改时间：21:27:08" itemprop="dateCreated datePublished" datetime="2022-05-15T17:55:21+08:00">2022-05-15</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/VirtualMachine/" itemprop="url" rel="index"><span itemprop="name">VirtualMachine</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>被封在鼠窝里两个月了，一直都是在家用自己的老爷备用机做工作。但是老(项)爷(目)机的性(优)能(化)实在是太差了。<br>打开 Unity 需要5分钟，编译代码3分钟，点一下 play 又是2分钟。这段时间来回修各种BUG，切来切去浪费了很多时间。</p>
-<p>决定还是用大奶机工作了，但又非常不愿意把公司的间谍全家桶装在电脑上，咋办呢？</p>
-<p>上网查了一下，大家说可以把全家桶关在虚拟机里，然后再把网络分享给宿主机。</p>
-<h2 id="Hyper-V"><a href="#Hyper-V" class="headerlink" title="Hyper-V"></a>Hyper-V</h2><p>最开始试用了 VirtualBox 无论是装32位还是64位的Win10或者 WinServer 都卡到飞起。即使把虚拟机的虚拟盘放在 SSD 上也还是卡。<br>了解到 Windows 有这个 Hyper-V 虚拟机就决定试用一下。</p>
-<p>结果这个玩意儿性能超棒的哦！放在 SSD 上可以说是不怎么卡。而且也能直接读宿主机的硬盘或油盘，非常的方便，虽然读盘的时候硬盘使用率显示是拉满的。</p>
-<p>我记得以前如果要要使用 VM 或者 VBox 的话需要关闭 Hyper-V 的功能，但是自从 Win10 20H2 还是某个版本之后就不需要这么做了。</p>
-<h3 id="虚拟机启动小坑"><a href="#虚拟机启动小坑" class="headerlink" title="虚拟机启动小坑"></a>虚拟机启动小坑</h3><p>“Boot Issue: Start PXE over IPv4”</p>
-<p>装好系统以后俺启动虚拟机就报这个错误。<br>把硬盘移动到第一位就好了。</p>
-<img src="/2022/05/15/20220515-hyperv-vpn-inside/20220515-pic004.png" class="" title="split">
-<h2 id="配置虚拟网卡"><a href="#配置虚拟网卡" class="headerlink" title="配置虚拟网卡"></a>配置虚拟网卡</h2><p>参考了网上的通用方案，需要两张虚拟网卡，一张桥接用来上网，另一个接收全家桶的分享。</p>
-<p>桥接</p>
-<p>我这边选用的是有线网的接口</p>
-<img src="/2022/05/15/20220515-hyperv-vpn-inside/20220515-pic001.png" class="" title="split">
-<p>内部网络</p>
-<img src="/2022/05/15/20220515-hyperv-vpn-inside/20220515-pic002.png" class="" title="split">
-<p>ipconfig 结果</p>
-<img src="/2022/05/15/20220515-hyperv-vpn-inside/20220515-pic003.png" class="" title="split">
-<h2 id="宿主机配置"><a href="#宿主机配置" class="headerlink" title="宿主机配置"></a>宿主机配置</h2><p>接下来就是配置宿主机，这又有一个不一样的情况出现了。</p>
-<p>在 Hyper-V 那边添加了1个虚拟交换机以后, 宿主机这边会出现2个适配器。不知道是不是我这边特有的情况。<br>把内部网络适配器的IP地址设置到 192.168.137.0 网段，我这边修改的是这个名字相同的。</p>
-<img src="/2022/05/15/20220515-hyperv-vpn-inside/20220515-pic005.png" class="" title="split">
-<p>然后宿主机添加转发就可以了，不过速度不够快，全家桶直接装宿主机上还是比较快的，</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">route add x.y.0.0 mask 255.255.0.0 192.168.137.1</span><br></pre></td></tr></table></figure>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="https://yidianyidi.fun/VirtualBox/yidianyidi-1708121150.html" target="_blank" rel="noopener">https://yidianyidi.fun/VirtualBox/yidianyidi-1708121150.html</a></p>
-<p><a href="https://www.youtube.com/watch?v=9Hc-5EOtaJs" target="_blank" rel="noopener">https://www.youtube.com/watch?v=9Hc-5EOtaJs</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1133,13 +1144,13 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-count">32</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">

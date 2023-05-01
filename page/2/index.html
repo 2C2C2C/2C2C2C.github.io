@@ -152,6 +152,97 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/05/15/20220515-hyperv-vpn-inside/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="2C2C2C2">
+      <meta itemprop="description" content="随便记录一些东西">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FishPlayer">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/05/15/20220515-hyperv-vpn-inside/" class="post-title-link" itemprop="url">Hyperv 虚拟机共享VPN给宿主机</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-05-15 17:55:21 / 修改时间：21:27:08" itemprop="dateCreated datePublished" datetime="2022-05-15T17:55:21+08:00">2022-05-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/VirtualMachine/" itemprop="url" rel="index"><span itemprop="name">VirtualMachine</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>被封在鼠窝里两个月了，一直都是在家用自己的老爷备用机做工作。但是老(项)爷(目)机的性(优)能(化)实在是太差了。<br>打开 Unity 需要5分钟，编译代码3分钟，点一下 play 又是2分钟。这段时间来回修各种BUG，切来切去浪费了很多时间。</p>
+<p>决定还是用大奶机工作了，但又非常不愿意把公司的间谍全家桶装在电脑上，咋办呢？</p>
+<p>上网查了一下，大家说可以把全家桶关在虚拟机里，然后再把网络分享给宿主机。</p>
+<h2 id="Hyper-V"><a href="#Hyper-V" class="headerlink" title="Hyper-V"></a>Hyper-V</h2><p>最开始试用了 VirtualBox 无论是装32位还是64位的Win10或者 WinServer 都卡到飞起。即使把虚拟机的虚拟盘放在 SSD 上也还是卡。<br>了解到 Windows 有这个 Hyper-V 虚拟机就决定试用一下。</p>
+<p>结果这个玩意儿性能超棒的哦！放在 SSD 上可以说是不怎么卡。而且也能直接读宿主机的硬盘或油盘，非常的方便，虽然读盘的时候硬盘使用率显示是拉满的。</p>
+<p>我记得以前如果要要使用 VM 或者 VBox 的话需要关闭 Hyper-V 的功能，但是自从 Win10 20H2 还是某个版本之后就不需要这么做了。</p>
+<h3 id="虚拟机启动小坑"><a href="#虚拟机启动小坑" class="headerlink" title="虚拟机启动小坑"></a>虚拟机启动小坑</h3><p>“Boot Issue: Start PXE over IPv4”</p>
+<p>装好系统以后俺启动虚拟机就报这个错误。<br>把硬盘移动到第一位就好了。</p>
+<img src="/2022/05/15/20220515-hyperv-vpn-inside/20220515-pic004.png" class="" title="split">
+<h2 id="配置虚拟网卡"><a href="#配置虚拟网卡" class="headerlink" title="配置虚拟网卡"></a>配置虚拟网卡</h2><p>参考了网上的通用方案，需要两张虚拟网卡，一张桥接用来上网，另一个接收全家桶的分享。</p>
+<p>桥接</p>
+<p>我这边选用的是有线网的接口</p>
+<img src="/2022/05/15/20220515-hyperv-vpn-inside/20220515-pic001.png" class="" title="split">
+<p>内部网络</p>
+<img src="/2022/05/15/20220515-hyperv-vpn-inside/20220515-pic002.png" class="" title="split">
+<p>ipconfig 结果</p>
+<img src="/2022/05/15/20220515-hyperv-vpn-inside/20220515-pic003.png" class="" title="split">
+<h2 id="宿主机配置"><a href="#宿主机配置" class="headerlink" title="宿主机配置"></a>宿主机配置</h2><p>接下来就是配置宿主机，这又有一个不一样的情况出现了。</p>
+<p>在 Hyper-V 那边添加了1个虚拟交换机以后, 宿主机这边会出现2个适配器。不知道是不是我这边特有的情况。<br>把内部网络适配器的IP地址设置到 192.168.137.0 网段，我这边修改的是这个名字相同的。</p>
+<img src="/2022/05/15/20220515-hyperv-vpn-inside/20220515-pic005.png" class="" title="split">
+<p>然后宿主机添加转发就可以了，不过速度不够快，全家桶直接装宿主机上还是比较快的，</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">route add x.y.0.0 mask 255.255.0.0 192.168.137.1</span><br></pre></td></tr></table></figure>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="https://yidianyidi.fun/VirtualBox/yidianyidi-1708121150.html" target="_blank" rel="noopener">https://yidianyidi.fun/VirtualBox/yidianyidi-1708121150.html</a></p>
+<p><a href="https://www.youtube.com/watch?v=9Hc-5EOtaJs" target="_blank" rel="noopener">https://www.youtube.com/watch?v=9Hc-5EOtaJs</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/04/23/20220423-ez-anchor/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -863,88 +954,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/20/20201220-delete-douban-post/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="2C2C2C2">
-      <meta itemprop="description" content="随便记录一些东西">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FishPlayer">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/12/20/20201220-delete-douban-post/" class="post-title-link" itemprop="url">JS脚本删除豆瓣广播</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-12-20 22:23:02" itemprop="dateCreated datePublished" datetime="2020-12-20T22:23:02+08:00">2020-12-20</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-21 01:03:51" itemprop="dateModified" datetime="2020-12-21T01:03:51+08:00">2020-12-21</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="JS脚本删除豆瓣广播"><a href="#JS脚本删除豆瓣广播" class="headerlink" title="JS脚本删除豆瓣广播"></a>JS脚本删除豆瓣广播</h1><p>很久以前为了清理自己SPAM在微博的东西，找过批量删除微博的脚本。现在也想顺手清理一下豆瓣的，不过没找到比较好用的。<br>不过完全不会WEB开发，也只能自己拼凑一下。</p>
-<p>直接上代码吧</p>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>豆瓣有保护机制的，如果在短时间内疯狂发送请求，会在一定时间内被BAN IP（亲身经历）。<br>所以我们可以试着用随机等待的方式来避免这个问题。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// I steal this from somewhere</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sleepWait</span>(<span class="params">waitMsec</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> startMsec = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">    <span class="keyword">while</span> (<span class="keyword">new</span> <span class="built_in">Date</span>() - startMsec &lt; waitMsec);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">execTest</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> step = <span class="number">0</span>; step &lt; <span class="number">10</span>; step++) &#123;</span><br><span class="line">        location.reload();</span><br><span class="line">        <span class="keyword">var</span> waitDuration = (<span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * <span class="number">10</span>) + <span class="number">1</span>) * <span class="number">10000</span>;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'test log, next exec in'</span> + waitDuration + <span class="string">'ms'</span>);</span><br><span class="line">        sleepWait(waitDuration);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>删除的代码是我白嫖来的，在 我的广播 的页面里执行这个函数大概可以删除当前页面中的所有广播。<br>不过转发好像不一定能删除，之后还得找别的方法。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// I steal this from somewhere</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">execDelTest</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> a = <span class="function"><span class="keyword">function</span>(<span class="params">c</span>) </span>&#123; $.post_withck(<span class="string">"/j/status/delete"</span>, &#123; <span class="attr">sid</span>: c &#125;) &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> b = <span class="function"><span class="keyword">function</span>(<span class="params">c</span>) </span>&#123; $.post_withck(<span class="string">"/j/status/unreshare"</span>, &#123; <span class="attr">sid</span>: c &#125;) &#125;;</span><br><span class="line"></span><br><span class="line">    $(<span class="string">"a[data-reshare-id]"</span>).each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        b($(<span class="keyword">this</span>).attr(<span class="string">"data-reshare-id"</span>));</span><br><span class="line">        $(<span class="keyword">this</span>).hide()</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    $(<span class="string">"div[data-sid]"</span>).each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        a($(<span class="keyword">this</span>).attr(<span class="string">"data-sid"</span>));</span><br><span class="line">        $(<span class="keyword">this</span>).hide()</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>完整代码如下，不过真的怕被BAN IP 可以把随机等待的时间设定得长一些</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// I steal this from somewhere</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sleepWait</span>(<span class="params">waitMsec</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> startMsec = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">    <span class="keyword">while</span> (<span class="keyword">new</span> <span class="built_in">Date</span>() - startMsec &lt; waitMsec);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// I steal this from somewhere</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">execDelTest</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> a = <span class="function"><span class="keyword">function</span>(<span class="params">c</span>) </span>&#123; $.post_withck(<span class="string">"/j/status/delete"</span>, &#123; <span class="attr">sid</span>: c &#125;) &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> b = <span class="function"><span class="keyword">function</span>(<span class="params">c</span>) </span>&#123; $.post_withck(<span class="string">"/j/status/unreshare"</span>, &#123; <span class="attr">sid</span>: c &#125;) &#125;;</span><br><span class="line"></span><br><span class="line">    $(<span class="string">"a[data-reshare-id]"</span>).each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        b($(<span class="keyword">this</span>).attr(<span class="string">"data-reshare-id"</span>));</span><br><span class="line">        $(<span class="keyword">this</span>).hide()</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    $(<span class="string">"div[data-sid]"</span>).each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        a($(<span class="keyword">this</span>).attr(<span class="string">"data-sid"</span>));</span><br><span class="line">        $(<span class="keyword">this</span>).hide()</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">execDelLoop</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">let</span> step = <span class="number">0</span>; step &lt; <span class="number">10</span>; step++) &#123;</span><br><span class="line">        location.reload();</span><br><span class="line">        <span class="keyword">var</span> waitDuration = (<span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * <span class="number">10</span>) + <span class="number">1</span>) * <span class="number">10000</span>;</span><br><span class="line">        sleepWait(waitDuration);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// finally execute deletion :D</span></span><br><span class="line">execDelLoop();</span><br></pre></td></tr></table></figure>
-<h2 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h2><p>感觉web这边可以做蛮多方便日常生活用的脚本，改天真的要开始学一学才行。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1016,13 +1025,13 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-count">32</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
