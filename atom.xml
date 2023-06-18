@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2023-05-01T06:47:56.718Z</updated>
+  <updated>2023-06-18T05:08:52.937Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,60 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>动画控制Layout相关参数</title>
+    <link href="http://yoursite.com/2023/06/18/20230618-animating-layout-params/"/>
+    <id>http://yoursite.com/2023/06/18/20230618-animating-layout-params/</id>
+    <published>2023-06-18T02:29:43.000Z</published>
+    <updated>2023-06-18T05:08:52.937Z</updated>
+    
+    <content type="html"><![CDATA[<p>在实际制作UI的时候，为了完成一些排版设计，我们会经常用到Unity的布局(Layout)组件。甚至有些复杂的排版，我会用嵌套布局来实现。<br>UI美术人经常希望在这些布局上加上一些进场出场动画(甚至包括spacing变动)，但布局组件上的数值是没法在动画中修改的，怎么办呢？</p><h2 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h2><p>在布局中添加一些空物体或是在布局外面套空物体。然后再使用Tween动画来完成UI美术们想要的那些进出场动画。<br>美术人不太喜欢的方法，因为有那么一点点不太方便和Animation直接一起预览，但如果整体进出场动画不依赖UnityAnimation且不是很复杂，这种方法完全够用。</p><h2 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h2><p>用通过动画控制脚本上的可序列化的数值，再传递到布局组件上。<br>个人感觉这个方法也还不错，还能支持预览，UI美术更偏向于这一个解决方法。</p><p>但是在动画窗口里里看到的curve是锯齿状的，很奇怪。之后还需要看下如何才能像其他属性一样拉正常的曲线。</p><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">using</span> UnityEngine;</span><br><span class="line"><span class="keyword">using</span> UnityEngine.UI;</span><br><span class="line"></span><br><span class="line">[<span class="meta">ExecuteAlways</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">LayoutGroupTempAnimationParam</span> : <span class="title">MonoBehaviour</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">SerializeField</span>]</span><br><span class="line">    <span class="keyword">private</span> LayoutGroup _target;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">SerializeField</span>]</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> _left;</span><br><span class="line">    [<span class="meta">SerializeField</span>]</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> _right;</span><br><span class="line">    [<span class="meta">SerializeField</span>]</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> _top;</span><br><span class="line">    [<span class="meta">SerializeField</span>]</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> _bottom;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">Header(<span class="meta-string">"GridLayout must use GridSpacing"</span>)</span>]</span><br><span class="line">    [<span class="meta">SerializeField</span>]</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">bool</span> _alsoControlSpacing;</span><br><span class="line">    [<span class="meta">SerializeField</span>]</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> _normalSpacing = <span class="number">0</span>;</span><br><span class="line">    [<span class="meta">SerializeField</span>]</span><br><span class="line">    <span class="keyword">private</span> Vector2 _gridSpacing = Vector2.zero;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> RectOffset m_targetPadding;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">OnDidApplyAnimationProperties</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (_target == <span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        ApplyPadding();</span><br><span class="line">        <span class="keyword">if</span> (_alsoControlSpacing)</span><br><span class="line">        &#123;</span><br><span class="line">            ApplySpacing();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// need to notify refresh</span></span><br><span class="line">        RectTransform rectTransform = <span class="keyword">this</span>.transform <span class="keyword">as</span> RectTransform;</span><br><span class="line">        LayoutRebuilder.MarkLayoutForRebuild(rectTransform);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">ApplyPadding</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        m_targetPadding = _target.padding;</span><br><span class="line">        <span class="keyword">if</span> (m_targetPadding != <span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            m_targetPadding.left = _left;</span><br><span class="line">            m_targetPadding.right = _right;</span><br><span class="line">            m_targetPadding.top = _top;</span><br><span class="line">            m_targetPadding.bottom = _bottom;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">ApplySpacing</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (_target <span class="keyword">is</span> HorizontalOrVerticalLayoutGroup layoutGroup)</span><br><span class="line">        &#123;</span><br><span class="line">            layoutGroup.spacing = _normalSpacing;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (_target <span class="keyword">is</span> GridLayoutGroup gridLayoutGroup)</span><br><span class="line">        &#123;</span><br><span class="line">            gridLayoutGroup.spacing = _gridSpacing;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> UNITY_EDITOR</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">OnValidate</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        ApplyPadding();</span><br><span class="line">        <span class="keyword">if</span> (_alsoControlSpacing)</span><br><span class="line">        &#123;</span><br><span class="line">            ApplySpacing();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (!Application.isPlaying)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// need to notify refresh</span></span><br><span class="line">            RectTransform rectTransform = <span class="keyword">this</span>.transform <span class="keyword">as</span> RectTransform;</span><br><span class="line">            LayoutRebuilder.MarkLayoutForRebuild(rectTransform);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Reset</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _target = <span class="keyword">this</span>.GetComponent&lt;LayoutGroup&gt;();</span><br><span class="line">        m_targetPadding = _target.padding;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><img src="/2023/06/18/20230618-animating-layout-params/20230618-animating-layout-params-01.gif" class="" title="split">]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;在实际制作UI的时候，为了完成一些排版设计，我们会经常用到Unity的布局(Layout)组件。甚至有些复杂的排版，我会用嵌套布局来实现。&lt;br&gt;UI美术人经常希望在这些布局上加上一些进场出场动画(甚至包括spacing变动)，但布局组件上的数值是没法在动画中修改的，怎么办
+      
+    
+    </summary>
+    
+    
+      <category term="Unity" scheme="http://yoursite.com/categories/Unity/"/>
+    
+    
+      <category term="Unity" scheme="http://yoursite.com/tags/Unity/"/>
+    
+      <category term="UGUI" scheme="http://yoursite.com/tags/UGUI/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Unity编辑器内静音Wwise</title>
+    <link href="http://yoursite.com/2023/06/17/20230617-editor-wwise-mute/"/>
+    <id>http://yoursite.com/2023/06/17/20230617-editor-wwise-mute/</id>
+    <published>2023-06-17T02:15:00.000Z</published>
+    <updated>2023-06-18T02:29:17.469Z</updated>
+    
+    <content type="html"><![CDATA[<p>项目引入Wwise以后，相信蛮多人都和我一样，平时不想听游戏声音就想听歌捶码修BUG的。但是Unity原本的mute按钮没法直接直接对Wwise那边做操作。<br>一开始不知道是搜索引擎的使用姿势不对还是咋的，查了好久都没查出来。导师研究了一下弄了一个版，大家用了感觉都很不错，决定分享出来。</p><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">EditorWwiseManager</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">bool</span> m_isPaused = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="title">EditorWwiseManager</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        EditorApplication.update += OnUpdate;</span><br><span class="line">        EditorApplication.pauseStateChanged += OnPauseStateChanged;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">OnPauseStateChanged</span>(<span class="params">PauseState state</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">switch</span> (state)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">case</span> PauseState.Paused:</span><br><span class="line">                m_isPaused = <span class="literal">true</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> PauseState.Unpaused:</span><br><span class="line">                m_isPaused = <span class="literal">false</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">OnUpdate</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (EditorUtility.audioMasterMute &amp;&amp; !m_isPaused)</span><br><span class="line">        &#123;</span><br><span class="line">            AkSoundEngine.Suspend(<span class="literal">true</span>);</span><br><span class="line">            m_isPaused = <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (!EditorUtility.audioMasterMute &amp;&amp; m_isPaused)</span><br><span class="line">        &#123;</span><br><span class="line">            AkSoundEngine.WakeupFromSuspend();</span><br><span class="line">            m_isPaused = <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>这样就可以通过Editor SceneView上的mute按钮把Wwise静音，超级方便凹。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;项目引入Wwise以后，相信蛮多人都和我一样，平时不想听游戏声音就想听歌捶码修BUG的。但是Unity原本的mute按钮没法直接直接对Wwise那边做操作。&lt;br&gt;一开始不知道是搜索引擎的使用姿势不对还是咋的，查了好久都没查出来。导师研究了一下弄了一个版，大家用了感觉都很不
+      
+    
+    </summary>
+    
+    
+      <category term="UnityEditor" scheme="http://yoursite.com/categories/UnityEditor/"/>
+    
+    
+      <category term="UnityEditor" scheme="http://yoursite.com/tags/UnityEditor/"/>
+    
+  </entry>
   
   <entry>
     <title>传入Predicate的小事</title>
@@ -513,60 +567,6 @@
       <category term="Unity" scheme="http://yoursite.com/tags/Unity/"/>
     
       <category term="UGUI" scheme="http://yoursite.com/tags/UGUI/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Git 本地忽略文件</title>
-    <link href="http://yoursite.com/2021/04/23/20210423-gitignore-locally/"/>
-    <id>http://yoursite.com/2021/04/23/20210423-gitignore-locally/</id>
-    <published>2021-04-23T13:33:14.000Z</published>
-    <updated>2021-04-23T13:48:20.194Z</updated>
-    
-    <content type="html"><![CDATA[<p>最近在拼UI，需要建立几个临时的场景在本地。自然不能上传，但是又想手贱 git add . 还是决定在本地手动设置忽略一些文件。</p><h1 id="设置Git-exclude"><a href="#设置Git-exclude" class="headerlink" title="设置Git exclude"></a>设置Git exclude</h1><p>首先需要找到这个文件。</p><p>exclude 文件在 如图的目录中</p><img src="/2021/04/23/20210423-gitignore-locally/20210423-gitignore-locally-pic01.png" class="" title="split"><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\.git\info\</span><br></pre></td></tr></table></figure><p>找到以后以文本文件的形式打开，用法和 gitignore 差不多，我还么有深入研究，但我差不多这样用。</p><img src="/2021/04/23/20210423-gitignore-locally/20210423-gitignore-locally-pic02.png" class="" title="split"><p>把我需要忽略的本地目录填上去就可以了。<br>顺便一说，若使用这个方式忽略了某个目录，当把已经进行版本控制的文件丢进这个目录里时，Git中会生成一个delete的改动。</p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;最近在拼UI，需要建立几个临时的场景在本地。自然不能上传，但是又想手贱 git add . 还是决定在本地手动设置忽略一些文件。&lt;/p&gt;
-&lt;h1 id=&quot;设置Git-exclude&quot;&gt;&lt;a href=&quot;#设置Git-exclude&quot; class=&quot;headerlink&quot; t
-      
-    
-    </summary>
-    
-    
-      <category term="Git" scheme="http://yoursite.com/categories/Git/"/>
-    
-    
-      <category term="Git" scheme="http://yoursite.com/tags/Git/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>修改commit消息</title>
-    <link href="http://yoursite.com/2021/04/08/20210408-edit-commit-msg/"/>
-    <id>http://yoursite.com/2021/04/08/20210408-edit-commit-msg/</id>
-    <published>2021-04-08T12:53:35.000Z</published>
-    <updated>2021-04-08T13:38:25.620Z</updated>
-    
-    <content type="html"><![CDATA[<p>前几天打游戏太疯了，上班的时候脑子都不清醒，commit的时候输错了东西，push的时候被block了才发现。<br>结果还因为不会改commit消息，还错误地操作使得工作全没了。</p><h1 id="修改当前最新的一条commit消息"><a href="#修改当前最新的一条commit消息" class="headerlink" title="修改当前最新的一条commit消息"></a>修改当前最新的一条commit消息</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># 修改当前最新的一条commit消息</span></span><br><span class="line">git commit --amend</span><br></pre></td></tr></table></figure><p>非常简单，一个命令就搞定了。然后就可以正常push了。</p><p>如果是需要修改已经推送到远端的commit，可以再这个命令之后尝试push —force。<br>不过我觉得这样的情景非常之少，都已经PUSH上去了为啥还需要改啊:(</p><h1 id="修改往前第N条commit消息-还未推送到远端的"><a href="#修改往前第N条commit消息-还未推送到远端的" class="headerlink" title="修改往前第N条commit消息(还未推送到远端的)"></a>修改往前第N条commit消息(还未推送到远端的)</h1><img src="/2021/04/08/20210408-edit-commit-msg/20210408-edit-commit-msg-01.png" class="" title="split"><p>如图，我需要修改图中选定的那一个commit。从我当前位置数，是第3个commit。<br>则X就应该是3。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">git rebase -i HEAD~X</span><br><span class="line"><span class="comment"># X is the number of commits to go back</span></span><br><span class="line"><span class="comment"># Move to the line of your commit, change pick into edit,</span></span><br><span class="line"><span class="comment"># then change your commit message:</span></span><br><span class="line">git commit --amend</span><br><span class="line"><span class="comment"># Finish the rebase with:</span></span><br><span class="line">git rebase --<span class="built_in">continue</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># :D</span></span><br><span class="line">git push</span><br></pre></td></tr></table></figure><p>执行rebase后，会让选择需要对哪条commit进行什么样的操作。</p><img src="/2021/04/08/20210408-edit-commit-msg/20210408-edit-commit-msg-02.png" class="" title="split"><p>需要编辑消息则就把pick改成edit，然后保存，退出文本编辑。就可以使用 commit —amend 来修改消息了，然后再执行下一条命令完成rebase。<br>然后就是快乐push。</p><p>其实也可以同时edit多条commit。这样，在使用　commit —amend　时会从最老的commit开始编辑。完成一条的编辑就需要 rebase —continue。<br>之后才能继续编辑下一条。</p><img src="/2021/04/08/20210408-edit-commit-msg/20210408-edit-commit-msg-03.png" class="" title="split"><p>如果修改了曾经push过的commit，就需要push —force。</p><img src="/2021/04/08/20210408-edit-commit-msg/20210408-edit-commit-msg-04.png" class="" title="split"><img src="/2021/04/08/20210408-edit-commit-msg/20210408-edit-commit-msg-05.png" class="" title="split">]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;前几天打游戏太疯了，上班的时候脑子都不清醒，commit的时候输错了东西，push的时候被block了才发现。&lt;br&gt;结果还因为不会改commit消息，还错误地操作使得工作全没了。&lt;/p&gt;
-&lt;h1 id=&quot;修改当前最新的一条commit消息&quot;&gt;&lt;a href=&quot;#修改当前最
-      
-    
-    </summary>
-    
-    
-      <category term="Git" scheme="http://yoursite.com/categories/Git/"/>
-    
-    
-      <category term="Git" scheme="http://yoursite.com/tags/Git/"/>
     
   </entry>
   

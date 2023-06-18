@@ -152,6 +152,162 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/07/24/20220724-find-script-reference/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="2C2C2C2">
+      <meta itemprop="description" content="随便记录一些东西">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FishPlayer">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/07/24/20220724-find-script-reference/" class="post-title-link" itemprop="url">查询MonoBehaviour在工程中的引用</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-07-24 17:55:21" itemprop="dateCreated datePublished" datetime="2022-07-24T17:55:21+08:00">2022-07-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-05-01 14:21:48" itemprop="dateModified" datetime="2023-05-01T14:21:48+08:00">2023-05-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/UnityEditor/" itemprop="url" rel="index"><span itemprop="name">UnityEditor</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>以前弄过一个在项目中查找Asset引用的。虽然很泛用，但跑起来非常的慢。<br>其实我们实际使用的时候，我们会经常做某一种搜索(比如查找脚本在预制体上的引用)。对于这种需要使用的特定条件的查找，单独做一个小工具可能效率会更高。</p>
+<p>本来还在烦恼怎么做，导师很快就做好了，跑起来很快。他告诉我，秘诀是 GetComponent。</p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>代码不方便直接贴出来，但还是想分享(记录)一下几个关键的步骤和思路~</p>
+<h3 id="选择脚本"><a href="#选择脚本" class="headerlink" title="选择脚本"></a>选择脚本</h3><p>我们需要在编辑器上用一个 field 去放我们想要搜寻的脚本。<br>但是没办法是用在泛型类上。需要指定实际的类型。</p>
+<p>Interface也可以查，放心用！</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">targetScript = EditorGUILayout.ObjectField(m_targetScript, <span class="keyword">typeof</span>(MonoScript), <span class="literal">false</span>) <span class="keyword">as</span> MonoScript;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">class SomeMono&lt;TData&gt; : MonoBehaviour</span></span><br><span class="line"><span class="comment">doesnt work on this case, the result will be null     </span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">Type targetType = m_targetScript.GetClass();</span><br></pre></td></tr></table></figure>
+<h3 id="获取预制体"><a href="#获取预制体" class="headerlink" title="获取预制体"></a>获取预制体</h3><p>从我们选择的目录下获取所有的prefab，相信Unity，这一步不会很慢的。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// we can also set the folderPath to save our time :D </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> paths = AssetDatabase.FindAssets(<span class="string">$"t: prefab"</span>, <span class="keyword">new</span>[] &#123; folderPath &#125;);</span><br><span class="line">GameObject[] toCheck = <span class="keyword">new</span> GameObject[paths.Length];</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; paths.Length; i++)</span><br><span class="line">    toCheck[i] = AssetDatabase.LoadAssetAtPath&lt;GameObject&gt;(AssetDatabase.GUIDToAssetPath(paths[i]));</span><br></pre></td></tr></table></figure>
+<h3 id="查询引用"><a href="#查询引用" class="headerlink" title="查询引用"></a>查询引用</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Type targetType;</span><br><span class="line">GameObject prefab;</span><br><span class="line"><span class="keyword">var</span> components = prefab.GetComponents(targetType);</span><br><span class="line"><span class="comment">// if components is not empty, then you get your stuff :D</span></span><br></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>如果要说学到了什么的话，大概是做工具前要搞明白它的使用情景，不能太脱节Tw.T</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/06/12/hello-world/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="2C2C2C2">
+      <meta itemprop="description" content="随便记录一些东西">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FishPlayer">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/06/12/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-06-12 00:43:52" itemprop="dateCreated datePublished" datetime="2022-06-12T00:43:52+08:00">2022-06-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-05-03 12:47:50" itemprop="dateModified" datetime="2020-05-03T12:47:50+08:00">2020-05-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/05/15/20220515-hyperv-vpn-inside/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -798,162 +954,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/04/23/20210423-gitignore-locally/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="2C2C2C2">
-      <meta itemprop="description" content="随便记录一些东西">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FishPlayer">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/04/23/20210423-gitignore-locally/" class="post-title-link" itemprop="url">Git 本地忽略文件</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-04-23 21:33:14 / 修改时间：21:48:20" itemprop="dateCreated datePublished" datetime="2021-04-23T21:33:14+08:00">2021-04-23</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Git/" itemprop="url" rel="index"><span itemprop="name">Git</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>最近在拼UI，需要建立几个临时的场景在本地。自然不能上传，但是又想手贱 git add . 还是决定在本地手动设置忽略一些文件。</p>
-<h1 id="设置Git-exclude"><a href="#设置Git-exclude" class="headerlink" title="设置Git exclude"></a>设置Git exclude</h1><p>首先需要找到这个文件。</p>
-<p>exclude 文件在 如图的目录中</p>
-<img src="/2021/04/23/20210423-gitignore-locally/20210423-gitignore-locally-pic01.png" class="" title="split">
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\.git\info\</span><br></pre></td></tr></table></figure>
-<p>找到以后以文本文件的形式打开，用法和 gitignore 差不多，我还么有深入研究，但我差不多这样用。</p>
-<img src="/2021/04/23/20210423-gitignore-locally/20210423-gitignore-locally-pic02.png" class="" title="split">
-<p>把我需要忽略的本地目录填上去就可以了。<br>顺便一说，若使用这个方式忽略了某个目录，当把已经进行版本控制的文件丢进这个目录里时，Git中会生成一个delete的改动。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/04/08/20210408-edit-commit-msg/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="2C2C2C2">
-      <meta itemprop="description" content="随便记录一些东西">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FishPlayer">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/04/08/20210408-edit-commit-msg/" class="post-title-link" itemprop="url">修改commit消息</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-04-08 20:53:35 / 修改时间：21:38:25" itemprop="dateCreated datePublished" datetime="2021-04-08T20:53:35+08:00">2021-04-08</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Git/" itemprop="url" rel="index"><span itemprop="name">Git</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>前几天打游戏太疯了，上班的时候脑子都不清醒，commit的时候输错了东西，push的时候被block了才发现。<br>结果还因为不会改commit消息，还错误地操作使得工作全没了。</p>
-<h1 id="修改当前最新的一条commit消息"><a href="#修改当前最新的一条commit消息" class="headerlink" title="修改当前最新的一条commit消息"></a>修改当前最新的一条commit消息</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># 修改当前最新的一条commit消息</span></span><br><span class="line">git commit --amend</span><br></pre></td></tr></table></figure>
-<p>非常简单，一个命令就搞定了。然后就可以正常push了。</p>
-<p>如果是需要修改已经推送到远端的commit，可以再这个命令之后尝试push —force。<br>不过我觉得这样的情景非常之少，都已经PUSH上去了为啥还需要改啊:(</p>
-<h1 id="修改往前第N条commit消息-还未推送到远端的"><a href="#修改往前第N条commit消息-还未推送到远端的" class="headerlink" title="修改往前第N条commit消息(还未推送到远端的)"></a>修改往前第N条commit消息(还未推送到远端的)</h1><img src="/2021/04/08/20210408-edit-commit-msg/20210408-edit-commit-msg-01.png" class="" title="split">
-<p>如图，我需要修改图中选定的那一个commit。从我当前位置数，是第3个commit。<br>则X就应该是3。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">git rebase -i HEAD~X</span><br><span class="line"><span class="comment"># X is the number of commits to go back</span></span><br><span class="line"><span class="comment"># Move to the line of your commit, change pick into edit,</span></span><br><span class="line"><span class="comment"># then change your commit message:</span></span><br><span class="line">git commit --amend</span><br><span class="line"><span class="comment"># Finish the rebase with:</span></span><br><span class="line">git rebase --<span class="built_in">continue</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># :D</span></span><br><span class="line">git push</span><br></pre></td></tr></table></figure>
-<p>执行rebase后，会让选择需要对哪条commit进行什么样的操作。</p>
-<img src="/2021/04/08/20210408-edit-commit-msg/20210408-edit-commit-msg-02.png" class="" title="split">
-<p>需要编辑消息则就把pick改成edit，然后保存，退出文本编辑。就可以使用 commit —amend 来修改消息了，然后再执行下一条命令完成rebase。<br>然后就是快乐push。</p>
-<p>其实也可以同时edit多条commit。这样，在使用　commit —amend　时会从最老的commit开始编辑。完成一条的编辑就需要 rebase —continue。<br>之后才能继续编辑下一条。</p>
-<img src="/2021/04/08/20210408-edit-commit-msg/20210408-edit-commit-msg-03.png" class="" title="split">
-<p>如果修改了曾经push过的commit，就需要push —force。</p>
-<img src="/2021/04/08/20210408-edit-commit-msg/20210408-edit-commit-msg-04.png" class="" title="split">
-<img src="/2021/04/08/20210408-edit-commit-msg/20210408-edit-commit-msg-05.png" class="" title="split">
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1025,7 +1025,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-count">34</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
