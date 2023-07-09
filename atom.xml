@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2023-07-09T10:11:33.816Z</updated>
+  <updated>2023-07-09T10:14:09.719Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -17,11 +17,11 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>20230709-dictionary-enum-boxing</title>
+    <title>CSharp字典使用enum的装箱</title>
     <link href="http://yoursite.com/2023/07/09/20230709-dictionary-enum-boxing/"/>
     <id>http://yoursite.com/2023/07/09/20230709-dictionary-enum-boxing/</id>
     <published>2023-07-09T09:43:00.000Z</published>
-    <updated>2023-07-09T10:11:33.816Z</updated>
+    <updated>2023-07-09T10:14:09.719Z</updated>
     
     <content type="html"><![CDATA[<p>今天看了下Unity官方2016年发的一个关于移动端小优化的一些分享视频。其中有一个关于把enum作为Dictionary中的key来使用时的boxing优化。</p><img src="/2023/07/09/20230709-dictionary-enum-boxing/20230709-dictionary-enum-boxing-01.png" class="" title="split"><p>这个用法在我之前的项目里用得还挺多吧。直接上图看IL code。</p><img src="/2023/07/09/20230709-dictionary-enum-boxing/20230709-dictionary-enum-boxing-02.png" class="" title="split"><p>Dictionary的增删查操作其实都会有用comparer.Equals()来判断是否相等的情况。<br>构建Dictionary时如果不传入指定的comparer，他会自己赋予一个’默认的’。这个默认的显然不适那么的友好。</p><img src="/2023/07/09/20230709-dictionary-enum-boxing/20230709-dictionary-enum-boxing-05.png" class="" title="split"><p>我们创建一个comparer，然后直接看使用comparer和不使用的两种不同情况下的IL code。</p><img src="/2023/07/09/20230709-dictionary-enum-boxing/20230709-dictionary-enum-boxing-03.png" class="" title="split"><img src="/2023/07/09/20230709-dictionary-enum-boxing/20230709-dictionary-enum-boxing-04.png" class="" title="split"><p>很明显使用我们自己的comparer可以免去装箱的消耗。</p><p>后来我又拿到Unity里跑了一下看profiler。尝试跑了查询和添加，差距确实有，但是从Profiler中看结果，200万次的操作下，GC是差不多的，时间上使用comparer快了1300多ms。<br>说实在的觉得是我的测试方法有问题。而且我跑在桌面端，这样测试也不严谨。</p>]]></content>
     
