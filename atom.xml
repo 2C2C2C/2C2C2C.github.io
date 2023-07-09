@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2023-06-18T05:37:20.904Z</updated>
+  <updated>2023-07-09T10:11:33.816Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>20230709-dictionary-enum-boxing</title>
+    <link href="http://yoursite.com/2023/07/09/20230709-dictionary-enum-boxing/"/>
+    <id>http://yoursite.com/2023/07/09/20230709-dictionary-enum-boxing/</id>
+    <published>2023-07-09T09:43:00.000Z</published>
+    <updated>2023-07-09T10:11:33.816Z</updated>
+    
+    <content type="html"><![CDATA[<p>今天看了下Unity官方2016年发的一个关于移动端小优化的一些分享视频。其中有一个关于把enum作为Dictionary中的key来使用时的boxing优化。</p><img src="/2023/07/09/20230709-dictionary-enum-boxing/20230709-dictionary-enum-boxing-01.png" class="" title="split"><p>这个用法在我之前的项目里用得还挺多吧。直接上图看IL code。</p><img src="/2023/07/09/20230709-dictionary-enum-boxing/20230709-dictionary-enum-boxing-02.png" class="" title="split"><p>Dictionary的增删查操作其实都会有用comparer.Equals()来判断是否相等的情况。<br>构建Dictionary时如果不传入指定的comparer，他会自己赋予一个’默认的’。这个默认的显然不适那么的友好。</p><img src="/2023/07/09/20230709-dictionary-enum-boxing/20230709-dictionary-enum-boxing-05.png" class="" title="split"><p>我们创建一个comparer，然后直接看使用comparer和不使用的两种不同情况下的IL code。</p><img src="/2023/07/09/20230709-dictionary-enum-boxing/20230709-dictionary-enum-boxing-03.png" class="" title="split"><img src="/2023/07/09/20230709-dictionary-enum-boxing/20230709-dictionary-enum-boxing-04.png" class="" title="split"><p>很明显使用我们自己的comparer可以免去装箱的消耗。</p><p>后来我又拿到Unity里跑了一下看profiler。尝试跑了查询和添加，差距确实有，但是从Profiler中看结果，200万次的操作下，GC是差不多的，时间上使用comparer快了1300多ms。<br>说实在的觉得是我的测试方法有问题。而且我跑在桌面端，这样测试也不严谨。</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;今天看了下Unity官方2016年发的一个关于移动端小优化的一些分享视频。其中有一个关于把enum作为Dictionary中的key来使用时的boxing优化。&lt;/p&gt;
+&lt;img src=&quot;/2023/07/09/20230709-dictionary-enum-boxin
+      
+    
+    </summary>
+    
+    
+      <category term="CSharp" scheme="http://yoursite.com/categories/CSharp/"/>
+    
+    
+      <category term="Unity" scheme="http://yoursite.com/tags/Unity/"/>
+    
+      <category term="CSharp" scheme="http://yoursite.com/tags/CSharp/"/>
+    
+  </entry>
   
   <entry>
     <title>Unity动画控制Layout参数</title>
@@ -527,35 +556,6 @@
       
         &lt;p&gt;最近项目升级了2020.3，Graphic这边多给了一个Raycast Padding的设置。&lt;br&gt;我们有在用一些完全空白的图片来接受UI的点击响应，同时也有一些用图片接收点击的按钮。&lt;/p&gt;
 &lt;p&gt;但很坑爹的是，我发现无论怎么设置Raycast Padding的值，场景
-      
-    
-    </summary>
-    
-    
-      <category term="Unity" scheme="http://yoursite.com/categories/Unity/"/>
-    
-    
-      <category term="Unity" scheme="http://yoursite.com/tags/Unity/"/>
-    
-      <category term="UGUI" scheme="http://yoursite.com/tags/UGUI/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Unity 自制 Scrollrect 小坑</title>
-    <link href="http://yoursite.com/2021/06/06/20210606-UGuiInputOnScrollkeng/"/>
-    <id>http://yoursite.com/2021/06/06/20210606-UGuiInputOnScrollkeng/</id>
-    <published>2021-06-06T14:33:16.000Z</published>
-    <updated>2021-06-06T14:59:28.187Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="问题出现"><a href="#问题出现" class="headerlink" title="问题出现"></a>问题出现</h1><p>终于改来改去，俺做的这个循环滚动列表成功运用到了项目里的仓库UI上。但是还是被一个BUG给击垮了。</p><p>UX给到的设计稿是当玩家鼠标在其中一个物品上时，要有一个小弹窗显示这个物品的一些讯息。<br>BUG的表现是当我已经’选中’一个物品后，用鼠标滚轮滚到下一行，小弹窗显示的还是上一个物品的讯息。</p><h1 id="BUG原因"><a href="#BUG原因" class="headerlink" title="BUG原因"></a>BUG原因</h1><p>我在UI脚本中写了关于鼠标移动进入和离开的处理，但其实当列表滚动时候，鼠标下面的物体还是上一个物体，但是物体内的数据已经改变，却没有刷新。</p><h1 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h1><p>其实也还算有个凑合的解决方案。导师之前重写了InputModule，所以我们决定在这边做改动。<br>当发生滚动时，我们需要重新做raycast。<br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">OnScrollWheel</span>(<span class="params">InputAction.CallbackContext context</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (IsActive())</span><br><span class="line">    &#123;</span><br><span class="line">        PointerEventData eventData = GetPointerData();</span><br><span class="line">        eventData.button = PointerEventData.InputButton.Middle;</span><br><span class="line">        eventData.Reset();</span><br><span class="line">        eventData.scrollDelta = context.ReadValue&lt;Vector2&gt;()</span><br><span class="line">        GameObject testScrollObject = ExecuteEventExecuteHierarchy(eventData.pointerCurrentRaycasgameObject, eventData, ExecuteEvents.scrollHandler)</span><br><span class="line">        <span class="keyword">if</span> (testScrollObject != <span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// to re-do the reycast cuz we may scroll a recyclscrollrect</span></span><br><span class="line">            HandlePointerExitAndEnter(eventData, <span class="literal">null</span>);</span><br><span class="line">            m_rayCastDelayFrame = SCROLL_RAYCAST_DELAY;</span><br><span class="line">            <span class="comment">// SCROLL_RAYCAST_DELAY =3 or 5, depends....</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p><p>我们先清楚了事件数据所认为的鼠标悬停的物体，然后过几帧再重新发射射线进行检测。<br>因为我的循环滚动列表依赖于Unity自带的滚动视图，并且其位置也是在LateUpdate中更新的，所以我们最好在下一帧或者接下来的几帧后再做射线检测。。</p><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// will call in update</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">Process</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    .....</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    CheckAndDoDelayRaycast();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">CheckAndDoDelayRaycast</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (m_rayCastDelayFrame &lt; <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (--m_rayCastDelayFrame == <span class="number">0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">var</span> eventData = GetPointerData();</span><br><span class="line">        eventSystem.RaycastAll(eventData, m_RaycastResultCache);</span><br><span class="line">        <span class="keyword">var</span> firstRaycast = FindFirstRaycast(m_RaycastResultCache)</span><br><span class="line">        eventData.pointerCurrentRaycast = firstRaycast;</span><br><span class="line">        m_RaycastResultCache.Clear()</span><br><span class="line">        <span class="keyword">var</span> temp = eventData.pointerCurrentRaycast.gameObject;</span><br><span class="line">        HandlePointerExitAndEnter(eventData, temp);</span><br><span class="line">        m_rayCastDelayFrame = <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h1 id=&quot;问题出现&quot;&gt;&lt;a href=&quot;#问题出现&quot; class=&quot;headerlink&quot; title=&quot;问题出现&quot;&gt;&lt;/a&gt;问题出现&lt;/h1&gt;&lt;p&gt;终于改来改去，俺做的这个循环滚动列表成功运用到了项目里的仓库UI上。但是还是被一个BUG给击垮了。&lt;/p&gt;
-&lt;p&gt;UX给到的
       
     
     </summary>
