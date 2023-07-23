@@ -152,6 +152,192 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/08/06/20220806-division-UI-talk-note/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="2C2C2C2">
+      <meta itemprop="description" content="随便记录一些东西">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FishPlayer">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/08/06/20220806-division-UI-talk-note/" class="post-title-link" itemprop="url">notes dat I took from the Divsion UI talk</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-08-06 10:55:21" itemprop="dateCreated datePublished" datetime="2022-08-06T10:55:21+08:00">2022-08-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-10-05 14:48:07" itemprop="dateModified" datetime="2022-10-05T14:48:07+08:00">2022-10-05</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Unity/" itemprop="url" rel="index"><span itemprop="name">Unity</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Well just ignore dat weird tag. :D</p>
+<p>Here is muy notes dat I learn from the Divsion UI talk.</p>
+<p>The key is iteration, threading and data.</p>
+<p>Iterate your stuff to make it better.</p>
+<p>Threading and data driven make the work efficient.</p>
+<p><a href="https://www.youtube.com/watch?v=H1MLtML0np0" target="_blank" rel="noopener">video</a>.</p>
+<h1 id="Snow-drop-UI"><a href="#Snow-drop-UI" class="headerlink" title="Snow drop UI"></a>Snow drop UI</h1><ul>
+<li>No canvas</li>
+<li>Immediate Mode<ul>
+<li>Constant cost (maybe it’s more statble?).</li>
+</ul>
+</li>
+<li>Vector Graphics<ul>
+<li>Shapes(scaling friendly, dun rely on resolution) over textures masks.</li>
+<li>Save GPU load by only rendering the pixels gonna be used.</li>
+<li>Artist can play with it.</li>
+</ul>
+</li>
+</ul>
+<h1 id="Game-Data-amp-Node-graph"><a href="#Game-Data-amp-Node-graph" class="headerlink" title="Game Data &amp; Node graph"></a>Game Data &amp; Node graph</h1><ul>
+<li><p>Lots of data getter (get pure data?) (in graph node), used in UI and also game play.</p>
+</li>
+<li><p>Auto conversion to save some performance.</p>
+</li>
+<li><p>custom UI logic components.</p>
+</li>
+<li><p>custom reusable compounds.</p>
+</li>
+</ul>
+<h1 id="Iteration"><a href="#Iteration" class="headerlink" title="Iteration"></a>Iteration</h1><h2 id="For-coder"><a href="#For-coder" class="headerlink" title="For coder"></a>For coder</h2><h3 id="Reduce-complie-time"><a href="#Reduce-complie-time" class="headerlink" title="Reduce complie time"></a>Reduce complie time</h3><ul>
+<li>Blob builds(idk what is this).</li>
+<li>Header file reduction.</li>
+<li>Keep refactoring code to make it efficient.</li>
+<li>Remove nolonger used code.</li>
+</ul>
+<h3 id="Reduce-startup-time-and-Load-time"><a href="#Reduce-startup-time-and-Load-time" class="headerlink" title="Reduce startup time and Load time"></a>Reduce startup time and Load time</h3><ul>
+<li>Only load needed stuff.</li>
+<li>UI preview with live data for easy iteration.</li>
+<li>Well some debug UI will also help :).</li>
+</ul>
+<p>(for my unity project)</p>
+<ul>
+<li>Have a UI preview scene (UI only, we can preview states and transitions).</li>
+<li>Have simple a gym dat provide gameplay with enough content.</li>
+</ul>
+<h3 id="Coder-to-Artist"><a href="#Coder-to-Artist" class="headerlink" title="Coder to Artist"></a>Coder to Artist</h3><ul>
+<li><p>Coder work with artist (react fast to feedbacks).</p>
+</li>
+<li><p>Resable compounds, arist can directly use.</p>
+</li>
+</ul>
+<h2 id="Drawback-of-iteration"><a href="#Drawback-of-iteration" class="headerlink" title="Drawback of iteration"></a>Drawback of iteration</h2><ul>
+<li>Hard to stop.</li>
+<li>Set clear goals and deadlines. (do not waste time)</li>
+<li>Greate for prototyping, risk for delivering. (need a lead to shut down iteration, make the decision)</li>
+</ul>
+<h1 id="Building-blocks-of-UI"><a href="#Building-blocks-of-UI" class="headerlink" title="Building blocks of UI"></a>Building blocks of UI</h1><p>To let arist and designers to have full(or more) control?</p>
+<h2 id="Widget-and-Graphics"><a href="#Widget-and-Graphics" class="headerlink" title="Widget and Graphics"></a>Widget and Graphics</h2><p>Widget define space, accept input. Graphic improve widget, relative size, also accept input?</p>
+<h2 id="5-Basic-widgets-with-a-few-variations"><a href="#5-Basic-widgets-with-a-few-variations" class="headerlink" title="5 Basic widgets with a few variations."></a>5 Basic widgets with a few variations.</h2><p>Use basic widgets, and use them to build functionalities.</p>
+<ul>
+<li><p>Window</p>
+<ul>
+<li>2D and 3D (anchoring functionalities, pixels or percentage; prepare some options for different auto scaling and apply to different UI widgets/graphic and situations).</li>
+<li>Vertical Stack (stack the (children)widgets)</li>
+<li>Layering</li>
+</ul>
+</li>
+<li><p>Text</p>
+<ul>
+<li>JIT font generaion (wtf, keep memory down)</li>
+<li>Fich text formatting lib to build customize text(icon, color …).</li>
+<li>Auto clip (no idea how to do it)</li>
+</ul>
+</li>
+<li><p>Image</p>
+<ul>
+<li>Use color/gradient more. (looks good with vector graphic)</li>
+<li>Texture and loose image(ikd this, no border image?) into sprite sheet.</li>
+</ul>
+</li>
+<li><p>Stack container</p>
+<ul>
+<li>For sorting elements.</li>
+<li>Spacing and padding (how to do it with stack)</li>
+<li>Invert for quick right to left language fixes (wtf)</li>
+</ul>
+</li>
+<li><p>Scroll Box</p>
+<ul>
+<li>Fixed size(viewport size) with a virtual inner space(content).</li>
+</ul>
+</li>
+</ul>
+<h2 id="7-Graphics-nodes"><a href="#7-Graphics-nodes" class="headerlink" title="7 Graphics (nodes)"></a>7 Graphics (nodes)</h2><ul>
+<li>Text with effects.</li>
+<li>Images(basic) with more shapes, flat or curved.</li>
+<li>Lines(strait, curved list?, 3d)</li>
+<li>Points, single point or large squares(for effects?)</li>
+<li>Shapes </li>
+<li>Sector (why? for their art style?)</li>
+<li>Custom graphics</li>
+</ul>
+<h1 id="Simply-Ui-workflow"><a href="#Simply-Ui-workflow" class="headerlink" title="Simply Ui workflow"></a>Simply Ui workflow</h1><ul>
+<li>Complex and powerful (lots of resuable compounds, and threading stuff)</li>
+<li>Documentation and examples(I guess examples are better and save time)</li>
+</ul>
+<h2 id="For-coder-1"><a href="#For-coder-1" class="headerlink" title="For coder"></a>For coder</h2><ul>
+<li>Simple code; Less code, less bugs </li>
+<li>Simple Tools; Do not overthink. Simple base, complex behaviour.</li>
+</ul>
+<h2 id="For-UI-artist-designer"><a href="#For-UI-artist-designer" class="headerlink" title="For UI artist/designer"></a>For UI artist/designer</h2><ul>
+<li>Communicate to avoid merge conflicts, get ahead of it (cuz yaml merge wont help u all the time).</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/07/30/20220730-unity-editor-stateobj/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -888,77 +1074,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/08/31/20210831-raycast-padding/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="2C2C2C2">
-      <meta itemprop="description" content="随便记录一些东西">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FishPlayer">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/31/20210831-raycast-padding/" class="post-title-link" itemprop="url">Unity2020 Graphic 小坑</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-08-31 21:45:42 / 修改时间：23:22:23" itemprop="dateCreated datePublished" datetime="2021-08-31T21:45:42+08:00">2021-08-31</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Unity/" itemprop="url" rel="index"><span itemprop="name">Unity</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>最近项目升级了2020.3，Graphic这边多给了一个Raycast Padding的设置。<br>我们有在用一些完全空白的图片来接受UI的点击响应，同时也有一些用图片接收点击的按钮。</p>
-<p>但很坑爹的是，我发现无论怎么设置Raycast Padding的值，场景预览中都没有显示框框，所以我其实是完全不知道这玩意儿到底怎么用的。<br>搜索一下才知道原来是padding的数值是负数的时候才是往外扩张。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">RaycastTarget</span> : <span class="title">Graphic</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// Additionally, If you need a Raycast target that is not a rectangle, you can implement bool Raycast(Vector2 sp, Camera eventCamera) method from Graphic.</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">SetMaterialDirty</span>(<span class="params"></span>)</span> &#123; <span class="keyword">return</span>; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">SetVerticesDirty</span>(<span class="params"></span>)</span> &#123; <span class="keyword">return</span>; &#125;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> Probably not necessary since the chain of calls `Rebuild()`-&gt;`UpdateGeometry()`-&gt;`DoMeshGeneration()`-&gt;`OnPopulateMesh()` won't happen; so here really just as a fail-safe.</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnPopulateMesh</span>(<span class="params">VertexHelper vh</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        vh.Clear();</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> UNITY_EDITOR</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">OnDrawGizmos</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="keyword">this</span>.enabled)</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        RectTransform rectTransform = <span class="keyword">this</span>.transform <span class="keyword">as</span> RectTransform;</span><br><span class="line">        Color wireColor = Color.yellow;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.isActiveAndEnabled)</span><br><span class="line">            wireColor.a *= <span class="number">0.7f</span></span><br><span class="line">        <span class="comment">// Padding to be applied to the masking</span></span><br><span class="line">        <span class="comment">// X = Left, Y = Bottom, Z = Right, W = Top</span></span><br><span class="line">        <span class="comment">// if you wanna make it bigger, then the all value shouble be negative</span></span><br><span class="line">        Vector4 padding = <span class="keyword">this</span>.raycastPadding * <span class="number">-1.0f</span>;</span><br><span class="line">        Matrix4x4 localToWorld = rectTransform.localToWorldMatrix</span><br><span class="line">        Vector3 topLeft = SomeUtils.GetOffsetLocalPosition(rectTransform, SomeUtils.UIOffsetType.TopLeft);</span><br><span class="line">        Vector3 topRight = SomeUtils.GetOffsetLocalPosition(rectTransform, SomeUtils.UIOffsetType.TopRight);</span><br><span class="line">        Vector3 bottomLeft = SomeUtils.GetOffsetLocalPosition(rectTransform, SomeUtils.UIOffsetType.BottomLeft);</span><br><span class="line">        Vector3 bottomRight = SomeUtils.GetOffsetLocalPosition(rectTransform, SomeUtils.UIOffsetType.BottomRight)</span><br><span class="line">        topLeft = localToWorld.MultiplyPoint(topLeft + (Vector3.left * padding.x) + (Vector3.up * padding.w));</span><br><span class="line">        topRight = localToWorld.MultiplyPoint(topRight + (Vector3.right * padding.z) + (Vector3.up * padding.w));</span><br><span class="line">        bottomLeft = localToWorld.MultiplyPoint(bottomLeft + (Vector3.left * padding.x) + (Vector3.down * padding.y));</span><br><span class="line">        bottomRight = localToWorld.MultiplyPoint(bottomRight + (Vector3.right * padding.z) + (Vector3.down * padding.y))</span><br><span class="line">        Color tempColor = Gizmos.color;</span><br><span class="line">        Gizmos.color = wireColor</span><br><span class="line">        Gizmos.DrawLine(topLeft, topRight);</span><br><span class="line">        Gizmos.DrawLine(topLeft, bottomLeft);</span><br><span class="line">        Gizmos.DrawLine(bottomRight, topRight);</span><br><span class="line">        Gizmos.DrawLine(bottomRight, bottomLeft);</span><br><span class="line">        Gizmos.color = tempColor</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>空白raycast target的可以在Gizmo里画，但是Image本身的不是那么好画，因为无法直接覆写原本的Editor。<br>一个笨办法就是做一个自己的Iamge然后也在Gizmo里画。<br>但其实这个是Graphic的property 不知道怎么做通用解决方案。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1030,7 +1145,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">35</span>
+          <span class="site-state-item-count">36</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
