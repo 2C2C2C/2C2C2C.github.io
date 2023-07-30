@@ -152,6 +152,84 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/08/10/20220810-unity-video-url-delay/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="2C2C2C2">
+      <meta itemprop="description" content="随便记录一些东西">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FishPlayer">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/08/10/20220810-unity-video-url-delay/" class="post-title-link" itemprop="url">Unity Video Url source 赋值小坑</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-08-10 10:55:21" itemprop="dateCreated datePublished" datetime="2022-08-10T10:55:21+08:00">2022-08-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-08-11 22:12:40" itemprop="dateModified" datetime="2022-08-11T22:12:40+08:00">2022-08-11</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Unity/" itemprop="url" rel="index"><span itemprop="name">Unity</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>这周赶版本，接到了一个前同事留下来的bug。是说UI上的教程视频一直不播放。<br>我们的视频资源是在 StreamingAssets 下的，用path进行加载。<br>播放相关的代码如下。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">OnEnable</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    m_player.prepareCompleted += OnPrepareCompleted;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">OnPrepareCompleted</span>(<span class="params">VideoPlayer source</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Debug.Log(<span class="string">"OnPrepareCompleted"</span>);</span><br><span class="line">    m_player.Play();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">SetVideo</span>(<span class="params"><span class="keyword">string</span> path</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    m_player.source = VideoSource.Url;</span><br><span class="line">    <span class="comment">// I guess this process may not be finished now.</span></span><br><span class="line">    m_player.url = path;</span><br><span class="line">    m_player.Prepare();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>查了一下，发现在调用了 SetVideo 之后，OnPrepareCompleted没有被调用，意思是 VideoPlayer的prepareCompleted事件没有触发。<br>我猜发生这个情况的原因是，当我们使用url来设置视频资源的那一帧，VideoPlayer还没能获取到视频资源的一些属性，或是上一个视频资源还在占用着当前的播放器，所以这个时候如果调用PrePare，其实是没有用的。</p>
+<p>所以我使用的Hacky Fix是在设置完资源的URL之后，等一帧再调用Prepare，然后等待 prepareCompleted 事件。</p>
+<p>顺便在网上查了一下，也有些人遇到类似的问题，说是赋值URL之后不知道视频资源什么时候才能正确播放。<br>论坛里有个人给出的解决方法是去检查 VideoPlayer.isPrepared 的这个属性。但赋值URL之后这个值并不会在某一时刻变成true。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/08/06/20220806-division-UI-talk-note/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1003,77 +1081,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/10/04/20211004-games101-env/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="2C2C2C2">
-      <meta itemprop="description" content="随便记录一些东西">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FishPlayer">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/10/04/20211004-games101-env/" class="post-title-link" itemprop="url">Games101 作业windows环境配置</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2021-10-04 15:18:50 / 修改时间：15:55:29" itemprop="dateCreated datePublished" datetime="2021-10-04T15:18:50+08:00">2021-10-04</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>终于开始学习 Games101了。除了听课以外还想做他的作业多巩固一下。</p>
-<p>但我实在是不想用虚拟机(菜，想调试)，所以想整个windows这边的环境。<br>最开始按照一些教程配Cmake啥的，结果作业1编译就疯狂报错实在受不了。群友推荐了 vcpkg+vs 俺马上来试试。</p>
-<h1 id="vcpkg"><a href="#vcpkg" class="headerlink" title="vcpkg"></a>vcpkg</h1><p><a href="https://github.com/microsoft/vcpkg/blob/master/README_zh_CN.md" target="_blank" rel="noopener">https://github.com/microsoft/vcpkg/blob/master/README_zh_CN.md</a></p>
-<p>安装并不难，找到了官方的简中手册，照着跑一轮就行。</p>
-<h1 id="安装作业依赖包"><a href="#安装作业依赖包" class="headerlink" title="安装作业依赖包"></a>安装作业依赖包</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># install latest packages :D</span></span><br><span class="line">.\vcpkg.exe install opencv:x64-windows</span><br><span class="line">.\vcpkg.exe install eigen3:x64-windows</span><br><span class="line"></span><br><span class="line"><span class="comment"># install for all users</span></span><br><span class="line">vcpkg integrate install</span><br></pre></td></tr></table></figure>
-<p>结果这个时候遇到了个天坑，eigen3这边的gitlab 仓库跑路了(不是)。</p>
-<img src="/2021/10/04/20211004-games101-env/20211004-pic000.png" class="" title="split">
-<p><a href="https://gitlab.com/libeigen/eigen/-/issues/2336" target="_blank" rel="noopener">https://gitlab.com/libeigen/eigen/-/issues/2336</a></p>
-<p>于是乎去暂存的仓库下载源码，然后放进 “vcpkg\downloads” 中，在执行之前的安装命令就好了</p>
-<p><a href="https://gitlab.com/cantonios/eigen/-/tree/3.3.9" target="_blank" rel="noopener">https://gitlab.com/cantonios/eigen/-/tree/3.3.9</a></p>
-<h1 id="作业框架设置"><a href="#作业框架设置" class="headerlink" title="作业框架设置"></a>作业框架设置</h1><p>我是自己NEW了一个C++的空vs工程，把作业代码都丢进去。</p>
-<p>目标平台选择x64</p>
-<p>右键 项目 属性 -&gt; c/c++ -&gt; 语言 -&gt; c++ 标准这边选择 c++17 (作业要求)</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1145,13 +1152,13 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">36</span>
+          <span class="site-state-item-count">37</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
