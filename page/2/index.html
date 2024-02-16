@@ -152,6 +152,84 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/09/12/20220912-unity-findref-guid/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="2C2C2C2">
+      <meta itemprop="description" content="随便记录一些东西">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FishPlayer">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/09/12/20220912-unity-findref-guid/" class="post-title-link" itemprop="url">查询Asset在工程中的引用(GUID)</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-09-12 10:55:21" itemprop="dateCreated datePublished" datetime="2022-09-12T10:55:21+08:00">2022-09-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-05-01 14:22:03" itemprop="dateModified" datetime="2023-05-01T14:22:03+08:00">2023-05-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/UnityEditor/" itemprop="url" rel="index"><span itemprop="name">UnityEditor</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>之前我用Unity自带的API去查询一些物体的引用，结果当然是超超超超超级慢，对于那些把项目工程放在辣鸡机械盘上的同事，这个工具根本是没法好好用的。而且因为要用Unity的APi，自然是没办法使用async的。</p>
+<p>最近导师拿到QA那边提供的一个类似的工具，改了一下，做了一个超级快的版本。</p>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>思路其实是非常简单的。我们知道Unity Asset会有一个唯一的GUID，那我们就可以用这个GUID去查询其引用。<br>查询的时候我们也不需要使用Unity API去检查引用，而是把我们的各种Asset都当成文本文件直接读取，然后直接在这些文本里去匹配我们需要查询的GUID。</p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// guidRegex just contains the asset guid</span></span><br><span class="line"><span class="function">List&lt;<span class="keyword">string</span>&gt; <span class="title">GetResult</span>(<span class="params"><span class="keyword">string</span>[] folders, Regex guidRegex</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">string</span>[] files = folders.SelectMany(folder =&gt; Directory.GetFiles(folder, <span class="string">"*"</span>SearchOption.AllDirectories)).ToArray();</span><br><span class="line">    List&lt;<span class="keyword">string</span>&gt; result = <span class="keyword">new</span> List&lt;<span class="keyword">string</span>&gt;(<span class="number">200</span>);</span><br><span class="line">    <span class="keyword">int</span> count = files.Length;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">string</span> filePath = files[i];</span><br><span class="line">        <span class="keyword">if</span> (ChecKFile(filePath, guidRegex))</span><br><span class="line">        &#123;</span><br><span class="line">            result.Add(filePath);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">ChecKFile</span>(<span class="params"><span class="keyword">string</span> filepath, Regex fileContent</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">string</span> assetText = File.ReadAllText(filepath);</span><br><span class="line">    MatchCollection matches = fileContent.Matches(assetText);</span><br><span class="line">    <span class="keyword">return</span> matches.Count &gt; <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>关键代码和Unity API毫无关系，可以避免长时间的卡死，而且我们也能加入取消搜索的功能之类的。如果在乎性能的话可以还可以在读文件检查这边做优化。不过感觉这样已经比之前快了许多了。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/08/14/20220814-unity-recttransform/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1001,96 +1079,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/04/05/20220404-input-sys-save-rebind-01/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="2C2C2C2">
-      <meta itemprop="description" content="随便记录一些东西">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FishPlayer">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/04/05/20220404-input-sys-save-rebind-01/" class="post-title-link" itemprop="url">Unity InputSystem 简单保存按键rebind</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-04-05 12:35:12 / 修改时间：13:57:58" itemprop="dateCreated datePublished" datetime="2022-04-05T12:35:12+08:00">2022-04-05</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Unity/" itemprop="url" rel="index"><span itemprop="name">Unity</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Unity 的 InputSystem 正式发布也好一段时间了。本来这边也想自己做一套输入处理但是看 Unity 这个官方的还挺方便就打算直接用。</p>
-<h1 id="InputAction"><a href="#InputAction" class="headerlink" title="InputAction"></a>InputAction</h1><p>说下我对这个 InputAction 的简单理解。</p>
-<p>InputAction</p>
-<pre><code>- Composite
-    - Binding
-- Binding
-</code></pre><ul>
-<li>Interaction</li>
-<li>Processor</li>
-</ul>
-<p>InputAction 是定义的最上层的交互事件，我认为他是直接和 gameplay 层面交互的，提供响应事件和输入设备的数据(比如鼠标的位置，或是线性按钮的数值)</p>
-<p>Binding 是具体到输入设备上按键，线性输入的一个数据结构</p>
-<p>Composite 是把 Binding 提供的直接输入数据处理成我们想要的数据并提供给 InputAction。</p>
-<p>另外两个可以应用于InputAction，Composite 和 Binding 的组件</p>
-<p>Interaction 是用来规定当前的 输入/行为 触发的机制。</p>
-<p>Processor 是用来对当前的输入数据做追加处理的。</p>
-<h1 id="rebind"><a href="#rebind" class="headerlink" title="rebind"></a>rebind</h1><p>我在官方的tank example中做的 rebind save</p>
-<p>对于简单的 Button Action 里的 Binding, rebind 的时候我们是追加了 OverridePath 给这个 Button Action 下面的 Binding。</p>
-<p>Path 是一个字符串, 大概是这样的 “<Gamepad>/buttonSouth”。 里面包含了输入设备类型和具体的按钮名。(其实我觉得， <Gamepad> 这样的文本可以提供成一个Const string ，会好用很多)</p>
-<p>对于简单的 rebind 存储，我们只需要找到所有的 Binding 里的 override path 保存下来，下次启动游戏加载了原本的 Action Map 之后再把 Override Path 给赋值上去。</p>
-<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">InputBindSaveHelper</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">readonly</span> <span class="keyword">string</span> s_keyMappingPreferKey = <span class="string">"KeyMapping"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">SaveActionMapRebinding</span>(<span class="params">InputActionMap actionMap</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Dictionary&lt;Guid, <span class="keyword">string</span>&gt; overridedActionPathDict = <span class="keyword">new</span> Dictionary&lt;Guid, <span class="keyword">string</span>&gt;();</span><br><span class="line">        UnityEngine.InputSystem.Utilities.ReadOnlyArray&lt;InputAction&gt; actions = actionMap.actions;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; actions.Count; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            InputAction action = actions[i];</span><br><span class="line">            UnityEngine.InputSystem.Utilities.ReadOnlyArray&lt;InputBinding&gt; actionBindings = action.bindings;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; actionBindings.Count; j++)</span><br><span class="line">            &#123;</span><br><span class="line">                InputBinding actionBinding = actionBindings[j];</span><br><span class="line">                <span class="keyword">if</span> (<span class="keyword">string</span>.IsNullOrEmpty(actionBinding.overridePath))</span><br><span class="line">                    <span class="keyword">continue</span>;</span><br><span class="line">                overridedActionPathDict.Add(actionBinding.id, actionBinding.overridePath);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        BinaryFormatter binFormatter = <span class="keyword">new</span> BinaryFormatter();</span><br><span class="line">        MemoryStream mStream = <span class="keyword">new</span> MemoryStream();</span><br><span class="line">        binFormatter.Serialize(mStream, overridedActionPathDict);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">byte</span>[] byteArr = mStream.ToArray();</span><br><span class="line">        <span class="comment">// idk why [Encoding.UTF8.GetString()] just doesnt work</span></span><br><span class="line">        <span class="keyword">string</span> encodingString = Convert.ToBase64String(byteArr, Base64FormattingOptions.InsertLineBreaks);</span><br><span class="line">        PlayerPrefs.SetString(s_keyMappingPreferKey, encodingString);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">LoadActionMapRebinding</span>(<span class="params">InputActionMap actionMap</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">string</span> encodingString = PlayerPrefs.GetString(s_keyMappingPreferKey);</span><br><span class="line">        <span class="keyword">byte</span>[] byteArr = Convert.FromBase64String(encodingString);</span><br><span class="line"></span><br><span class="line">        BinaryFormatter binFormatter = <span class="keyword">new</span> BinaryFormatter();</span><br><span class="line">        MemoryStream mStream = <span class="keyword">new</span> MemoryStream(byteArr);</span><br><span class="line">        Dictionary&lt;Guid, <span class="keyword">string</span>&gt; rebindSavePairDict = binFormatter.Deserialize(mStream) <span class="keyword">as</span> Dictionary&lt;Guid, <span class="keyword">string</span>&gt;;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (rebindSavePairDict != <span class="literal">null</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            UnityEngine.InputSystem.Utilities.ReadOnlyArray&lt;InputAction&gt; actions = actionMap.actions;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; actions.Count; i++)</span><br><span class="line">            &#123;</span><br><span class="line">                InputAction action = actions[i];</span><br><span class="line">                UnityEngine.InputSystem.Utilities.ReadOnlyArray&lt;InputBinding&gt; actionBindings = action.bindings;</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; actionBindings.Count; j++)</span><br><span class="line">                &#123;</span><br><span class="line">                    InputBinding actionBinding = actionBindings[j];</span><br><span class="line">                    <span class="comment">// override</span></span><br><span class="line">                    <span class="keyword">if</span> (rebindSavePairDict.ContainsKey(actionBinding.id))</span><br><span class="line">                    &#123;</span><br><span class="line">                        actionBinding.overridePath = rebindSavePairDict[actionBinding.id];</span><br><span class="line">                        action.ApplyBindingOverride(actionBinding);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>当前因为项目里的存档相关的功能还没做完，结构还没定下来，所以我只能把 rebind 存在PlayerPrefs里。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>我也只是大概看了一下 Unity 的这个 InputSystem，没有很深的去使用。但是初步上手的时候就感觉他的封装和扩展性对于那些操作要求不高的游戏是已经够用的了。<br>比较麻烦的一个点就是他的 Interaction, Processor 和 Binding 的覆盖全都需要用 string。直接写的 string 会非常不方便，估计使用者得自己总结一些其常用的 const string 写进变量直接调用。<br>这样才能比较好的维持代码可读性。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1162,7 +1150,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-count">39</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1205,7 +1193,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2023</span>
+  <span itemprop="copyrightYear">2024</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
