@@ -152,6 +152,91 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/04/16/20220416-odin-custom-value-drawer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="2C2C2C2">
+      <meta itemprop="description" content="随便记录一些东西">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FishPlayer">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/04/16/20220416-odin-custom-value-drawer/" class="post-title-link" itemprop="url">Unity Odin CustomValueDrawer 小坑</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-04-16 10:20:26" itemprop="dateCreated datePublished" datetime="2022-04-16T10:20:26+08:00">2022-04-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-05-15 14:11:17" itemprop="dateModified" datetime="2022-05-15T14:11:17+08:00">2022-05-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Unity/" itemprop="url" rel="index"><span itemprop="name">Unity</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>为了方便策划在 scriptable object 上配置我们的任务以及事件相关的文本，我做了一个简单的 struct 。里面包含了 I2 的 Lockey 和一个参数数组。<br>既然要方便策划配置，那肯定要做一个简单的预览，这样策划就能知道自己配置的文本参数是否正确。</p>
+<p>既然要做预览，那肯定得得自己复写一下他的 property drawer了。对一个字段的编辑器绘制重写有两种方式，一种是继承 OdinValueDrawer class， 还有一种是 CustomValueDrawer Attribute.</p>
+<p><a href="https://odininspector.com/tutorials/how-to-create-custom-drawers-using-odin/how-to-create-a-custom-value-drawer" target="_blank" rel="noopener">https://odininspector.com/tutorials/how-to-create-custom-drawers-using-odin/how-to-create-a-custom-value-drawer</a><br><a href="https://odininspector.com/attributes/custom-value-drawer-attribute" target="_blank" rel="noopener">https://odininspector.com/attributes/custom-value-drawer-attribute</a></p>
+<h1 id="踩坑"><a href="#踩坑" class="headerlink" title="踩坑"></a>踩坑</h1><p>我定义的结构是这样的。</p>
+<p>在默认情况下他已经能在 inspector上画出我的 Lockey 和我的参数数组。<br>因为考虑到给整个结构做 OdinValueDrawer 需要自己画数组有点麻烦，所以我选择用 CustomValueDrawer 只重新画 LocalizedString。</p>
+<p>LocalizedString 的重画我直接照搬了同事的，但是我发现了一个非常奇怪的问题。</p>
+<p>我创建了一个下拉选框，然后在用户选中一个新的 lockey 的时候我对结构体中的 lockey 进行更新。但我发现在下拉选框的选中事件触发后进行赋值，绘制完成再返回新的结构，得到的是没有被更改的结果。<br>但是同样的绘制代码，在 OdinValueDrawer 中却能得到正确的结果！！！CustomValueDrawer 和 OdinValueDrawer 的原理是不一样的。</p>
+<p>OdinValueDrawer 就是相当于一个更先进的 Property Drawer, 在这个绘制器里是可以获取到原本的实际的字段值的。</p>
+<p>CustomValueDrawer 则像是一个函数，里面包含了绘制的方法，但是不能够直接操作原本的字段，需要最后把你更新到的值返回出去，这才能够赋值给实际的那个字段。</p>
+<p>代码给出，有问题的地方使用注释标明了。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[<span class="meta">Serializable</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">struct</span> LocalizationStringParmPack</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">CustomValueDrawer(<span class="meta-string">"DrawPreviewText"</span>)</span>]</span><br><span class="line">    <span class="keyword">public</span> LocalizedString TextLoc;</span><br><span class="line">    <span class="keyword">public</span> LocalizationParamsManager.ParamValue[] ParmsArray;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">string</span> <span class="title">ToString</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.GetRawEnglishString();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> UNITY_EDITOR</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> GUIStyle m_previewStyle;</span><br><span class="line">    <span class="keyword">static</span> GUIStyle PreviewStyle</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">get</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (m_previewStyle == <span class="literal">null</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                m_previewStyle = <span class="keyword">new</span> GUIStyle(EditorStyles.textArea);</span><br><span class="line">                m_previewStyle.wordWrap = <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> m_previewStyle;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// use hacky stuff to get selected new lockey</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">string</span> s_wtfKey = <span class="keyword">string</span>.Empty;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">bool</span> s_hasChanged = <span class="literal">false</span>;</span><br><span class="line">    <span class="function">LocalizedString <span class="title">DrawPreviewText</span>(<span class="params">LocalizedString <span class="keyword">value</span>, GUIContent label</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">using</span> (<span class="keyword">new</span> EditorGUILayout.VerticalScope(UnityEditor.EditorStyles.helpBox))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// draw lockey</span></span><br><span class="line">            <span class="keyword">using</span> (<span class="keyword">new</span> EditorGUILayout.HorizontalScope())</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (label != <span class="literal">null</span>)</span><br><span class="line">                &#123;</span><br><span class="line">                    EditorGUILayout.LabelField(label, GUILayout.Width(EditorGUIUtility.labelWidth));</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="comment">// weird stuff happin in dropdown</span></span><br><span class="line">                <span class="keyword">if</span> (EditorGUILayout.DropdownButton(<span class="keyword">new</span> GUIContent(<span class="keyword">value</span>.mTerm), FocusType.Keyboard))</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">var</span> terms = LocalizationManager.GetTermsList();</span><br><span class="line">                    <span class="keyword">var</span> selector = <span class="keyword">new</span> GenericSelector&lt;<span class="keyword">string</span>&gt;(<span class="string">"Select Term"</span>, terms);</span><br><span class="line">                    selector.EnableSingleClickToSelect();</span><br><span class="line">                    selector.SelectionConfirmed += s =&gt;</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="keyword">if</span> (s.Any())</span><br><span class="line">                        &#123;</span><br><span class="line">                            s_wtfKey = s.First();</span><br><span class="line">                            <span class="comment">// WEIRD STUFF HERE</span></span><br><span class="line">                            <span class="comment">/* if I do  </span></span><br><span class="line"><span class="comment">                            LocalizedString next = new LocalizedString(s.First());</span></span><br><span class="line"><span class="comment">                            and return 'next' and the end of method, it just doesnt work!!!</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">                            cuz the GenericSelector is actually a editor window, and</span></span><br><span class="line"><span class="comment">                            */</span></span><br><span class="line">                            s_hasChanged = <span class="literal">true</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;;</span><br><span class="line">                    selector.ShowInPopup();</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">int</span> mask = (<span class="keyword">value</span>.mRTL_IgnoreArabicFix ? <span class="number">0</span> : <span class="number">1</span>) +</span><br><span class="line">                           (<span class="keyword">value</span>.mRTL_ConvertNumbers ? <span class="number">0</span> : <span class="number">2</span>) +</span><br><span class="line">                           (<span class="keyword">value</span>.m_DontLocalizeParameters ? <span class="number">0</span> : <span class="number">4</span>);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">using</span> (<span class="keyword">var</span> changed = <span class="keyword">new</span> EditorGUI.ChangeCheckScope())</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">int</span> newMask = EditorGUILayout.MaskField(mask, <span class="keyword">new</span> <span class="keyword">string</span>[] &#123; <span class="string">"Arabic Fix"</span>, <span class="string">"Ignore Numbers in RTL"</span>, <span class="string">"Localize Parameters"</span> &#125;, GUILayout.Width(<span class="number">30</span>));</span><br><span class="line">                    <span class="keyword">if</span> (newMask != mask)</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="keyword">value</span>.mRTL_IgnoreArabicFix = (newMask &amp; <span class="number">1</span>) == <span class="number">0</span>;</span><br><span class="line">                        <span class="keyword">value</span>.mRTL_ConvertNumbers = (newMask &amp; <span class="number">2</span>) == <span class="number">0</span>;</span><br><span class="line">                        <span class="keyword">value</span>.m_DontLocalizeParameters = (newMask &amp; <span class="number">4</span>) == <span class="number">0</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (GUILayout.Button(<span class="string">$"Clear"</span>))</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="comment">/* this will also work</span></span><br><span class="line"><span class="comment">                    LocalizedString next = new LocalizedString("[NULL]");</span></span><br><span class="line"><span class="comment">                    */</span></span><br><span class="line">                    s_wtfKey = <span class="string">"[NULL]"</span>;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            LocalizedString next = s_hasChanged ? <span class="keyword">new</span> LocalizedString(s_wtfKey) : <span class="keyword">value</span>;</span><br><span class="line">            s_hasChanged = <span class="literal">false</span>;</span><br><span class="line">            <span class="comment">/*</span></span><br><span class="line"><span class="comment">            draw preview</span></span><br><span class="line"><span class="comment">            draw preview</span></span><br><span class="line"><span class="comment">            draw preview</span></span><br><span class="line"><span class="comment">            */</span></span><br><span class="line">            <span class="keyword">return</span> next;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">string</span> <span class="title">GetParamValue</span>(<span class="params"><span class="keyword">string</span> key</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; ParmsArray.Length; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (ParmsArray[i].Name == key)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">string</span>.IsNullOrEmpty(ParmsArray[i].Value) ? key : ParmsArray[i].Value;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> key;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="又踩坑"><a href="#又踩坑" class="headerlink" title="又踩坑"></a>又踩坑</h1><p>因为这边使用了静态字段，所以如果需要同时绘制这个字段两次，那就会出问题。所以最后我还是换回OdinValueDrawer。<br>静态字段最好还是别在这种情况下使用吧。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/04/05/20220404-input-sys-save-rebind-01/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -863,92 +948,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/10/17/20201017-unity-onaudiofilterread/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="2C2C2C2">
-      <meta itemprop="description" content="随便记录一些东西">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FishPlayer">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/10/17/20201017-unity-onaudiofilterread/" class="post-title-link" itemprop="url">Unity OnAudioFilterRead 学习笔记</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-10-17 19:03:52" itemprop="dateCreated datePublished" datetime="2020-10-17T19:03:52+08:00">2020-10-17</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-10-18 17:32:34" itemprop="dateModified" datetime="2020-10-18T17:32:34+08:00">2020-10-18</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Unity/" itemprop="url" rel="index"><span itemprop="name">Unity</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>最近想着做一个音乐游戏的DEMO试试，但是毫无头绪不知道怎么开始。看了下邦邦的视频决定先把节拍器做出来，再用节拍器提供的事件去支撑起其它的部分。</p>
-<p>因为完全没做过音乐游戏，而且也对游戏引擎以及声音方面没有什么了解，所以开始在网上海搜节拍器的代码并拿来测试。</p>
-<p>最后得到俩解决方案：1.在Unity里写一个；2.使用专业的音频插件（如CRIWARE或者WWISE），使用里面的节拍器。<br>因为只是尝试做做DEMO，决定先不引入音频插件了。</p>
-<p>在冲浪查询的时候发现Unity的官方文档中已经写好了一个！真是太棒了，马上嫖过来用。为了方便之后使用，我也决定把这份代码尽可能看懂。</p>
-<p>下面是Unity的源码<br><a href="https://docs.unity3d.com/ScriptReference/MonoBehaviour.OnAudioFilterRead.html" target="_blank" rel="noopener">MonoBehaviour.OnAudioFilterRead(float[], int)</a><br><a href="https://docs.unity3d.com/ScriptReference/AudioSettings-dspTime.html" target="_blank" rel="noopener">AudioSettings.dspTime</a></p>
-<h1 id="提取基本代码"><a href="#提取基本代码" class="headerlink" title="提取基本代码"></a>提取基本代码</h1><p>首先我大概跑了一下，看了一下，提取出了我认为是节拍器最基本的部分。</p>
-<p>signatureHi / signatureLo =&gt; 这个就是我们所说的几几拍。<br>signatureHi是每小节的拍子数，signatureLo是指x分音符为1拍。accent是指当前小结内的拍子数。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[<span class="meta">RequireComponent(typeof(AudioSource))</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MetronomeExample</span> : <span class="title">MonoBehaviour</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">double</span> bpm = <span class="number">128.0f</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> signatureHi = <span class="number">4</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> signatureLo = <span class="number">4</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">double</span> nextTick = <span class="number">0.0F</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">double</span> sampleRate = <span class="number">0.0F</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> accent= <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">bool</span> running = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">event</span> System.Action&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt; OnBeatTick;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Start</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        accent = signatureHi;</span><br><span class="line">        sampleRate = AudioSettings.outputSampleRate;</span><br><span class="line">        nextTick = AudioSettings.dspTime * sampleRate;</span><br><span class="line">        running = <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">OnAudioFilterRead</span>(<span class="params"><span class="keyword">float</span>[] data, <span class="keyword">int</span> channels</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (!running)</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">double</span> samplesPerTick = sampleRate * (<span class="number">60.0f</span> / bpm) * (<span class="number">4.0f</span> / signatureLo);</span><br><span class="line">        <span class="keyword">double</span> sample = AudioSettings.dspTime * sampleRate;</span><br><span class="line">        <span class="keyword">int</span> dataLen = data.Length / channels;</span><br><span class="line">        <span class="keyword">int</span> n = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (n &lt; dataLen)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">while</span> (sample + n &gt;= nextTick)</span><br><span class="line">            &#123;</span><br><span class="line">                nextTick += samplesPerTick;</span><br><span class="line">                <span class="keyword">if</span> (++accent &gt; signatureHi)</span><br><span class="line">                &#123;</span><br><span class="line">                    accent = <span class="number">1</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                OnBeatTick?.Invoke(accent, signatureHi);</span><br><span class="line">                Debug.Log(<span class="string">$"Tick: <span class="subst">&#123;accent&#125;</span> / <span class="subst">&#123;signatureHi&#125;</span>"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            n++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">nextTick = AudioSettings.dspTime * sampleRate; </span><br><span class="line">``` </span><br><span class="line">从 Start() 开始，先做节拍器的初始化。 因为需要准确的音频数据，所以我们会使用音频相关的函数来操作，而不是使用 Update()。</span><br><span class="line">通过当前的时间 * 当前的采样率，大概就能得到当前的音频信息总量。</span><br><span class="line"></span><br><span class="line">``` CSharp</span><br><span class="line">OnAudioFilterRead(<span class="keyword">float</span>[] data, <span class="keyword">int</span> channels)</span><br><span class="line">``` </span><br><span class="line">接着我们可以把 OnAudioFilterRead() 看作 Update() 来使用。 </span><br><span class="line">channels 大概是声道数,比如我平时用的辣鸡机器是双声道（左右的），那么 channels 的值就是<span class="number">2</span>。</span><br><span class="line">data[] 中存储的是当前这一次遍历的音频数据，也会包含不同声道的音频信息，比如\[<span class="number">0L</span>, <span class="number">1</span>R, <span class="number">2L</span>, <span class="number">3</span>R....\]之类的。</span><br><span class="line"></span><br><span class="line">``` CSharp</span><br><span class="line"><span class="keyword">double</span> samplesPerTick = sampleRate * (<span class="number">60.0f</span> / bpm) * (<span class="number">4.0f</span> / signatureLo);</span><br><span class="line"><span class="keyword">double</span> sample = AudioSettings.dspTime * sampleRate;</span><br><span class="line">``` </span><br><span class="line">这里是用与计算拍子的间隔时间。(<span class="number">60.0f</span> / bpm) 所计算的是对于 <span class="number">4</span>/<span class="number">4</span> 拍而言的拍子间隔时间。</span><br><span class="line">而 (<span class="number">4.0f</span> / signatureLo) 可以算出一个参数，并乘给 <span class="number">4</span>/<span class="number">4</span> 拍而言的拍子间隔时间。</span><br><span class="line">sample 可以粗浅的认为是当前的时间。</span><br><span class="line"></span><br><span class="line">``` CSharp</span><br><span class="line"><span class="keyword">while</span> (n &lt; dataLen)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">while</span> (sample + n &gt;= nextTick)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 用起来就相当于</span></span><br><span class="line">        <span class="comment">// nextTime = Time.time * timeInterval; </span></span><br><span class="line">        nextTick += samplesPerTick;</span><br><span class="line">        <span class="keyword">if</span> (++accent &gt; signatureHi)</span><br><span class="line">        &#123;</span><br><span class="line">            accent = <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        OnBeatTick?.Invoke(accent, signatureHi);</span><br><span class="line">        Debug.Log(<span class="string">$"Tick: <span class="subst">&#123;accent&#125;</span> / <span class="subst">&#123;signatureHi&#125;</span>"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    n++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这边遍历一下接下来会播放的音频数据。根据数据的长度来判断是否会需要发出节拍器的 tick。</p>
-<h1 id="节拍器音效"><a href="#节拍器音效" class="headerlink" title="节拍器音效"></a>节拍器音效</h1><p>在官方源码中还用到了一些其他的变量，并给data赋值，其实这些就是为了播放节拍器音效而存在的。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">while</span> (n&lt;dataLen)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">float</span> x = gain * amp * Mathf.Sin(phase);</span><br><span class="line">    <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span> (i &lt; channels)</span><br><span class="line">    &#123;</span><br><span class="line">        data[n * channels + i] += x;</span><br><span class="line">        i++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> (sample + n &gt;= nextTick)</span><br><span class="line">    &#123;</span><br><span class="line">        nextTick += samplesPerTick;</span><br><span class="line">        amp = <span class="number">1.0F</span>;</span><br><span class="line">        <span class="keyword">if</span> (++accent &gt; signatureHi)</span><br><span class="line">        &#123;</span><br><span class="line">            accent = <span class="number">1</span>;</span><br><span class="line">            amp *= <span class="number">2.0F</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        OnBeatTick?.Invoke(accent, signatureHi);</span><br><span class="line">        Debug.Log(<span class="string">$"Tick: <span class="subst">&#123;accent&#125;</span> / <span class="subst">&#123;signatureHi&#125;</span>"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    phase += amp* <span class="number">0.3F</span>;</span><br><span class="line">    amp *= <span class="number">0.993F</span>;</span><br><span class="line">    n++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="摸了"><a href="#摸了" class="headerlink" title="摸了"></a>摸了</h1><p>感觉自己的知识面又窄又浅，还是需要多看书才行。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1020,7 +1019,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">39</span>
+          <span class="site-state-item-count">40</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
