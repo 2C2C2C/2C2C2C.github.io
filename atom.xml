@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2025-02-21T15:36:45.687Z</updated>
+  <updated>2025-03-03T13:44:38.901Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>TextMeshPro 富文文本自定义颜色</title>
+    <link href="http://yoursite.com/2025/02/23/20250223-tmp-custom-richtext-color/"/>
+    <id>http://yoursite.com/2025/02/23/20250223-tmp-custom-richtext-color/</id>
+    <published>2025-02-23T15:33:33.000Z</published>
+    <updated>2025-03-03T13:44:38.901Z</updated>
+    
+    <content type="html"><![CDATA[<p>TextMeshPro 支持富文本，富文本有颜色标签。对于一些武器/技能描述里的关键字，在文本表里我们都会用 <code>&lt;color=#FFFFFF&gt;</code> 这样的标记去给文本换色。<br>但是这样会有一些比较麻烦的问题，比如当美术希望全部把颜色换掉时，这再去表格里做替换就比较麻烦了，而且也无法区分两种用途不同但是数值一样的颜色。</p><p>于是乎交互和策划那边提来了需求希望能在富文本里使用自定义的颜色tag，为了方便做效果的测试和迭代。</p><p>当前我们已经在使用自定义的继承TMP的文本组件了，达成这个功能就会比较简单，只需要对TMP的代码做一些小修改然后再根据他的规则续写一下我们的自定义的颜色获取就好了。</p><h2 id="TextMeshPro-源码获取"><a href="#TextMeshPro-源码获取" class="headerlink" title="TextMeshPro 源码获取"></a>TextMeshPro 源码获取</h2><p>现在我们都是从 PackageManager 中下载的 TMP，一般是无法直接修改的。需要按照以下步骤才能修改：</p><ul><li>从 <code>PROJECT_ROOT/Library/PackageCache/</code> 中找到 TMP 的包，名字应该是 <code>com.unity.textmeshpro@x.x.x</code></li><li>把整个包拖到 <code>PROJECT_ROOT/Packages/</code> 这个目录下，重启 Unity 工程</li><li>从 <code>PROJECT_ROOT/Packages/com.unity.textmeshpro@x.x.x/</code> 的目录下随意修改源码</li></ul><h2 id="修改思路"><a href="#修改思路" class="headerlink" title="修改思路"></a>修改思路</h2><p><code>TMP_Asset.cs</code> 这个文件有差不多9000行，非常庞大。其中有一大部分是关于富文本标签的解析的。</p><p>我看到的大概的文本渲染的流程大概是这样的:</p><ul><li>文本赋值(从属性或面板上赋值)</li><li>标记需要重建网格</li><li>(重建网格) 使用一个 uint 数组备份当前输入的文本。如果文本长于数组，那扩容到目标长度，如果文本短于数组，空位填0。</li><li>(重建网格) 准备一个 UnicodeChar(编码，原长度等)。如果文本长于数组，那扩容到2的n次幂，如果文本短于数组，空位填0。</li><li>(重建网格) 填充 UnicodeChar 数组，缓存准备操作的文本(会区分换行符和不同字符以及 br, style 标签)。</li><li>(重建网格) 遍历 UnicodeChar 数组以构建网格。</li><li>(重建网格) (遍历 UnicodeChar 数组) 检查每一个 UnicodeChar，如果是可以直接展示的字符，则根据当前的富文本标签区间和其它显示相关的参数来给 m_textInfo 里的 characterInfo(缓存需要绘制的字符的网格相关的信息) 数组中的元素赋值。</li><li>(重建网格) (遍历 UnicodeChar 数组) 检查每一个 UnicodeChar，根据组件上的大小写风格定义来换算当前实际需要使用的 char UnicodeChar。</li><li>(重建网格) (遍历 UnicodeChar 数组) 根据实际使用的 char code 去查询字形(如果是动态的贴图，查不到的会创建并写入贴图)。</li><li>(重建网格) (遍历 UnicodeChar 数组) 根据各种效果处理后的结果，更新m_textInfo 里的 characterInfo(缓存需要绘制的字符的网格相关的信息) 数组中的元素。</li><li>(重建网格) 根据整体的对齐模式计算整体的偏移，之后用于重新更新m_textInfo 里的 characterInfo。</li><li>(重建网格) 接下来还有一系列处理我头大了看不下去了 :)</li></ul><p>整个流程很长我没看完，但还是看到了我需要的关键部分。<code>internal bool ValidateHtmlTag(UnicodeChar[] chars, int startIndex, out int endIndex)</code> 这个函数中就有富文本标签的解析而且正好有根据颜色标签来计算颜色的部分。再这个部分(TMP_Text.cs line 7766)中就正好是根据颜色名字来赋颜色，在这里我们加上用于解析自定义颜色的函数就可以了</p><h2 id="TextMeshPro-超链接点击"><a href="#TextMeshPro-超链接点击" class="headerlink" title="TextMeshPro 超链接点击"></a>TextMeshPro 超链接点击</h2><p>这个功能也是我最开始提到的对于武器/技能描述里的关键字会需要的一个功能，点击超链接文本打开某某界面展示下详情。配合 TMP 也非常好好完成。<br>需要一个响应点击的脚本挂在有 TMP 的物体上或者直接继承 TMP 然后也继承响应点击的这个接口。</p><p>我们可以明确得到点击的富文本链接内容，需要打开界面的情况就自己切割参数解析即可。</p><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">TempTMP</span> : <span class="title">TextMeshProUGUI</span>, <span class="title">IPointerClickHandler</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">OnPointerClick</span>(<span class="params">PointerEventData eventData</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">int</span> linkIndex = TMP_TextUtilities.FindIntersectingLink(<span class="keyword">this</span>, eventData.position, eventData.pressEventCamera);</span><br><span class="line">        <span class="keyword">if</span> (linkIndex != <span class="number">-1</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">/*</span></span><br><span class="line"><span class="comment">            * e.g. &lt;link="a2,b2"&gt;Mesh&lt;/link&gt;</span></span><br><span class="line"><span class="comment">            * linkInfo.GetLinkID() will "get a2,b2"</span></span><br><span class="line"><span class="comment">            * linkInfo.GetLinkText() will get "Mesh"</span></span><br><span class="line"><span class="comment">            */</span></span><br><span class="line">            TMP_LinkInfo linkInfo = <span class="keyword">this</span>.textInfo.linkInfo[linkIndex];</span><br><span class="line">            Debug.Log(<span class="string">$"linkId <span class="subst">&#123;linkInfo.GetLinkID()&#125;</span> / linkText <span class="subst">&#123;linkInfo.GetLinkText()&#125;</span>"</span>);</span><br><span class="line">            <span class="comment">// Do stuff u want here :D</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;TextMeshPro 支持富文本，富文本有颜色标签。对于一些武器/技能描述里的关键字，在文本表里我们都会用 &lt;code&gt;&amp;lt;color=#FFFFFF&amp;gt;&lt;/code&gt; 这样的标记去给文本换色。&lt;br&gt;但是这样会有一些比较麻烦的问题，比如当美术希望全部把颜色换掉时
+      
+    
+    </summary>
+    
+    
+    
+      <category term="UGUI" scheme="http://yoursite.com/tags/UGUI/"/>
+    
+  </entry>
   
   <entry>
     <title>查询Asset在工程中的引用(GUID)</title>
@@ -550,34 +574,6 @@
     
     
       <category term="Unity" scheme="http://yoursite.com/tags/Unity/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>使用 State Object 暂存 property drawer 的状态。</title>
-    <link href="http://yoursite.com/2022/07/30/20220730-unity-editor-stateobj/"/>
-    <id>http://yoursite.com/2022/07/30/20220730-unity-editor-stateobj/</id>
-    <published>2022-07-30T09:55:21.000Z</published>
-    <updated>2023-05-01T06:21:54.625Z</updated>
-    
-    <content type="html"><![CDATA[<p>最近在做红点功能，path是用string挂在UI物体上的。UI同学那边想要一个按钮可以切换path在inspector是可编辑或不可编辑的状态。<br>最开始毫无思路，因为本身path是一个string，我自然不可以它身上记录这个编辑与否的状态。后来想着能不能把这个状态存在path的protperty drawer上。问了下导师，可行，但是没法直接存。</p><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>创建一个object存储这个状态，这个object存入editor的state object里。<br>在Property drawer进行绘制的时候获取/更新这个object。</p><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><p>代码很简单</p><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">UITagDrawer</span> : <span class="title">PropertyDrawer</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// the object for string state</span></span><br><span class="line">    <span class="keyword">class</span> <span class="title">EditingState</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">bool</span> IsEditing = <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnGUI</span>(<span class="params">Rect position, SerializedProperty property, GUIContent label</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="comment">/***/</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// get state object</span></span><br><span class="line">        EditingState state = GUIUtility.GetStateObject(<span class="keyword">typeof</span>(EditingState), GUIUtility.GetControlID(FocusType.Passive)) <span class="keyword">as</span> EditingState;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">using</span> (<span class="keyword">new</span> EditorGUILayout.HorizontalScope(style))</span><br><span class="line">        &#123;</span><br><span class="line">            Rect editButtonRect = <span class="keyword">new</span> Rect(position.x, position.y, <span class="number">16f</span>, <span class="number">16f</span>);</span><br><span class="line">            <span class="keyword">if</span> (GUI.Button(editButtonRect, <span class="string">"E"</span>))</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">// well since it's a class we dun need to set it back :&gt;</span></span><br><span class="line">                state.IsEditing = !state.IsEditing;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (GUILayout.Button(<span class="string">"X"</span>, GUILayout.Width(<span class="number">18</span>)))</span><br><span class="line">            &#123;</span><br><span class="line">                state.IsEditing = !state.IsEditing;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (state.IsEditing)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">// show text field</span></span><br><span class="line">                tagStr = EditorGUILayout.TextField(tagStr);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">// show lable</span></span><br><span class="line">                EditorGUILayout.LabelField(tagStr);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;最近在做红点功能，path是用string挂在UI物体上的。UI同学那边想要一个按钮可以切换path在inspector是可编辑或不可编辑的状态。&lt;br&gt;最开始毫无思路，因为本身path是一个string，我自然不可以它身上记录这个编辑与否的状态。后来想着能不能把这个状态存
-      
-    
-    </summary>
-    
-    
-      <category term="UnityEditor" scheme="http://yoursite.com/categories/UnityEditor/"/>
-    
-    
-      <category term="Unity" scheme="http://yoursite.com/tags/Unity/"/>
-    
-      <category term="UnityEditor" scheme="http://yoursite.com/tags/UnityEditor/"/>
     
   </entry>
   

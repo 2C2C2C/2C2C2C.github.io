@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="TextMeshPro 支持富文本，富文本有颜色标签。对于一些武器&#x2F;技能描述里的关键字，在文本表里我们都会用 &lt;color&#x3D;#FFFFFF&gt; 这样的标记去给文本换色。但是这样会有一些比较麻烦的问题，比如当美术希望全部把颜色换掉时，这再去表格里做替换就比较麻烦了，而且也无法区分两种用途不同但是数值一样的颜色。 于是乎交互和策划那边提来了需求希望能在富文本里使用自定义的颜色tag，为了方便">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TextMeshPro 富文文本自定义颜色">
+<meta property="og:url" content="http://yoursite.com/2025/02/23/20250223-tmp-custom-richtext-color/index.html">
+<meta property="og:site_name" content="FishPlayer">
+<meta property="og:description" content="TextMeshPro 支持富文本，富文本有颜色标签。对于一些武器&#x2F;技能描述里的关键字，在文本表里我们都会用 &lt;color&#x3D;#FFFFFF&gt; 这样的标记去给文本换色。但是这样会有一些比较麻烦的问题，比如当美术希望全部把颜色换掉时，这再去表格里做替换就比较麻烦了，而且也无法区分两种用途不同但是数值一样的颜色。 于是乎交互和策划那边提来了需求希望能在富文本里使用自定义的颜色tag，为了方便">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-02-23T15:33:33.000Z">
+<meta property="article:modified_time" content="2025-03-03T13:44:38.901Z">
+<meta property="article:author" content="2C2C2C2">
+<meta property="article:tag" content="UGUI">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2025/02/23/20250223-tmp-custom-richtext-color/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>TextMeshPro 富文文本自定义颜色 | FishPlayer</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="FishPlayer" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">FishPlayer</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">一个喜欢摸鱼的废物</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2025/02/23/20250223-tmp-custom-richtext-color/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="2C2C2C2">
+      <meta itemprop="description" content="随便记录一些东西">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FishPlayer">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          TextMeshPro 富文文本自定义颜色
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-02-23 23:33:33" itemprop="dateCreated datePublished" datetime="2025-02-23T23:33:33+08:00">2025-02-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-03-03 21:44:38" itemprop="dateModified" datetime="2025-03-03T21:44:38+08:00">2025-03-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>TextMeshPro 支持富文本，富文本有颜色标签。对于一些武器/技能描述里的关键字，在文本表里我们都会用 <code>&lt;color=#FFFFFF&gt;</code> 这样的标记去给文本换色。<br>但是这样会有一些比较麻烦的问题，比如当美术希望全部把颜色换掉时，这再去表格里做替换就比较麻烦了，而且也无法区分两种用途不同但是数值一样的颜色。</p>
+<p>于是乎交互和策划那边提来了需求希望能在富文本里使用自定义的颜色tag，为了方便做效果的测试和迭代。</p>
+<p>当前我们已经在使用自定义的继承TMP的文本组件了，达成这个功能就会比较简单，只需要对TMP的代码做一些小修改然后再根据他的规则续写一下我们的自定义的颜色获取就好了。</p>
+<h2 id="TextMeshPro-源码获取"><a href="#TextMeshPro-源码获取" class="headerlink" title="TextMeshPro 源码获取"></a>TextMeshPro 源码获取</h2><p>现在我们都是从 PackageManager 中下载的 TMP，一般是无法直接修改的。需要按照以下步骤才能修改：</p>
+<ul>
+<li>从 <code>PROJECT_ROOT/Library/PackageCache/</code> 中找到 TMP 的包，名字应该是 <code>com.unity.textmeshpro@x.x.x</code></li>
+<li>把整个包拖到 <code>PROJECT_ROOT/Packages/</code> 这个目录下，重启 Unity 工程</li>
+<li>从 <code>PROJECT_ROOT/Packages/com.unity.textmeshpro@x.x.x/</code> 的目录下随意修改源码</li>
+</ul>
+<h2 id="修改思路"><a href="#修改思路" class="headerlink" title="修改思路"></a>修改思路</h2><p><code>TMP_Asset.cs</code> 这个文件有差不多9000行，非常庞大。其中有一大部分是关于富文本标签的解析的。</p>
+<p>我看到的大概的文本渲染的流程大概是这样的:</p>
+<ul>
+<li>文本赋值(从属性或面板上赋值)</li>
+<li>标记需要重建网格</li>
+<li>(重建网格) 使用一个 uint 数组备份当前输入的文本。如果文本长于数组，那扩容到目标长度，如果文本短于数组，空位填0。</li>
+<li>(重建网格) 准备一个 UnicodeChar(编码，原长度等)。如果文本长于数组，那扩容到2的n次幂，如果文本短于数组，空位填0。</li>
+<li>(重建网格) 填充 UnicodeChar 数组，缓存准备操作的文本(会区分换行符和不同字符以及 br, style 标签)。</li>
+<li>(重建网格) 遍历 UnicodeChar 数组以构建网格。</li>
+<li>(重建网格) (遍历 UnicodeChar 数组) 检查每一个 UnicodeChar，如果是可以直接展示的字符，则根据当前的富文本标签区间和其它显示相关的参数来给 m_textInfo 里的 characterInfo(缓存需要绘制的字符的网格相关的信息) 数组中的元素赋值。</li>
+<li>(重建网格) (遍历 UnicodeChar 数组) 检查每一个 UnicodeChar，根据组件上的大小写风格定义来换算当前实际需要使用的 char UnicodeChar。</li>
+<li>(重建网格) (遍历 UnicodeChar 数组) 根据实际使用的 char code 去查询字形(如果是动态的贴图，查不到的会创建并写入贴图)。</li>
+<li>(重建网格) (遍历 UnicodeChar 数组) 根据各种效果处理后的结果，更新m_textInfo 里的 characterInfo(缓存需要绘制的字符的网格相关的信息) 数组中的元素。</li>
+<li>(重建网格) 根据整体的对齐模式计算整体的偏移，之后用于重新更新m_textInfo 里的 characterInfo。</li>
+<li>(重建网格) 接下来还有一系列处理我头大了看不下去了 :)</li>
+</ul>
+<p>整个流程很长我没看完，但还是看到了我需要的关键部分。<code>internal bool ValidateHtmlTag(UnicodeChar[] chars, int startIndex, out int endIndex)</code> 这个函数中就有富文本标签的解析而且正好有根据颜色标签来计算颜色的部分。再这个部分(TMP_Text.cs line 7766)中就正好是根据颜色名字来赋颜色，在这里我们加上用于解析自定义颜色的函数就可以了</p>
+<h2 id="TextMeshPro-超链接点击"><a href="#TextMeshPro-超链接点击" class="headerlink" title="TextMeshPro 超链接点击"></a>TextMeshPro 超链接点击</h2><p>这个功能也是我最开始提到的对于武器/技能描述里的关键字会需要的一个功能，点击超链接文本打开某某界面展示下详情。配合 TMP 也非常好好完成。<br>需要一个响应点击的脚本挂在有 TMP 的物体上或者直接继承 TMP 然后也继承响应点击的这个接口。</p>
+<p>我们可以明确得到点击的富文本链接内容，需要打开界面的情况就自己切割参数解析即可。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">TempTMP</span> : <span class="title">TextMeshProUGUI</span>, <span class="title">IPointerClickHandler</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">OnPointerClick</span>(<span class="params">PointerEventData eventData</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">int</span> linkIndex = TMP_TextUtilities.FindIntersectingLink(<span class="keyword">this</span>, eventData.position, eventData.pressEventCamera);</span><br><span class="line">        <span class="keyword">if</span> (linkIndex != <span class="number">-1</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">/*</span></span><br><span class="line"><span class="comment">            * e.g. &lt;link="a2,b2"&gt;Mesh&lt;/link&gt;</span></span><br><span class="line"><span class="comment">            * linkInfo.GetLinkID() will "get a2,b2"</span></span><br><span class="line"><span class="comment">            * linkInfo.GetLinkText() will get "Mesh"</span></span><br><span class="line"><span class="comment">            */</span></span><br><span class="line">            TMP_LinkInfo linkInfo = <span class="keyword">this</span>.textInfo.linkInfo[linkIndex];</span><br><span class="line">            Debug.Log(<span class="string">$"linkId <span class="subst">&#123;linkInfo.GetLinkID()&#125;</span> / linkText <span class="subst">&#123;linkInfo.GetLinkText()&#125;</span>"</span>);</span><br><span class="line">            <span class="comment">// Do stuff u want here :D</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/UGUI/" rel="tag"># UGUI</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/02/21/20250221-unity-findref-guid/" rel="prev" title="查询Asset在工程中的引用(GUID)">
+      <i class="fa fa-chevron-left"></i> 查询Asset在工程中的引用(GUID)
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#TextMeshPro-源码获取"><span class="nav-number">1.</span> <span class="nav-text">TextMeshPro 源码获取</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改思路"><span class="nav-number">2.</span> <span class="nav-text">修改思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TextMeshPro-超链接点击"><span class="nav-number">3.</span> <span class="nav-text">TextMeshPro 超链接点击</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="2C2C2C2"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">2C2C2C2</p>
+  <div class="site-description" itemprop="description">随便记录一些东西</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/2C2C2C" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;2C2C2C" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">2C2C2C2</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

@@ -152,6 +152,98 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2025/02/23/20250223-tmp-custom-richtext-color/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="2C2C2C2">
+      <meta itemprop="description" content="随便记录一些东西">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FishPlayer">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/02/23/20250223-tmp-custom-richtext-color/" class="post-title-link" itemprop="url">TextMeshPro 富文文本自定义颜色</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-02-23 23:33:33" itemprop="dateCreated datePublished" datetime="2025-02-23T23:33:33+08:00">2025-02-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-03-03 21:44:38" itemprop="dateModified" datetime="2025-03-03T21:44:38+08:00">2025-03-03</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>TextMeshPro 支持富文本，富文本有颜色标签。对于一些武器/技能描述里的关键字，在文本表里我们都会用 <code>&lt;color=#FFFFFF&gt;</code> 这样的标记去给文本换色。<br>但是这样会有一些比较麻烦的问题，比如当美术希望全部把颜色换掉时，这再去表格里做替换就比较麻烦了，而且也无法区分两种用途不同但是数值一样的颜色。</p>
+<p>于是乎交互和策划那边提来了需求希望能在富文本里使用自定义的颜色tag，为了方便做效果的测试和迭代。</p>
+<p>当前我们已经在使用自定义的继承TMP的文本组件了，达成这个功能就会比较简单，只需要对TMP的代码做一些小修改然后再根据他的规则续写一下我们的自定义的颜色获取就好了。</p>
+<h2 id="TextMeshPro-源码获取"><a href="#TextMeshPro-源码获取" class="headerlink" title="TextMeshPro 源码获取"></a>TextMeshPro 源码获取</h2><p>现在我们都是从 PackageManager 中下载的 TMP，一般是无法直接修改的。需要按照以下步骤才能修改：</p>
+<ul>
+<li>从 <code>PROJECT_ROOT/Library/PackageCache/</code> 中找到 TMP 的包，名字应该是 <code>com.unity.textmeshpro@x.x.x</code></li>
+<li>把整个包拖到 <code>PROJECT_ROOT/Packages/</code> 这个目录下，重启 Unity 工程</li>
+<li>从 <code>PROJECT_ROOT/Packages/com.unity.textmeshpro@x.x.x/</code> 的目录下随意修改源码</li>
+</ul>
+<h2 id="修改思路"><a href="#修改思路" class="headerlink" title="修改思路"></a>修改思路</h2><p><code>TMP_Asset.cs</code> 这个文件有差不多9000行，非常庞大。其中有一大部分是关于富文本标签的解析的。</p>
+<p>我看到的大概的文本渲染的流程大概是这样的:</p>
+<ul>
+<li>文本赋值(从属性或面板上赋值)</li>
+<li>标记需要重建网格</li>
+<li>(重建网格) 使用一个 uint 数组备份当前输入的文本。如果文本长于数组，那扩容到目标长度，如果文本短于数组，空位填0。</li>
+<li>(重建网格) 准备一个 UnicodeChar(编码，原长度等)。如果文本长于数组，那扩容到2的n次幂，如果文本短于数组，空位填0。</li>
+<li>(重建网格) 填充 UnicodeChar 数组，缓存准备操作的文本(会区分换行符和不同字符以及 br, style 标签)。</li>
+<li>(重建网格) 遍历 UnicodeChar 数组以构建网格。</li>
+<li>(重建网格) (遍历 UnicodeChar 数组) 检查每一个 UnicodeChar，如果是可以直接展示的字符，则根据当前的富文本标签区间和其它显示相关的参数来给 m_textInfo 里的 characterInfo(缓存需要绘制的字符的网格相关的信息) 数组中的元素赋值。</li>
+<li>(重建网格) (遍历 UnicodeChar 数组) 检查每一个 UnicodeChar，根据组件上的大小写风格定义来换算当前实际需要使用的 char UnicodeChar。</li>
+<li>(重建网格) (遍历 UnicodeChar 数组) 根据实际使用的 char code 去查询字形(如果是动态的贴图，查不到的会创建并写入贴图)。</li>
+<li>(重建网格) (遍历 UnicodeChar 数组) 根据各种效果处理后的结果，更新m_textInfo 里的 characterInfo(缓存需要绘制的字符的网格相关的信息) 数组中的元素。</li>
+<li>(重建网格) 根据整体的对齐模式计算整体的偏移，之后用于重新更新m_textInfo 里的 characterInfo。</li>
+<li>(重建网格) 接下来还有一系列处理我头大了看不下去了 :)</li>
+</ul>
+<p>整个流程很长我没看完，但还是看到了我需要的关键部分。<code>internal bool ValidateHtmlTag(UnicodeChar[] chars, int startIndex, out int endIndex)</code> 这个函数中就有富文本标签的解析而且正好有根据颜色标签来计算颜色的部分。再这个部分(TMP_Text.cs line 7766)中就正好是根据颜色名字来赋颜色，在这里我们加上用于解析自定义颜色的函数就可以了</p>
+<h2 id="TextMeshPro-超链接点击"><a href="#TextMeshPro-超链接点击" class="headerlink" title="TextMeshPro 超链接点击"></a>TextMeshPro 超链接点击</h2><p>这个功能也是我最开始提到的对于武器/技能描述里的关键字会需要的一个功能，点击超链接文本打开某某界面展示下详情。配合 TMP 也非常好好完成。<br>需要一个响应点击的脚本挂在有 TMP 的物体上或者直接继承 TMP 然后也继承响应点击的这个接口。</p>
+<p>我们可以明确得到点击的富文本链接内容，需要打开界面的情况就自己切割参数解析即可。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">TempTMP</span> : <span class="title">TextMeshProUGUI</span>, <span class="title">IPointerClickHandler</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">OnPointerClick</span>(<span class="params">PointerEventData eventData</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">int</span> linkIndex = TMP_TextUtilities.FindIntersectingLink(<span class="keyword">this</span>, eventData.position, eventData.pressEventCamera);</span><br><span class="line">        <span class="keyword">if</span> (linkIndex != <span class="number">-1</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">/*</span></span><br><span class="line"><span class="comment">            * e.g. &lt;link="a2,b2"&gt;Mesh&lt;/link&gt;</span></span><br><span class="line"><span class="comment">            * linkInfo.GetLinkID() will "get a2,b2"</span></span><br><span class="line"><span class="comment">            * linkInfo.GetLinkText() will get "Mesh"</span></span><br><span class="line"><span class="comment">            */</span></span><br><span class="line">            TMP_LinkInfo linkInfo = <span class="keyword">this</span>.textInfo.linkInfo[linkIndex];</span><br><span class="line">            Debug.Log(<span class="string">$"linkId <span class="subst">&#123;linkInfo.GetLinkID()&#125;</span> / linkText <span class="subst">&#123;linkInfo.GetLinkText()&#125;</span>"</span>);</span><br><span class="line">            <span class="comment">// Do stuff u want here :D</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2025/02/21/20250221-unity-findref-guid/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -911,84 +1003,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2023/07/23/20230723-int-draw-as-enum/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="2C2C2C2">
-      <meta itemprop="description" content="随便记录一些东西">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FishPlayer">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/07/23/20230723-int-draw-as-enum/" class="post-title-link" itemprop="url">Unity编辑器中以enum的方式绘制int</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2023-07-23 17:34:10" itemprop="dateCreated datePublished" datetime="2023-07-23T17:34:10+08:00">2023-07-23</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-07-25 00:07:44" itemprop="dateModified" datetime="2023-07-25T00:07:44+08:00">2023-07-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/UnityEditor/" itemprop="url" rel="index"><span itemprop="name">UnityEditor</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>项目里的UI框架有非常方便实用的数据绑定功能。各种UI表现件也可以根据数据集里的某个int改变UI表现。但是比较逆天的是我们经常把enum转int然后再到表现件上去调对应的各种状态。<br>对着magic number调配置确实很让人苦恼。</p>
-<p>思路就是再需要根据int来调偶配置的component上添加一个编辑器里专用的Type对象，然后根据这个对象类型去画int。基于Odin做的，但我觉得这个思路应该还不错。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">    <span class="comment">// use a string to temply store the type</span></span><br><span class="line"></span><br><span class="line">    [<span class="meta">AttributeUsage(AttributeTargets.Field)</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">EnumTypeQualifiedName</span>: <span class="title">Attribute</span> &#123; &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">DrawerPriority(DrawerPriorityLevel.WrapperPriority)</span>]</span><br><span class="line">    public class EnumTypeQualifiedNameAttributeDrawer : OdinAttributeDrawer&lt;EnumTypeQualifiedName, string&gt;</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">class</span> <span class="title">EditingState</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">static</span> IEnumerable&lt;Type&gt; tempQuery;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">bool</span> wannaSet = <span class="literal">false</span>;</span><br><span class="line">            <span class="keyword">public</span> Type selectedType = <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">DrawPropertyLayout</span>(<span class="params">GUIContent label</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">string</span> currentName = <span class="keyword">this</span>.ValueEntry.SmartValue;</span><br><span class="line">            Type enumType = <span class="keyword">string</span>.IsNullOrEmpty(currentName) ? <span class="literal">null</span> : Type.GetType(currentName);</span><br><span class="line">            <span class="keyword">string</span> enumTypeNiceName = enumType == <span class="literal">null</span> ? <span class="string">"invalid!!!"</span> : enumType.GetNiceName();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">int</span> controlId = GUIUtility.GetControlID(FocusType.Passive);</span><br><span class="line">            EditingState state = GUIUtility.GetStateObject(<span class="keyword">typeof</span>(EditingState), controlId) <span class="keyword">as</span> EditingState;</span><br><span class="line">            <span class="keyword">if</span> (state.wannaSet)</span><br><span class="line">            &#123;</span><br><span class="line">                currentName = state.selectedType.AssemblyQualifiedName;</span><br><span class="line">                state.selectedType = <span class="literal">null</span>;</span><br><span class="line">                state.wannaSet = <span class="literal">false</span>;</span><br><span class="line">                <span class="keyword">this</span>.ValueEntry.SmartValue = currentName;</span><br><span class="line">            &#125;</span><br><span class="line">            EditorGUILayout.BeginVertical();</span><br><span class="line">            GUIStyle guiStyle = <span class="keyword">new</span> GUIStyle(EditorStyles.label);</span><br><span class="line">            guiStyle.alignment = TextAnchor.MiddleLeft;</span><br><span class="line">            EditorGUILayout.LabelField(<span class="keyword">this</span>.Property.NiceName, guiStyle);</span><br><span class="line"></span><br><span class="line">            guiStyle = <span class="keyword">new</span> GUIStyle(EditorStyles.popup);</span><br><span class="line">            guiStyle.alignment = TextAnchor.MiddleLeft;</span><br><span class="line">            <span class="keyword">if</span> (EditorGUILayout.DropdownButton(<span class="keyword">new</span> GUIContent(<span class="string">$"Preview Enum Type (<span class="subst">&#123;enumTypeNiceName&#125;</span>)"</span>), FocusType.Keyboard, guiStyle))</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (EditingState.tempQuery == <span class="literal">null</span>)</span><br><span class="line">                &#123;</span><br><span class="line">                    EditingState.tempQuery = GetTargetEnumTypes();</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                TypeSelector selector = <span class="keyword">new</span> TypeSelector(EditingState.tempQuery, <span class="literal">false</span>);</span><br><span class="line">                selector.EnableSingleClickToSelect();</span><br><span class="line">                selector.ShowInPopup();</span><br><span class="line">                selector.SelectionConfirmed += selection =&gt;</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">var</span> resultTypeArray = selection.ToArray();</span><br><span class="line">                    <span class="keyword">if</span> (resultTypeArray.Length &gt; <span class="number">0</span>)</span><br><span class="line">                    &#123;</span><br><span class="line">                        Type selectedType = resultTypeArray.GetValue(<span class="number">0</span>) <span class="keyword">as</span> Type;</span><br><span class="line">                        EditingState state = GUIUtility.GetStateObject(<span class="keyword">typeof</span>(EditingState), controlId) <span class="keyword">as</span> EditingState;</span><br><span class="line">                        state.selectedType = selectedType;</span><br><span class="line">                        state.wannaSet = <span class="literal">true</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;;</span><br><span class="line">            &#125;</span><br><span class="line">            EditorGUILayout.EndVertical();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> IEnumerable&lt;Type&gt; <span class="title">GetTargetEnumTypes</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="comment">// TODO @Hiko here to get actual enum types</span></span><br><span class="line">            TypeCache.TypeCollection cache = TypeCache.GetTypesDerivedFrom&lt;Enum&gt;();</span><br><span class="line">            <span class="keyword">var</span> query = cache.Where(t =&gt; t.IsEnum &amp;&amp; t.IsPublic);</span><br><span class="line">            <span class="keyword">return</span> query;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// put temply data into a sturct </span></span><br><span class="line"></span><br><span class="line">    [<span class="meta">Serializable</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">struct</span> IntAsEnumEditorPack</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">bool</span> showIntAsEnumForTaggedField;</span><br><span class="line">        [<span class="meta">EnumTypeQualifiedName</span>]</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">string</span> enumTypeQualifiedName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IIntAsEnumPackHolder</span></span><br><span class="line">    &#123;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> UNITY_EDITOR</span></span><br><span class="line">        IntAsEnumEditorPack holderData &#123; <span class="keyword">get</span>; &#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// draw enum popup for int</span></span><br><span class="line"></span><br><span class="line">    [<span class="meta">AttributeUsage(AttributeTargets.Field)</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">IntAsEnumAttribute</span> : <span class="title">Attribute</span> &#123; &#125;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">DrawerPriority(DrawerPriorityLevel.WrapperPriority)</span>]</span><br><span class="line">    public class IntAsEnumAttributeDrawer : OdinAttributeDrawer&lt;IntAsEnumAttribute, int&gt;</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">DrawPropertyLayout</span>(<span class="params">GUIContent label</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">int</span> nextValue, prevValue = <span class="keyword">this</span>.ValueEntry.SmartValue;</span><br><span class="line">            InspectorProperty containerProterty = <span class="keyword">this</span>.ValueEntry.Property;</span><br><span class="line">            Type holderType = <span class="keyword">typeof</span>(IIntAsEnumPackHolder);</span><br><span class="line">            Type containerType = containerProterty.ParentType;</span><br><span class="line">            <span class="keyword">bool</span> doContinue = <span class="literal">true</span>;</span><br><span class="line">            <span class="keyword">while</span> (doContinue)</span><br><span class="line">            &#123;</span><br><span class="line">                Type parentType = containerProterty.ParentType;</span><br><span class="line">                <span class="keyword">if</span> (parentType == <span class="literal">null</span>)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                containerType = parentType;</span><br><span class="line">                containerProterty = containerProterty.Parent;</span><br><span class="line">                <span class="keyword">if</span> (holderType.IsAssignableFrom(containerType))</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            GUIStyle guiStyle = <span class="keyword">new</span> GUIStyle(EditorStyles.label);</span><br><span class="line">            guiStyle.alignment = TextAnchor.MiddleLeft;</span><br><span class="line">            <span class="keyword">if</span> (containerType != <span class="literal">null</span> &amp;&amp; holderType.IsAssignableFrom(containerType))</span><br><span class="line">            &#123;</span><br><span class="line">                IIntAsEnumPackHolder holder = containerProterty.ValueEntry.WeakSmartValue <span class="keyword">as</span> IIntAsEnumPackHolder;</span><br><span class="line">                IntAsEnumEditorPack packData = holder.holderData;</span><br><span class="line">                <span class="keyword">if</span> (packData.showIntAsEnumForTaggedField)</span><br><span class="line">                &#123;</span><br><span class="line">                    EditorGUILayout.BeginVertical();</span><br><span class="line">                    EditorGUILayout.LabelField(<span class="keyword">this</span>.Property.NiceName, guiStyle);</span><br><span class="line">                    Type enumType = <span class="keyword">string</span>.IsNullOrEmpty(packData.enumTypeQualifiedName) ? <span class="literal">null</span> : Type.GetType(packData.enumTypeQualifiedName);</span><br><span class="line">                    <span class="keyword">if</span> (enumType != <span class="literal">null</span> &amp;&amp; enumType.IsEnum)</span><br><span class="line">                    &#123;</span><br><span class="line">                        Enum prevEnumValue;</span><br><span class="line">                        <span class="keyword">if</span> (!enumType.IsEnumDefined(prevValue))</span><br><span class="line">                        &#123;</span><br><span class="line">                            prevEnumValue = Enum.GetValues(enumType).GetValue(<span class="number">0</span>) <span class="keyword">as</span> Enum;</span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="keyword">else</span></span><br><span class="line">                        &#123;</span><br><span class="line">                            prevEnumValue = (Enum)Enum.ToObject(enumType, prevValue);</span><br><span class="line">                        &#125;</span><br><span class="line">                        guiStyle = <span class="keyword">new</span> GUIStyle(EditorStyles.popup);</span><br><span class="line">                        guiStyle.stretchWidth = <span class="literal">false</span>;</span><br><span class="line">                        guiStyle.alignment = TextAnchor.MiddleLeft;</span><br><span class="line">                        Enum nextEnumValue = EditorGUILayout.EnumPopup(prevEnumValue, guiStyle);</span><br><span class="line">                        nextValue = Convert.ToInt32(nextEnumValue);</span><br><span class="line">                        <span class="keyword">this</span>.ValueEntry.SmartValue = nextValue;</span><br><span class="line">                        guiStyle = <span class="keyword">new</span> GUIStyle(EditorStyles.label);</span><br><span class="line">                        guiStyle.alignment = TextAnchor.MiddleLeft;</span><br><span class="line">                        guiStyle.stretchWidth = <span class="literal">false</span>;</span><br><span class="line">                        EditorGUILayout.LabelField(<span class="string">$"int value: (<span class="subst">&#123;nextValue&#125;</span>)"</span>, guiStyle);</span><br><span class="line">                    &#125;</span><br><span class="line">                    EditorGUILayout.EndVertical();</span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// can not find the target preview enum type, draw normal int field</span></span><br><span class="line">            EditorGUILayout.BeginHorizontal();</span><br><span class="line">            EditorGUILayout.LabelField(<span class="keyword">this</span>.Property.NiceName);</span><br><span class="line">            nextValue = EditorGUILayout.IntField(prevValue);</span><br><span class="line">            <span class="keyword">this</span>.ValueEntry.SmartValue = nextValue;</span><br><span class="line">            EditorGUILayout.EndHorizontal();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// test case</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">TesterA</span> : <span class="title">MonoBehaviour</span>, <span class="title">IIntAsEnumPackHolder</span></span><br><span class="line">    &#123;</span><br><span class="line">    <span class="meta">#<span class="meta-keyword">if</span> UNITY_EDITOR</span></span><br><span class="line">        [<span class="meta">SerializeField</span>]</span><br><span class="line">        <span class="keyword">private</span> IntAsEnumEditorPack intAsEnumEditorPack;</span><br><span class="line">        <span class="keyword">public</span> IntAsEnumEditorPack holderData =&gt; intAsEnumEditorPack;</span><br><span class="line">    <span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line">        [<span class="meta">Serializable</span>]</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">struct</span> TempStructA</span><br><span class="line">        &#123;</span><br><span class="line">            [<span class="meta">IntAsEnum</span>]</span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">int</span> tempInt;</span><br><span class="line">            <span class="keyword">public</span> Color tempColor;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> TempStructA[] tempArray;</span><br><span class="line"></span><br><span class="line">        [<span class="meta">IntAsEnum</span>]</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">int</span> tempIntA;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<p>效果如下<br><img src="/2023/07/23/20230723-int-draw-as-enum/20230723-int-draw-as-enum-pic001.png" class="" title="split"></p>
-<p>用起来是方便了，但是也引入了一个问题。这个做法会需要序列化一这两个小小的字段到物体上。导致Prefab变肥了，但感觉打包的时候打出来的prefab里应该不会包含这俩字段，应该还凑合啦。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1060,7 +1074,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-count">45</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
