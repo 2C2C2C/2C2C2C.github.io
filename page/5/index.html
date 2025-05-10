@@ -152,6 +152,87 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/14/20200614-check-target-fan-shape/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="2C2C2C2">
+      <meta itemprop="description" content="随便记录一些东西">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FishPlayer">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/06/14/20200614-check-target-fan-shape/" class="post-title-link" itemprop="url">简易检测，目标是否在扇形区域(2D)</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-06-14 11:30:45 / 修改时间：13:25:53" itemprop="dateCreated datePublished" datetime="2020-06-14T11:30:45+08:00">2020-06-14</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Unity/" itemprop="url" rel="index"><span itemprop="name">Unity</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>最近在项目组里做一些小游戏原型，深感自己菜得如虫豸。为了慢慢提升还是决定做一些记录，虽然只是很垃圾的功能。<br>因为做的是手游，所以对性能蛮看重的，说是原型，为了快也只是项目里开了个单独的新场景做的，3C都有，做好了可以直接打包APK试玩。<br>废话不多说，这次做的事很简单，在扇形区域内检测一些目标。因为听说Vector3. Angle()里会跑开方的计算，故尝试避免使用这个方法。</p>
+<img src="/2020/06/14/20200614-check-target-fan-shape/20200614-pic001.png" class="" title="split">
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>需要解决的需求是在检测者 前方 的一个扇形内检测目标物体，其实可以化简为2D平面的检测。<br>我决定多次使用点乘和叉乘来解决这个问题。</p>
+<p>已知数据：<br>检测者的位置，朝向，检测角度大小，半径大小<br>检测目标的位置</p>
+<p>步骤：</p>
+<ol>
+<li>用检测者的前方向量和检测者到目标的方向向量点乘来判断目标物体是否在检测者前方。</li>
+<li>用检测者前方方向向量和检测区域的两个边界方向分别叉乘得到两个法向向量A,B。</li>
+<li>用检测者到目标的方向向量和检测区域的两个边界方向分别叉乘得到两个法向向量C,D。</li>
+<li>用点乘检测C,D是否同向，是，则在检测区外</li>
+<li>是否同时满足向量A,C同向，向量B,D同向，是，则在检测区内</li>
+</ol>
+<p>其实我自己都感觉这中文，写得很乱，还不如直接看代码23333<br>全部代码：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">TargetCheckTester</span> : <span class="title">MonoBehaviour</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> Transform m_transform = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">SerializeField</span>]</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">float</span> m_checkAngle = <span class="number">60.0f</span>;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">SerializeField</span>]</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">float</span> m_checkRadius = <span class="number">6.0f</span>;</span><br><span class="line"></span><br><span class="line">    [<span class="meta">SerializeField</span>]</span><br><span class="line">    <span class="keyword">private</span> Transform m_targetTransform = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">CheckTarget1</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="literal">null</span> == m_targetTransform)</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">        Vector3 myPos = m_transform.position;</span><br><span class="line">        Vector3 myForward = m_transform.forward;</span><br><span class="line">        <span class="keyword">float</span> halfAngle = m_checkAngle * <span class="number">0.5f</span>;</span><br><span class="line">        Vector3 dirUp = Quaternion.Euler(<span class="number">0.0f</span>, -halfAngle, <span class="number">0.0f</span>) * myForward;</span><br><span class="line">        Vector3 dirDown = Quaternion.Euler(<span class="number">0.0f</span>, halfAngle, <span class="number">0.0f</span>) * myForward;</span><br><span class="line"></span><br><span class="line">        Vector3 upCheck = Vector3.Cross(myForward, dirUp);</span><br><span class="line">        Vector3 downCheck = Vector3.Cross(myForward, dirDown);</span><br><span class="line"></span><br><span class="line">        Vector3 targetPos = m_targetTransform.position;</span><br><span class="line">        <span class="comment">// hack, to make them on a 2d plane :)</span></span><br><span class="line">        targetPos.y = myPos.y;</span><br><span class="line">        Vector3 toTargetDir = targetPos - myPos;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// draw line</span></span><br><span class="line">        Vector3 point1 = myPos + dirUp * m_checkRadius;</span><br><span class="line">        Vector3 point2 = myPos + dirDown * m_checkRadius;</span><br><span class="line">        Vector3 point0 = myPos + myForward * m_checkRadius;</span><br><span class="line"></span><br><span class="line">        Debug.DrawLine(myPos, point1, Color.yellow, Time.deltaTime);</span><br><span class="line">        Debug.DrawLine(myPos, point2, Color.yellow, Time.deltaTime);</span><br><span class="line">        Debug.DrawLine(myPos, point0, Color.yellow, Time.deltaTime);</span><br><span class="line">        Debug.DrawLine(point1, point0, Color.yellow, Time.deltaTime);</span><br><span class="line">        Debug.DrawLine(point2, point0, Color.yellow, Time.deltaTime);</span><br><span class="line">        Debug.DrawLine(myPos, targetPos, Color.red, Time.deltaTime);</span><br><span class="line">        <span class="comment">// draw line</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (Vector3.Dot(toTargetDir, myForward) &lt; <span class="number">0.0f</span> || toTargetDir.sqrMagnitude &gt; m_checkRadius * m_checkRadius)</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">        Vector3 targetUpCheck = Vector3.Cross(toTargetDir, dirUp);</span><br><span class="line">        Vector3 targetDownCheck = Vector3.Cross(toTargetDir, dirDown);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">float</span> selfCheck = Vector3.Dot(targetUpCheck, targetDownCheck);</span><br><span class="line">        <span class="keyword">float</span> dotCheckUp = Vector3.Dot(upCheck, targetUpCheck);</span><br><span class="line">        <span class="keyword">float</span> dotCheckDown = Vector3.Dot(targetDownCheck, downCheck);</span><br><span class="line">        <span class="keyword">if</span> (selfCheck &lt;= <span class="number">0.0f</span> &amp;&amp; dotCheckUp * dotCheckDown &gt;= <span class="number">0.0f</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            Debug.Log(<span class="string">"target in sight"</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">#<span class="meta-keyword">region</span> mono method</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Awake</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        m_transform = <span class="keyword">this</span>.transform;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Update</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        CheckTarget1();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">#<span class="meta-keyword">endregion</span></span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<img src="/2020/06/14/20200614-check-target-fan-shape/20200614-pic002.png" class="" title="split">
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/05/20200605-Unity-EasyButton/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -626,7 +707,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-count">46</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
