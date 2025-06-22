@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="交互希望能在界面上比较方便的显示 🍌*5 这样的效果。好在当前的项目使用TMP，只需要把图标打成一个资源赋给TMP文本组件，就可以在文本中显示图标。 为了让交互策划能够自行调整图标使用的范围以及质量，我随手搓了一个小配置来做到这个事情。当前我们的美术资源还没有做规范整理，所以项目中存在着尺寸不一致的图标，但对于文本上使用的图标来说，尺寸大概是固定的，所以图集里的图标尺寸也应该要固定下来。最最开始">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TextMeshPro 图标图集整合小工具">
+<meta property="og:url" content="http://yoursite.com/2025/06/22/20250622-tmpspriteassetpacker/index.html">
+<meta property="og:site_name" content="FishPlayer">
+<meta property="og:description" content="交互希望能在界面上比较方便的显示 🍌*5 这样的效果。好在当前的项目使用TMP，只需要把图标打成一个资源赋给TMP文本组件，就可以在文本中显示图标。 为了让交互策划能够自行调整图标使用的范围以及质量，我随手搓了一个小配置来做到这个事情。当前我们的美术资源还没有做规范整理，所以项目中存在着尺寸不一致的图标，但对于文本上使用的图标来说，尺寸大概是固定的，所以图集里的图标尺寸也应该要固定下来。最最开始">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-22T10:39:35.000Z">
+<meta property="article:modified_time" content="2025-06-22T11:03:47.812Z">
+<meta property="article:author" content="2C2C2C2">
+<meta property="article:tag" content="Unity">
+<meta property="article:tag" content="UGUI">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2025/06/22/20250622-tmpspriteassetpacker/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>TextMeshPro 图标图集整合小工具 | FishPlayer</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="FishPlayer" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">FishPlayer</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">一个喜欢摸鱼的废物</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2025/06/22/20250622-tmpspriteassetpacker/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="2C2C2C2">
+      <meta itemprop="description" content="随便记录一些东西">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FishPlayer">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          TextMeshPro 图标图集整合小工具
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-06-22 18:39:35 / 修改时间：19:03:47" itemprop="dateCreated datePublished" datetime="2025-06-22T18:39:35+08:00">2025-06-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Unity/" itemprop="url" rel="index"><span itemprop="name">Unity</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>交互希望能在界面上比较方便的显示 <code>🍌*5</code> 这样的效果。好在当前的项目使用TMP，只需要把图标打成一个资源赋给TMP文本组件，就可以在文本中显示图标。</p>
+<p>为了让交互策划能够自行调整图标使用的范围以及质量，我随手搓了一个小配置来做到这个事情。<br>当前我们的美术资源还没有做规范整理，所以项目中存在着尺寸不一致的图标，但对于文本上使用的图标来说，尺寸大概是固定的，所以图集里的图标尺寸也应该要固定下来。<br>最最开始的时候想的是直接写一个双线性采样线跑跑，做个可以用的程度，但是不是因为我对需求的描述不太好，问Copilot并没有给出我要的做法，我又懒得自己写(其实是加班加傻了，用<code>Texture2D.GetPixelBilinear()</code>可以)，于是又开谷歌搜一下，很快就在论坛里找到一个比较有趣的做法。</p>
+<p>这个思路是这样的:<br>1 以我们缩放的目标尺寸创建RT，作为渲染目标<br>2 把需要缩放的贴图用这个RT渲染一次<br>3 新的贴图直接从渲染结果中取色<br>4 非常方便，而且渲染时可以指定贴图filter模式，便于得到质量OK的图图</p>
+<p>说实在的这次的笔记没什么含量，只是觉得自己对图形相关的知识太过于欠缺了，无论是理论知识还是API的了解。拼图写功能好几年了，对自己还是挺失望的，好在每次谷歌都能救我(<br>最近也是一直加班做系统功能，老实说有点心累。手头其实有很多坑没有填，觉得可能是时候停下来了。对工作相关的东西，以及生活技能，做梳理审视，想一下今后的方向和目标。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">UI.Editor</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span> A shortcut to creatre TMP sprite asset <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">TextMeshProIconPacker</span> : <span class="title">ScriptableObject</span></span><br><span class="line">    &#123;</span><br><span class="line">        [<span class="meta">Header(<span class="meta-string">"Result Config"</span>)</span>]</span><br><span class="line">        [<span class="meta">SerializeField,</span>]</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">string</span> _textureOutPutName = <span class="string">"TempIconAtlas"</span>;</span><br><span class="line">        [<span class="meta">SerializeField,</span>]</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">string</span> m_spawnedAtlasPath;</span><br><span class="line">        [<span class="meta">SerializeField,</span>]</span><br><span class="line">        <span class="keyword">private</span> TMP_SpriteAsset m_target;</span><br><span class="line"></span><br><span class="line">        [<span class="meta">Header(<span class="meta-string">"Sprite Pack"</span>)</span>]</span><br><span class="line">        [<span class="meta">SerializeField</span>]</span><br><span class="line">        <span class="keyword">private</span> Sprite[] _spriteToPack;</span><br><span class="line">        [<span class="meta">SerializeField</span>]</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">int</span> _maxSize = <span class="number">512</span>;</span><br><span class="line">        [<span class="meta">SerializeField</span>]</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">int</span> _iconSize = <span class="number">64</span>;</span><br><span class="line">        [<span class="meta">SerializeField</span>]</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">int</span> _padding = <span class="number">2</span>;</span><br><span class="line">        [<span class="meta">SerializeField</span>]</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">float</span> _iconScale = <span class="number">1.2f</span>;</span><br><span class="line"></span><br><span class="line">        [<span class="meta">SerializeField</span>]</span><br><span class="line">        <span class="keyword">private</span> SpriteRect[] m_spriteRects;</span><br><span class="line"></span><br><span class="line">        [<span class="meta">MenuItem(<span class="meta-string">"Assets/UI/CreateTMPSpriteConfigTemplate"</span>)</span>]</span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">InternalCreateTestAsset</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            TextMeshProIconPacker asset = ScriptableObject.CreateInstance&lt;TextMeshProIconPacker&gt;();</span><br><span class="line">            <span class="comment">// TODO Change this path</span></span><br><span class="line">            <span class="keyword">string</span> assetPath = <span class="string">"Assets/TMPSpriteConfig/TMPSpriteConfigTemplate.asset"</span>;</span><br><span class="line">            UnityEditor.AssetDatabase.CreateAsset(asset, assetPath);</span><br><span class="line">            UnityEditor.AssetDatabase.SaveAssets();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        [<span class="meta">ContextMenu(<span class="meta-string">"Create Sprite Atlas"</span>)</span>]</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">PackSpritesForTMP_EditorOnly</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="literal">null</span> == _spriteToPack || <span class="number">0</span> == _spriteToPack.Length)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// grab all sprite as textures</span></span><br><span class="line">            Texture2D[] sourceTextures = GatherTextures();</span><br><span class="line">            FixImportSettings(sourceTextures, <span class="literal">true</span>);</span><br><span class="line">            Texture2D[] texture2Pack = GetAdjustedT2D(sourceTextures);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// create sprite rects for atlas</span></span><br><span class="line">            Texture2D texture = <span class="keyword">new</span> Texture2D(_maxSize, _maxSize, TextureFormat.RGBA32, <span class="literal">false</span>);</span><br><span class="line">            Rect[] rects = texture.PackTextures(texture2Pack, _padding, _maxSize);</span><br><span class="line">            m_spriteRects = <span class="keyword">new</span> SpriteRect[rects.Length];</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; rects.Length; i++)</span><br><span class="line">            &#123;</span><br><span class="line">                m_spriteRects[i] = <span class="keyword">new</span> SpriteRect()</span><br><span class="line">                &#123;</span><br><span class="line">                    name = texture2Pack[i].name,</span><br><span class="line">                    spriteID = GUID.Generate(),</span><br><span class="line">                    rect = ConvertToPixelRect(texture.width, texture.height, rects[i]),</span><br><span class="line">                    pivot = Vector2.zero,</span><br><span class="line">                    alignment = SpriteAlignment.BottomLeft</span><br><span class="line">                &#125;;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            EditorUtility.SetDirty(<span class="keyword">this</span>);</span><br><span class="line">            AssetDatabase.SaveAssetIfDirty(<span class="keyword">this</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">string</span> path = AssetDatabase.GetAssetPath(<span class="keyword">this</span>);</span><br><span class="line">            <span class="keyword">string</span> folderPath = Path.GetDirectoryName(path);</span><br><span class="line">            <span class="keyword">string</span> pngPath = <span class="string">$"<span class="subst">&#123;folderPath&#125;</span>/<span class="subst">&#123;_textureOutPutName&#125;</span>Atlas.png"</span>;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// save sprite atlas</span></span><br><span class="line">            Texture2D decopmpresseTex = DeCompress(texture);</span><br><span class="line">            <span class="keyword">byte</span>[] bytes = decopmpresseTex.EncodeToPNG();</span><br><span class="line">            File.WriteAllBytes(pngPath, bytes);</span><br><span class="line">            <span class="keyword">int</span> temp = name.Length + <span class="number">6</span>;</span><br><span class="line">            m_spawnedAtlasPath = path.Substring(<span class="number">0</span>, path.Length - temp) + <span class="string">$"<span class="subst">&#123;_textureOutPutName&#125;</span>Atlas.png"</span>;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// revert sprite readable</span></span><br><span class="line">            FixImportSettings(sourceTextures, <span class="literal">false</span>);</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>, length = texture2Pack.Length; i &lt; length; i++)</span><br><span class="line">            &#123;</span><br><span class="line">                Texture.DestroyImmediate(texture2Pack[i]);</span><br><span class="line">            &#125;</span><br><span class="line">            texture2Pack = <span class="literal">null</span>;</span><br><span class="line">            AssetDatabase.Refresh();</span><br><span class="line"></span><br><span class="line">            TextureImporter textureImporter = AssetImporter.GetAtPath(pngPath) <span class="keyword">as</span> TextureImporter;</span><br><span class="line">            textureImporter.textureType = TextureImporterType.Sprite;</span><br><span class="line">            textureImporter.spriteImportMode = SpriteImportMode.Multiple;</span><br><span class="line">            textureImporter.SaveAndReimport();</span><br><span class="line"></span><br><span class="line">            textureImporter = AssetImporter.GetAtPath(pngPath) <span class="keyword">as</span> TextureImporter;</span><br><span class="line">            SpriteDataProviderFactories factory = <span class="keyword">new</span>();</span><br><span class="line">            factory.Init();</span><br><span class="line">            ISpriteEditorDataProvider dataProvider = factory.GetSpriteEditorDataProviderFromObject(textureImporter);</span><br><span class="line">            dataProvider.InitSpriteEditorDataProvider();</span><br><span class="line">            dataProvider.SetSpriteRects(m_spriteRects);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Note: This section is only for Unity 2021.2 and newer</span></span><br><span class="line">            <span class="comment">// Register the new Sprite Rect's name and GUID with the ISpriteNameFileIdDataProvider</span></span><br><span class="line">            ISpriteNameFileIdDataProvider spriteNameFileIdDataProvider = dataProvider.GetDataProvider&lt;ISpriteNameFileIdDataProvider&gt;();</span><br><span class="line">            List&lt;SpriteNameFileIdPair&gt; nameFileIdPairs = spriteNameFileIdDataProvider.GetNameFileIdPairs().ToList();</span><br><span class="line">            nameFileIdPairs.AddRange(m_spriteRects.Select(spriteRect =&gt; <span class="keyword">new</span> SpriteNameFileIdPair(spriteRect.name, spriteRect.spriteID)));</span><br><span class="line">            spriteNameFileIdDataProvider.SetNameFileIdPairs(nameFileIdPairs);</span><br><span class="line"></span><br><span class="line">            dataProvider.Apply();</span><br><span class="line">            textureImporter.SaveAndReimport();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        [<span class="meta">ContextMenu(<span class="meta-string">"Generate asset by sprite atlas"</span>)</span>]</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ApplyAtlasToAsset</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">string</span> path = AssetDatabase.GetAssetPath(<span class="keyword">this</span>);</span><br><span class="line">            <span class="keyword">string</span> folderPath = Path.GetDirectoryName(path);</span><br><span class="line">            <span class="keyword">string</span> pngPath = <span class="string">$"<span class="subst">&#123;folderPath&#125;</span>/<span class="subst">&#123;_textureOutPutName&#125;</span>Atlas.png"</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (<span class="literal">null</span> == m_target)</span><br><span class="line">            &#123;</span><br><span class="line">                m_target = ScriptableObject.CreateInstance&lt;TMP_SpriteAsset&gt;();</span><br><span class="line">                m_target.name = _textureOutPutName;</span><br><span class="line">                m_target.spriteInfoList = <span class="keyword">new</span>();</span><br><span class="line">                AssetDatabase.CreateAsset(m_target, <span class="string">$"<span class="subst">&#123;folderPath&#125;</span>/<span class="subst">&#123;_textureOutPutName&#125;</span>.asset"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                Material.DestroyImmediate(m_target.material);</span><br><span class="line">                m_target.material = <span class="literal">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            m_target.spriteSheet = AssetDatabase.LoadAssetAtPath&lt;Texture2D&gt;(pngPath);</span><br><span class="line">            AddDefaultMaterial(m_target);</span><br><span class="line"></span><br><span class="line">            Type hackType = <span class="keyword">typeof</span>(TMP_SpriteAssetMenu);</span><br><span class="line">            MethodInfo[] hackMethods = hackType.GetMethods(BindingFlags.NonPublic | BindingFlags.Static);</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>, length = hackMethods.Length; i &lt; length; i++)</span><br><span class="line">            &#123;</span><br><span class="line">                MethodInfo hackMethod = hackMethods[i];</span><br><span class="line">                ParameterInfo[] paramInfos = hackMethod.GetParameters();</span><br><span class="line">                <span class="keyword">if</span> (<span class="number">1</span> == paramInfos.Length &amp;&amp; <span class="keyword">typeof</span>(TMP_SpriteAsset) == paramInfos[<span class="number">0</span>].ParameterType)</span><br><span class="line">                &#123;</span><br><span class="line">                    hackMethod.Invoke(<span class="literal">null</span>, <span class="keyword">new</span> <span class="keyword">object</span>[] &#123; m_target &#125;);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            List&lt;TMP_SpriteCharacter&gt; characters = m_target.spriteCharacterTable;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>, length = characters.Count; i &lt; length; i++)</span><br><span class="line">            &#123;</span><br><span class="line">                TMP_SpriteCharacter character = characters[i];</span><br><span class="line">                character.scale = _iconScale;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            EditorUtility.SetDirty(m_target);</span><br><span class="line">            AssetDatabase.SaveAssetIfDirty(m_target);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        [<span class="meta">ContextMenu(<span class="meta-string">"Clear result"</span>)</span>]</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Clear</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="literal">null</span> != m_target)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">string</span> taragetath = AssetDatabase.GetAssetPath(m_target);</span><br><span class="line">                AssetDatabase.DeleteAsset(taragetath);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (!<span class="keyword">string</span>.IsNullOrEmpty(m_spawnedAtlasPath))</span><br><span class="line">            &#123;</span><br><span class="line">                AssetDatabase.DeleteAsset(m_spawnedAtlasPath);</span><br><span class="line">            &#125;</span><br><span class="line">            m_target = <span class="literal">null</span>;</span><br><span class="line">            m_spawnedAtlasPath = <span class="keyword">string</span>.Empty;</span><br><span class="line">            m_spriteRects = <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> Texture2D[] <span class="title">GatherTextures</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            List&lt;Texture2D&gt; resultTexture = <span class="keyword">new</span> List&lt;Texture2D&gt;();</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>, length = _spriteToPack.Length; i &lt; length; i++)</span><br><span class="line">            &#123;</span><br><span class="line">                Sprite existSprite = _spriteToPack[i];</span><br><span class="line">                <span class="keyword">string</span> assetPath = AssetDatabase.GetAssetPath(existSprite);</span><br><span class="line">                <span class="keyword">if</span> (<span class="keyword">string</span>.IsNullOrEmpty(assetPath))</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">continue</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                Texture2D loadedT2D = AssetDatabase.LoadAssetAtPath&lt;Texture2D&gt;(assetPath);</span><br><span class="line">                resultTexture.Add(loadedT2D);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> resultTexture.ToArray();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">FixImportSettings</span>(<span class="params">Texture2D[] textures, <span class="keyword">bool</span> readable</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>, length = textures.Length; i &lt; length; i++)</span><br><span class="line">            &#123;</span><br><span class="line">                Texture2D texture = textures[i];</span><br><span class="line">                <span class="keyword">string</span> path = AssetDatabase.GetAssetPath(texture);</span><br><span class="line">                TextureImporter importer = AssetImporter.GetAtPath(path) <span class="keyword">as</span> TextureImporter;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (importer == <span class="literal">null</span>) <span class="keyword">continue</span>;</span><br><span class="line">                importer.isReadable = readable;</span><br><span class="line">                importer.SaveAndReimport();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> Rect <span class="title">ConvertToPixelRect</span>(<span class="params"><span class="keyword">int</span> width, <span class="keyword">int</span> height, Rect uvRect</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">float</span> pixelLeft = uvRect.x * width;</span><br><span class="line">            <span class="keyword">float</span> pixelTop = uvRect.y * height;</span><br><span class="line">            <span class="keyword">float</span> pixelWidth = uvRect.width * width;</span><br><span class="line">            <span class="keyword">float</span> pixelHeight = uvRect.height * height;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Rect(pixelLeft, pixelTop, pixelWidth, pixelHeight);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> Texture2D <span class="title">DeCompress</span>(<span class="params">Texture2D source</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            RenderTexture renderTex = RenderTexture.GetTemporary(</span><br><span class="line">                source.width,</span><br><span class="line">                source.height,</span><br><span class="line">                <span class="number">0</span>,</span><br><span class="line">                RenderTextureFormat.Default,</span><br><span class="line">                RenderTextureReadWrite.Linear);</span><br><span class="line"></span><br><span class="line">            Graphics.Blit(source, renderTex);</span><br><span class="line">            RenderTexture previous = RenderTexture.active;</span><br><span class="line">            RenderTexture.active = renderTex;</span><br><span class="line">            Texture2D readableText = <span class="keyword">new</span> Texture2D(source.width, source.height);</span><br><span class="line">            readableText.ReadPixels(<span class="keyword">new</span> Rect(<span class="number">0</span>, <span class="number">0</span>, renderTex.width, renderTex.height), <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">            readableText.Apply();</span><br><span class="line">            RenderTexture.active = previous;</span><br><span class="line">            RenderTexture.ReleaseTemporary(renderTex);</span><br><span class="line">            <span class="keyword">return</span> readableText;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">AddDefaultMaterial</span>(<span class="params">TMP_SpriteAsset spriteAsset</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            Shader shader = Shader.Find(<span class="string">"TextMeshPro/Sprite"</span>);</span><br><span class="line">            Material material = <span class="keyword">new</span> Material(shader);</span><br><span class="line">            material.SetTexture(ShaderUtilities.ID_MainTex, spriteAsset.spriteSheet);</span><br><span class="line"></span><br><span class="line">            spriteAsset.material = material;</span><br><span class="line">            material.hideFlags = HideFlags.HideInHierarchy;</span><br><span class="line">            AssetDatabase.AddObjectToAsset(material, spriteAsset);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> Texture2D[] <span class="title">GetAdjustedT2D</span>(<span class="params">Texture2D[] source</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            Texture2D[] result = <span class="keyword">new</span> Texture2D[source.Length];</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>, length = source.Length; i &lt; length; i++)</span><br><span class="line">            &#123;</span><br><span class="line">                Texture2D after = GPUTextureScaler.GetScaledResult(source[i], _iconSize, _iconSize);</span><br><span class="line">                result[i] = after;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> result;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// from https://discussions.unity.com/t/how-to-resize-scale-down-texture-without-losing-quality/810223/14</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">GPUTextureScaler</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> Returns a scaled copy of given texture.</span></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="tex"&gt;</span>Source texure to scale<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="width"&gt;</span>Destination texture width<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="height"&gt;</span>Destination texture height<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="mode"&gt;</span>Filtering mode<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Texture2D <span class="title">GetScaledResult</span>(<span class="params">Texture2D src, <span class="keyword">int</span> width, <span class="keyword">int</span> height, FilterMode mode = FilterMode.Trilinear</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            Rect texR = <span class="keyword">new</span>(<span class="number">0</span>, <span class="number">0</span>, width, height);</span><br><span class="line">            DoGPUScale(src, width, height, mode);</span><br><span class="line"></span><br><span class="line">            <span class="comment">//Get rendered data back to a new texture</span></span><br><span class="line">            Texture2D result = <span class="keyword">new</span>(width, height, TextureFormat.ARGB32, <span class="literal">true</span>);</span><br><span class="line">            result.Reinitialize(width, height);</span><br><span class="line">            result.ReadPixels(texR, <span class="number">0</span>, <span class="number">0</span>, <span class="literal">true</span>);</span><br><span class="line">            result.name = src.name;</span><br><span class="line">            <span class="keyword">return</span> result;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> Scales the texture data of the given texture.</span></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="tex"&gt;</span>Texure to scale<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="width"&gt;</span>New width<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="height"&gt;</span>New height<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="mode"&gt;</span>Filtering mode<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Scale</span>(<span class="params">Texture2D tex, <span class="keyword">int</span> width, <span class="keyword">int</span> height, FilterMode mode = FilterMode.Trilinear</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            Rect texR = <span class="keyword">new</span>(<span class="number">0</span>, <span class="number">0</span>, width, height);</span><br><span class="line">            DoGPUScale(tex, width, height, mode);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Update new texture</span></span><br><span class="line">            tex.Reinitialize(width, height);</span><br><span class="line">            tex.ReadPixels(texR, <span class="number">0</span>, <span class="number">0</span>, <span class="literal">true</span>);</span><br><span class="line">            tex.Apply(<span class="literal">true</span>); <span class="comment">//Remove this if you hate us applying textures for you :)</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Internal unility that renders the source texture into the RTT - the scaling method itself.</span></span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">DoGPUScale</span>(<span class="params">Texture2D src, <span class="keyword">int</span> width, <span class="keyword">int</span> height, FilterMode fmode</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="comment">//We need the source texture in VRAM because we render with it</span></span><br><span class="line">            src.filterMode = fmode;</span><br><span class="line">            src.Apply(<span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">            <span class="comment">//Using RTT for best quality and performance. Thanks, Unity 5</span></span><br><span class="line">            RenderTexture rtt = <span class="keyword">new</span>(width, height, <span class="number">32</span>);</span><br><span class="line"></span><br><span class="line">            <span class="comment">//Set the RTT in order to render to it</span></span><br><span class="line">            Graphics.SetRenderTarget(rtt);</span><br><span class="line"></span><br><span class="line">            <span class="comment">//Setup 2D matrix in range 0..1, so nobody needs to care about sized</span></span><br><span class="line">            GL.LoadPixelMatrix(<span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">            <span class="comment">//Then clear &amp; draw the texture to fill the entire RTT.</span></span><br><span class="line">            GL.Clear(<span class="literal">true</span>, <span class="literal">true</span>, <span class="keyword">new</span> Color(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>));</span><br><span class="line">            Graphics.DrawTexture(<span class="keyword">new</span> Rect(<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>), src);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Unity/" rel="tag"># Unity</a>
+              <a href="/tags/UGUI/" rel="tag"># UGUI</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/05/10/20250510-assetpath/" rel="prev" title="Unity资源链接">
+      <i class="fa fa-chevron-left"></i> Unity资源链接
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="2C2C2C2"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">2C2C2C2</p>
+  <div class="site-description" itemprop="description">随便记录一些东西</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">47</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/2C2C2C" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;2C2C2C" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">2C2C2C2</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
