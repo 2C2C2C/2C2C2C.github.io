@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="最近几个月都是猛猛加班和服务器兄弟联调做系统。工作确实重复又无趣。最近周末不用强制加班了，于是用省下时间把以前UI那边的一个人认为还算有点意思的小需求做了。今天的主题是 UGUI不规则形按钮！ UGUI射线点击流程既然要做一个和UI点击相关的功能，那就就得先看一看UI这部分的点击检测是如何实现的。我只是大概看了一下源码，简化着说一下 1234567EventSystem 每一帧驱动当前的 Inpu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UGUI不规则形状按钮">
+<meta property="og:url" content="http://yoursite.com/2025/08/24/20250824-ugui-polygon-button/index.html">
+<meta property="og:site_name" content="FishPlayer">
+<meta property="og:description" content="最近几个月都是猛猛加班和服务器兄弟联调做系统。工作确实重复又无趣。最近周末不用强制加班了，于是用省下时间把以前UI那边的一个人认为还算有点意思的小需求做了。今天的主题是 UGUI不规则形按钮！ UGUI射线点击流程既然要做一个和UI点击相关的功能，那就就得先看一看UI这部分的点击检测是如何实现的。我只是大概看了一下源码，简化着说一下 1234567EventSystem 每一帧驱动当前的 Inpu">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-08-24T08:16:16.000Z">
+<meta property="article:modified_time" content="2025-08-31T08:51:03.787Z">
+<meta property="article:author" content="2C2C2C2">
+<meta property="article:tag" content="UGUI">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2025/08/24/20250824-ugui-polygon-button/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>UGUI不规则形状按钮 | FishPlayer</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="FishPlayer" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">FishPlayer</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">一个喜欢摸鱼的废物</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2025/08/24/20250824-ugui-polygon-button/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="2C2C2C2">
+      <meta itemprop="description" content="随便记录一些东西">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FishPlayer">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          UGUI不规则形状按钮
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-08-24 16:16:16" itemprop="dateCreated datePublished" datetime="2025-08-24T16:16:16+08:00">2025-08-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-08-31 16:51:03" itemprop="dateModified" datetime="2025-08-31T16:51:03+08:00">2025-08-31</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>最近几个月都是猛猛加班和服务器兄弟联调做系统。工作确实重复又无趣。最近周末不用强制加班了，于是用省下时间把以前UI那边的一个人认为还算有点意思的小需求做了。<br>今天的主题是 UGUI不规则形按钮！</p>
+<h1 id="UGUI射线点击流程"><a href="#UGUI射线点击流程" class="headerlink" title="UGUI射线点击流程"></a>UGUI射线点击流程</h1><p>既然要做一个和UI点击相关的功能，那就就得先看一看UI这部分的点击检测是如何实现的。<br>我只是大概看了一下源码，简化着说一下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">EventSystem 每一帧驱动当前的 InputModule 处理当前的输入</span><br><span class="line">                ↓</span><br><span class="line">InputModule 从输入中捕获到点击信息，以点击信息调用EventSystem对所有附带了Raycaster的Canvas发起对点击点的检测</span><br><span class="line">                ↓</span><br><span class="line">InputModule 收集所有Raycaster得到的结果，进行排序，得到最终的发送点击信息的目标物体</span><br><span class="line">                ↓</span><br><span class="line">让目标物体执行对应的点击回调 (IPointerClickHandler)</span><br></pre></td></tr></table></figure>
+<p>对于今天的这个功能，我们需要关注的是 <code>InputModule 从输入中捕获到点击信息，以点击信息调用EventSystem对所有附带了Raycaster的Canvas发起对点击点的检测</code> 这一步。</p>
+<h1 id="UI物体的Raycast点击检测"><a href="#UI物体的Raycast点击检测" class="headerlink" title="UI物体的Raycast点击检测"></a>UI物体的Raycast点击检测</h1><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Raycast</span>(<span class="params">Canvas canvas, Camera eventCamera, Vector2 pointerPosition, IList&lt;Graphic&gt; foundGraphics, List&lt;Graphic&gt; results</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// Necessary for the event system</span></span><br><span class="line">    <span class="keyword">int</span> totalCount = foundGraphics.Count;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; totalCount; ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        Graphic graphic = foundGraphics[i];</span><br><span class="line">        <span class="comment">// -1 means it hasn't been processed by the canvas, which means it isn't actually drawn</span></span><br><span class="line">        <span class="keyword">if</span> (!graphic.raycastTarget || graphic.canvasRenderer.cull || graphic.depth == <span class="number">-1</span>)</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        <span class="comment">// The 1st check</span></span><br><span class="line">        <span class="keyword">if</span> (!RectTransformUtility.RectangleContainsScreenPoint(graphic.rectTransform, pointerPosition, eventCamera, graphic.raycastPadding))</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        <span class="keyword">if</span> (eventCamera != <span class="literal">null</span> &amp;&amp; eventCamera.WorldToScreenPoint(graphic.rectTransform.position).z &gt; eventCamera.farClipPlane)</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        <span class="keyword">if</span> (graphic.Raycast(pointerPosition, eventCamera))</span><br><span class="line">        &#123;</span><br><span class="line">            s_SortedGraphics.Add(graphic);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    s_SortedGraphics.Sort((g1, g2) =&gt; g2.depth.CompareTo(g1.depth));</span><br><span class="line">    totalCount = s_SortedGraphics.Count;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; totalCount; ++i)</span><br><span class="line">        results.Add(s_SortedGraphics[i]);</span><br><span class="line">    s_SortedGraphics.Clear();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="title">Raycast</span>(<span class="params">Vector2 sp, Camera eventCamera</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!isActiveAndEnabled)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">var</span> t = transform;</span><br><span class="line">    <span class="keyword">var</span> components = ListPool&lt;Component&gt;.Get();</span><br><span class="line">    <span class="keyword">bool</span> ignoreParentGroups = <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">bool</span> continueTraversal = <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">while</span> (t != <span class="literal">null</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        t.GetComponents(components);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; components.Count; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">var</span> canvas = components[i] <span class="keyword">as</span> Canvas;</span><br><span class="line">            <span class="keyword">if</span> (canvas != <span class="literal">null</span> &amp;&amp; canvas.overrideSorting)</span><br><span class="line">                continueTraversal = <span class="literal">false</span>;</span><br><span class="line">            <span class="keyword">var</span> filter = components[i] <span class="keyword">as</span> ICanvasRaycastFilter;</span><br><span class="line">            <span class="keyword">if</span> (filter == <span class="literal">null</span>)</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            <span class="keyword">var</span> raycastValid = <span class="literal">true</span>;</span><br><span class="line">            <span class="keyword">var</span> <span class="keyword">group</span> = components[i] <span class="keyword">as</span> CanvasGroup;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">group</span> != <span class="literal">null</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (!<span class="keyword">group</span>.enabled)</span><br><span class="line">                    <span class="keyword">continue</span>;</span><br><span class="line">                <span class="keyword">if</span> (ignoreParentGroups == <span class="literal">false</span> &amp;&amp; <span class="keyword">group</span>.ignoreParentGroups)</span><br><span class="line">                &#123;</span><br><span class="line">                    ignoreParentGroups = <span class="literal">true</span>;</span><br><span class="line">                    raycastValid = filter.IsRaycastLocationValid(sp, eventCamera);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span> <span class="keyword">if</span> (!ignoreParentGroups)</span><br><span class="line">                    raycastValid = filter.IsRaycastLocationValid(sp, eventCamera);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                raycastValid = filter.IsRaycastLocationValid(sp, eventCamera);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (!raycastValid)</span><br><span class="line">            &#123;</span><br><span class="line">                ListPool&lt;Component&gt;.Release(components);</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        t = continueTraversal ? t.parent : <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    ListPool&lt;Component&gt;.Release(components);</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从源码中得知，在判断了点击位置是在Graphic的RectTranform范围里之后，会让graphic根据点击位置做自定义的点击检查(我说自定义是因为这个函数是可以被覆写的)。<br>graphic 对于点击的检查也没有想象中的那么简单，大概内容是这样的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1 获取当前自己身上的与点击检测相关的额外检查组件，如果有，就让和它们来判断这个点击是否合法</span><br><span class="line">2 如果上一步判断合法，那么就持续对父级物体做这样的判断直到父级&#x2F;当前物体身上有Canvas</span><br><span class="line">3 如果上一步判断合法，那么这个点击就成立！</span><br></pre></td></tr></table></figure></p>
+<p>这个所谓的“额外检查组件”实际上是一个接口(ICanvasRaycastFilter)，这个接口就是今天这个功能的重点。通过源码能清楚看到，如果没有这个额外的检查，点击检测的结果会沿用之前的结果(点击位置是否在RectTransfrom范围内)。</p>
+<h1 id="简易UI多边形点击范围"><a href="#简易UI多边形点击范围" class="headerlink" title="简易UI多边形点击范围"></a>简易UI多边形点击范围</h1><p>交互同学想要的自定义点击范围，其实可以简单的认为是要规划一个简单多边形。<br>为了描述这个多边形，我决定以顺时针记录描述这个多边形的点(便于gizmo绘制也方便做点击检测)。</p>
+<p>判断点击位置是否在自定义的多边形内，就用比较简单的射线法来判断。<br>射线法：</p>
+<ul>
+<li>从需要检测的点引出一条射线</li>
+<li>计算射线和多边形的交点数量</li>
+<li>交点数如果是奇数，说明点在多边形内；如果是偶数，则点不在多边形内</li>
+</ul>
+<p>当然这个做法会遇到一些需要处理的边界状况(射线刚好与若干条边重合或者点就在多边形的点上)。</p>
+<p>于是实际检测的步骤就是对每条边都先检查特殊情况，不符合特殊情况的时候再做常规的涉嫌检查。<br>在检测代码中，我每次取到多边形的点都会根据实际情况排上，下两个点。原因也很简单，检测是否相交用的是向量的叉乘只能判断是否会相交，但是不能明确相交的位置。<br>这个时候我还需要判断一下这个理论交点是否存在，因为检测边的点已经明确了上下，再根据向量的叉乘就可以明确对于检测边(从下往上方向)，需要检测的点在左侧(理论交点有效)还是右侧(理论交点无效)。</p>
+
+
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">UnityEngine.UI</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">RequireComponent(typeof(CanvasRenderer))</span>]</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">partial</span> <span class="keyword">class</span> <span class="title">RaycastOnlyPolygonGraphic</span> : <span class="title">MaskableGraphic</span>, <span class="title">ICanvasRaycastFilter</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// Use normalized value, must be clockwise :)</span></span><br><span class="line">        [<span class="meta">SerializeField</span>]</span><br><span class="line">        <span class="keyword">private</span> List&lt;Vector2&gt; m_innerPoints;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> IReadOnlyList&lt;Vector2&gt; PointList =&gt; m_innerPoints;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">int</span> PointCount =&gt; <span class="literal">null</span> == m_innerPoints ? <span class="number">0</span> : m_innerPoints.Count;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">SetMaterialDirty</span>(<span class="params"></span>)</span> &#123; <span class="keyword">return</span>; &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">SetVerticesDirty</span>(<span class="params"></span>)</span> &#123; <span class="keyword">return</span>; &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">bool</span> <span class="title">IsRaycastLocationValid</span>(<span class="params">Vector2 screenPoint, Camera eventCamera</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="comment">// Point in rect</span></span><br><span class="line">            <span class="keyword">if</span> (RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, screenPoint, eventCamera, <span class="keyword">out</span> Vector2 local))</span><br><span class="line">            &#123;</span><br><span class="line">                Vector2 bottomLeft = GetLocalRectPosition(rectTransform, Vector2.zero);</span><br><span class="line">                Vector2 localDelta = <span class="keyword">new</span>(local.x - bottomLeft.x, local.y - bottomLeft.y);</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> UNITY_EDITOR</span></span><br><span class="line">                Debug.DrawLine(rectTransform.TransformPoint(bottomLeft), rectTransform.TransformPoint(local), Color.red);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">                Rect rect = rectTransform.rect;</span><br><span class="line">                Vector2 normalizedLocalPoint = <span class="keyword">new</span>(localDelta.x / rect.width, localDelta.y / rect.height);</span><br><span class="line">                <span class="keyword">bool</span> result = RaycastCheckPointInPolygon(normalizedLocalPoint);</span><br><span class="line">                <span class="keyword">return</span> result;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// TODO let them choose where to create de new point</span></span><br><span class="line">        [<span class="meta">ContextMenu(nameof(CreateNewPoint))</span>]</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">CreateNewPoint</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            m_innerPoints ??= <span class="keyword">new</span> List&lt;Vector2&gt;();</span><br><span class="line">            <span class="keyword">if</span> (<span class="number">2</span> &gt; m_innerPoints.Count)</span><br><span class="line">            &#123;</span><br><span class="line">                m_innerPoints.Add(Vector2.zero);</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">int</span> pointCount = m_innerPoints.Count;</span><br><span class="line">            Vector2 newPoint = m_innerPoints[pointCount - <span class="number">1</span>];</span><br><span class="line">            Vector2 tempDir = m_innerPoints[<span class="number">0</span>] - m_innerPoints[pointCount - <span class="number">1</span>];</span><br><span class="line">            newPoint += <span class="number">0.5f</span> * tempDir;</span><br><span class="line">            m_innerPoints.Add(newPoint);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Vector2 <span class="title">GetPoint</span>(<span class="params"><span class="keyword">int</span> index</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="literal">null</span> == m_innerPoints)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span> Vector2.zero;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> m_innerPoints[index];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">SetPoint</span>(<span class="params"><span class="keyword">int</span> index, Vector2 point</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="number">0</span> &gt; index || m_innerPoints.Count &lt;= index)</span><br><span class="line">            &#123;</span><br><span class="line">                Debug.LogError(<span class="string">$"Index <span class="subst">&#123;index&#125;</span> is out of range for points list."</span>);</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            m_innerPoints[index] = point;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnPopulateMesh</span>(<span class="params">VertexHelper vh</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            vh.Clear();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> Bottom left as (0,0)</span></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="target"&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="normalizedRectPosition"&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">        <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">        <span class="function"><span class="keyword">private</span> Vector2 <span class="title">GetLocalRectPosition</span>(<span class="params">RectTransform target, Vector2 normalizedRectPosition</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            Vector2 result = Vector2.zero;</span><br><span class="line">            Vector2 targetSize = target.rect.size;</span><br><span class="line">            Vector2 targetPivot = target.pivot;</span><br><span class="line"></span><br><span class="line">            Vector2 pivotOffset = Vector2.one * <span class="number">0.5f</span> - targetPivot;</span><br><span class="line">            pivotOffset.x *= targetSize.x;</span><br><span class="line">            pivotOffset.y *= targetSize.y;</span><br><span class="line"></span><br><span class="line">            result += pivotOffset;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// start from bottom left</span></span><br><span class="line">            result.x -= targetSize.x * <span class="number">0.5f</span>;</span><br><span class="line">            result.y -= targetSize.y * <span class="number">0.5f</span>;</span><br><span class="line"></span><br><span class="line">            result.x += normalizedRectPosition.x * targetSize.x;</span><br><span class="line">            result.y += normalizedRectPosition.y * targetSize.y;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> result;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">bool</span> <span class="title">RaycastCheckPointInPolygon</span>(<span class="params">Vector2 normalizedPoint</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            <span class="keyword">int</span> pointCount = m_innerPoints.Count;</span><br><span class="line">            <span class="keyword">if</span> (<span class="number">3</span> &gt; pointCount)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (<span class="number">3</span> == pointCount)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span> PointInTriangle</span><br><span class="line">                (</span><br><span class="line">                    normalizedPoint,</span><br><span class="line">                    m_innerPoints[<span class="number">0</span>],</span><br><span class="line">                    m_innerPoints[<span class="number">1</span>],</span><br><span class="line">                    m_innerPoints[<span class="number">2</span>]</span><br><span class="line">                );</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">int</span> intersectionCount = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>, length = pointCount; i &lt; length; i++)</span><br><span class="line">            &#123;</span><br><span class="line">                Vector2 upPoint = m_innerPoints[i];</span><br><span class="line">                Vector2 downPoint = m_innerPoints[(i + <span class="number">1</span>) % length];</span><br><span class="line">                <span class="keyword">if</span> (upPoint.y &lt; downPoint.y)</span><br><span class="line">                &#123;</span><br><span class="line">                    (upPoint, downPoint) = (downPoint, upPoint);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="comment">// Right edge-point</span></span><br><span class="line">                Vector2 edge = <span class="keyword">new</span>(<span class="number">1f</span>, normalizedPoint.y);</span><br><span class="line"></span><br><span class="line">                <span class="comment">// First check</span></span><br><span class="line">                <span class="keyword">if</span> (Mathf.Max(upPoint.x, downPoint.x) &lt; normalizedPoint.x ||</span><br><span class="line">                    upPoint.y &lt; normalizedPoint.y ||</span><br><span class="line">                    downPoint.y &gt; normalizedPoint.y)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">continue</span>; <span class="comment">// Wont collide with this segment</span></span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                Vector2 p2up = upPoint - normalizedPoint;</span><br><span class="line">                Vector2 down2up = upPoint - downPoint;</span><br><span class="line"></span><br><span class="line">                <span class="comment">// Point is the same as upPoint or downPoint or the point is on the segment or point is</span></span><br><span class="line">                <span class="keyword">if</span> ((Mathf.Approximately(upPoint.x, normalizedPoint.x) &amp;&amp; Mathf.Approximately(upPoint.y, normalizedPoint.y)) ||</span><br><span class="line">                    (Mathf.Approximately(downPoint.x, normalizedPoint.x) &amp;&amp; Mathf.Approximately(downPoint.y, normalizedPoint.y)) ||</span><br><span class="line">                    <span class="number">0</span> == Vector3.Cross(p2up, down2up).z)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                Vector2 p2edge = edge - normalizedPoint;</span><br><span class="line">                Vector2 p2down = downPoint - normalizedPoint;</span><br><span class="line"></span><br><span class="line">                Vector3 cross1 = Vector3.Cross(p2up, p2edge);</span><br><span class="line">                Vector3 cross2 = Vector3.Cross(p2down, p2edge);</span><br><span class="line"></span><br><span class="line">                Vector2 edge2p = normalizedPoint - edge;</span><br><span class="line">                Vector2 edge2up = upPoint - edge;</span><br><span class="line">                Vector2 edge2down = downPoint - edge;</span><br><span class="line"></span><br><span class="line">                Vector3 cross3 = Vector3.Cross(edge2up, edge2p);</span><br><span class="line">                Vector3 cross4 = Vector3.Cross(edge2down, edge2p);</span><br><span class="line"></span><br><span class="line">                <span class="comment">// Lines are intersecting</span></span><br><span class="line">                <span class="keyword">if</span> (<span class="number">0</span> &gt;= cross1.z * cross2.z &amp;&amp;</span><br><span class="line">                    <span class="number">0</span> &gt;= cross3.z * cross4.z &amp;&amp;</span><br><span class="line">                    <span class="number">0</span> &lt; Vector3.Cross(p2down, p2up).z) <span class="comment">// Check if point is at the left side of current segment</span></span><br><span class="line">                &#123;</span><br><span class="line">                    intersectionCount++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> intersectionCount % <span class="number">2</span> == <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">bool</span> <span class="title">PointInTriangle</span>(<span class="params">Vector2 p, Vector2 a, Vector2 b, Vector2 c</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            Vector3 p2a = a - p;</span><br><span class="line">            Vector3 p2b = b - p;</span><br><span class="line">            Vector3 p2c = c - p;</span><br><span class="line"></span><br><span class="line">            Vector3 cross1 = Vector3.Cross(p2a, p2b);</span><br><span class="line">            Vector3 cross2 = Vector3.Cross(p2b, p2c);</span><br><span class="line">            Vector3 cross3 = Vector3.Cross(p2c, p2a);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">float</span> dot1 = Vector3.Dot(cross1, cross2);</span><br><span class="line">            <span class="keyword">float</span> dot2 = Vector3.Dot(cross2, cross3);</span><br><span class="line">            <span class="keyword">float</span> dot3 = Vector3.Dot(cross3, cross1);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> dot1 &gt;= <span class="number">0</span> &amp;&amp;</span><br><span class="line">                   dot2 &gt;= <span class="number">0</span> &amp;&amp;</span><br><span class="line">                   dot3 &gt;= <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一些编辑器的绘制，凑合用的</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">[<span class="meta">CanEditMultipleObjects</span>]</span><br><span class="line">[<span class="meta">CustomEditor(typeof(RaycastOnlyPolygonGraphic), true)</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">RaycastOnlyIrregularGraphicEditor</span> : <span class="title">Editor</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> RaycastOnlyPolygonGraphic m_target;</span><br><span class="line">    <span class="keyword">private</span> SerializedProperty m_pointsProperty;</span><br><span class="line">    <span class="keyword">private</span> ReorderableList m_pointList;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">bool</span> m_normalized;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">OnEnable</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        m_target = target <span class="keyword">as</span> RaycastOnlyPolygonGraphic;</span><br><span class="line">        m_pointsProperty = serializedObject.FindProperty(<span class="string">"m_innerPoints"</span>);</span><br><span class="line"></span><br><span class="line">        m_normalized = <span class="literal">true</span>;</span><br><span class="line">        m_pointList = CreatePointList();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">OnDisable</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        m_target = <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnInspectorGUI</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="comment">// TODO draw only raycast target field and readonly points, triangles</span></span><br><span class="line">        <span class="keyword">base</span>.OnInspectorGUI();</span><br><span class="line"></span><br><span class="line">        serializedObject.Update();</span><br><span class="line">        EditorGUILayout.Space();</span><br><span class="line">        m_pointList.DoLayoutList();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (GUILayout.Button(<span class="string">"Create New Point"</span>))</span><br><span class="line">        &#123;</span><br><span class="line">            m_target.CreateNewPoint();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (GUILayout.Button(<span class="string">"Create Convex Hull"</span>))</span><br><span class="line">        &#123;</span><br><span class="line">            m_target.CreateConvexHullFromPoints();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        serializedObject.ApplyModifiedProperties();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> ReorderableList <span class="title">CreatePointList</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        ReorderableList reorderableList = <span class="keyword">new</span>(serializedObject, m_pointsProperty, <span class="literal">true</span>, <span class="literal">true</span>, <span class="literal">true</span>, <span class="literal">true</span>);</span><br><span class="line">        reorderableList.drawElementCallback = (rect, index, isActive, isFocused) =&gt;</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">const</span> <span class="keyword">float</span> spacing = <span class="number">2</span>, fieldWidth = <span class="number">10</span>;</span><br><span class="line">            rect.y += spacing; rect.height = EditorGUIUtility.singleLineHeight;</span><br><span class="line">            SerializedProperty pointProp = m_pointsProperty.GetArrayElementAtIndex(index);</span><br><span class="line">            Vector2 pointValue = pointProp.vector2Value;</span><br><span class="line">            rect.width = (rect.width - spacing) / <span class="number">2</span>;</span><br><span class="line">            EditorGUIUtility.labelWidth = fieldWidth;</span><br><span class="line">            OnNormalizeFloatField(rect, <span class="string">"X"</span>, <span class="keyword">ref</span> pointValue.x, <span class="number">0</span>);</span><br><span class="line">            rect.x += rect.width + spacing;</span><br><span class="line">            OnNormalizeFloatField(rect, <span class="string">"Y"</span>, <span class="keyword">ref</span> pointValue.y, <span class="number">1</span>);</span><br><span class="line">            EditorGUIUtility.labelWidth = <span class="number">0</span>;</span><br><span class="line">            pointProp.vector2Value = pointValue;</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        reorderableList.onAddCallback = list =&gt;</span><br><span class="line">        &#123;</span><br><span class="line">            ReorderableList.defaultBehaviours.DoAddButton(list);</span><br><span class="line">            <span class="keyword">if</span> (m_pointsProperty.arraySize &lt;= <span class="number">1</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            SerializedProperty startPointProp = m_pointsProperty.GetArrayElementAtIndex(<span class="number">0</span>);</span><br><span class="line">            SerializedProperty newPointProp = m_pointsProperty.GetArrayElementAtIndex(m_pointsProperty.arraySize - <span class="number">1</span>);</span><br><span class="line">            newPointProp.vector2Value = (newPointProp.vector2Value + startPointProp.vector2Value) / <span class="number">2</span>;</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        reorderableList.onRemoveCallback = list =&gt;</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (m_pointsProperty.arraySize &lt;= <span class="number">3</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            ReorderableList.defaultBehaviours.DoRemoveButton(list);</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        reorderableList.drawHeaderCallback = rect =&gt;</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">const</span> <span class="keyword">int</span> buttonWidth = <span class="number">75</span>;</span><br><span class="line">            rect.width -= buttonWidth;</span><br><span class="line">            EditorGUI.LabelField(rect, <span class="string">"Points"</span>);</span><br><span class="line">            rect.x += rect.width;</span><br><span class="line">            rect.width = buttonWidth;</span><br><span class="line">            m_normalized = GUI.Toggle(rect, m_normalized, <span class="string">"Normalize"</span>, EditorStyles.miniButton);</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> reorderableList;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">OnNormalizeFloatField</span>(<span class="params">Rect rect, <span class="keyword">string</span> label, <span class="keyword">ref</span> <span class="keyword">float</span> <span class="keyword">value</span>, <span class="keyword">int</span> axis</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (m_normalized)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">value</span> = Mathf.Clamp01(EditorGUI.FloatField(rect, label, <span class="keyword">value</span>));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            Vector2 size = ((target <span class="keyword">as</span> RaycastOnlyPolygonGraphic).transform <span class="keyword">as</span> RectTransform).rect.size;</span><br><span class="line">            <span class="keyword">value</span> = Mathf.Clamp01(EditorGUI.FloatField(rect, label, <span class="keyword">value</span> * size[axis]) / size[axis]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">OnSceneGUI</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (m_target == <span class="literal">null</span> || !m_target.enabled)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        DrawPointHandles();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">DrawPointHandles</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Color beforeColor = Handles.color;</span><br><span class="line">        Matrix4x4 beforeMatrix = Handles.matrix;</span><br><span class="line">        RectTransform rectTransform = m_target.transform <span class="keyword">as</span> RectTransform;</span><br><span class="line"></span><br><span class="line">        Handles.color = Color.blue;</span><br><span class="line">        Handles.matrix = m_target.transform.localToWorldMatrix;</span><br><span class="line"></span><br><span class="line">        Vector3 moveHandle = Vector3.zero;</span><br><span class="line">        Vector3 moveSnap = Vector3.one * <span class="number">0.5f</span>;</span><br><span class="line">        <span class="keyword">float</span> moveSize = HandleUtility.GetHandleSize(m_target.transform.position) * <span class="number">0.1f</span>;</span><br><span class="line"></span><br><span class="line">        EditorGUI.BeginChangeCheck();</span><br><span class="line">        <span class="keyword">int</span> pointCount = m_target.PointCount;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; pointCount; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            moveHandle = (m_target.GetPoint(i) - rectTransform.pivot) * rectTransform.rect.size;</span><br><span class="line">            moveHandle = Handles.FreeMoveHandle(moveHandle, moveSize, moveSnap, Handles.CircleHandleCap);</span><br><span class="line">            m_target.SetPoint(i, Clamp01(moveHandle / rectTransform.rect.size + rectTransform.pivot));</span><br><span class="line">            Handles.Label(moveHandle, <span class="string">$"<span class="subst">&#123;i&#125;</span>"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (EditorGUI.EndChangeCheck())</span><br><span class="line">        &#123;</span><br><span class="line">            EditorUtility.SetDirty(m_target);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Handles.color = beforeColor;</span><br><span class="line">        Handles.matrix = beforeMatrix;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> Vector2 <span class="title">Clamp01</span>(<span class="params">Vector2 vector</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        vector.x = Mathf.Clamp01(vector.x);</span><br><span class="line">        vector.y = Mathf.Clamp01(vector.y);</span><br><span class="line">        <span class="keyword">return</span> vector;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>除开射线法，还可以用回转法：</p>
+<ul>
+<li>检测点与多边形的每一个点连线</li>
+<li>算出每两个相邻点之间的夹角旋转角度</li>
+<li>角度总和为0时点在多边形外,和为360则点在多边形内</li>
+</ul>
+<p>没有选择这个方法是因为该方法设计开方运算，而这个检测需要每一帧跑，感觉上用射线法的消耗会少一些。</p>
+<h1 id="根据点集生成简单多边形"><a href="#根据点集生成简单多边形" class="headerlink" title="根据点集生成简单多边形"></a>根据点集生成简单多边形</h1><p>为了方便交互同学编辑点击区域，我加了一个简单的凸多边形生成(并保证缓存下来的点是按照顺时针排布的)。<br>这样交互同学就无需花时间去手动排序点集，编辑耗时更短，也方便直接从大改的形状进行进一步修改。<br>凸多边形生成的算法也是使用最简单的 Gift Wrapping 算法，网上一搜就有思路。因为这项操作是编辑器时进行，所以我没有在意性能。</p>
+<p>算法流程大概就是这样的:</p>
+<ul>
+<li>遍历所有点，找到极左点</li>
+<li>以极左点开始从剩下的点中，找对于自己来说，角度最大的在顺时针方向的凸点</li>
+<li>再以找到的凸点作为起始寻找下一个凸点</li>
+<li>最后直到下一个凸点是最开始找到的极左点时，退出循环</li>
+<li>得到顺时针排布的凸包点集</li>
+</ul>
+
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"> <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> List&lt;Vector2&gt; <span class="title">GenerateConvexHull</span>(<span class="params">IReadOnlyList&lt;Vector2&gt; points</span>)</span></span><br><span class="line"><span class="function"></span> &#123;</span><br><span class="line">    List&lt;Vector2&gt; result = <span class="keyword">new</span>();</span><br><span class="line">    <span class="comment">// Find left most point</span></span><br><span class="line">    <span class="keyword">int</span> leftMostIndex = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>, length = points.Count; i &lt; length; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (points[leftMostIndex].x &gt; points[i].x)</span><br><span class="line">        &#123;</span><br><span class="line">             leftMostIndex = i;</span><br><span class="line">        &#125;</span><br><span class="line">     &#125;</span><br><span class="line">     result.Add(points[leftMostIndex]);</span><br><span class="line"></span><br><span class="line">     <span class="comment">// Start from leftmost point, then find rest points</span></span><br><span class="line">     List&lt;Vector2&gt; collinearPoints = <span class="keyword">new</span>();</span><br><span class="line">     Vector2 current = points[leftMostIndex];</span><br><span class="line">     <span class="keyword">while</span> (<span class="literal">true</span>)</span><br><span class="line">     &#123;</span><br><span class="line">         Vector2 nextTarget = points[<span class="number">0</span>];</span><br><span class="line">         <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>, length = points.Count; i &lt; length; i++)</span><br><span class="line">         &#123;</span><br><span class="line">            <span class="keyword">if</span> (points[i] == current)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            Vector2 tempPoint = points[i];</span><br><span class="line">            <span class="keyword">float</span> x1, x2, y1, y2;</span><br><span class="line">            x1 = current.x - nextTarget.x;</span><br><span class="line">            x2 = current.x - tempPoint.x;</span><br><span class="line"></span><br><span class="line">            y1 = current.y - nextTarget.y;</span><br><span class="line">            y2 = current.y - tempPoint.y;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// Magnitude of the cross product</span></span><br><span class="line">            <span class="keyword">float</span> val = (y2 * x1) - (y1 * x2);</span><br><span class="line">            <span class="keyword">if</span> (val &gt; <span class="number">0</span>) <span class="comment">// Find a farther point that makes a convex angle</span></span><br><span class="line">            &#123;</span><br><span class="line">                nextTarget = tempPoint;</span><br><span class="line">                collinearPoints = <span class="keyword">new</span> List&lt;Vector2&gt;();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (val == <span class="number">0</span>) <span class="comment">// Handle collinear points(with current target)</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> ((current - nextTarget).sqrMagnitude &lt; (current - tempPoint).sqrMagnitude)</span><br><span class="line">                &#123;</span><br><span class="line">                    collinearPoints.Add(nextTarget); <span class="comment">// Add and move to farther collinear point</span></span><br><span class="line">                    nextTarget = tempPoint;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                &#123;</span><br><span class="line">                    collinearPoints.Add(tempPoint); <span class="comment">// Add a closer collinear point</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">// Ah this point would make prev-target point into a concave point, do not add it :(</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>, length = collinearPoints.Count; i &lt; length; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            result.Add(collinearPoints[i]);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (nextTarget == points[leftMostIndex])</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        result.Add(nextTarget);</span><br><span class="line">        current = nextTarget;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/UGUI/" rel="tag"># UGUI</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/06/22/20250622-tmpspriteassetpacker/" rel="prev" title="TextMeshPro图标笔记+简易图集工具">
+      <i class="fa fa-chevron-left"></i> TextMeshPro图标笔记+简易图集工具
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#UGUI射线点击流程"><span class="nav-number">1.</span> <span class="nav-text">UGUI射线点击流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#UI物体的Raycast点击检测"><span class="nav-number">2.</span> <span class="nav-text">UI物体的Raycast点击检测</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#简易UI多边形点击范围"><span class="nav-number">3.</span> <span class="nav-text">简易UI多边形点击范围</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#根据点集生成简单多边形"><span class="nav-number">4.</span> <span class="nav-text">根据点集生成简单多边形</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="2C2C2C2"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">2C2C2C2</p>
+  <div class="site-description" itemprop="description">随便记录一些东西</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">48</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/2C2C2C" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;2C2C2C" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">2C2C2C2</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
