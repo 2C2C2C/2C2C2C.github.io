@@ -618,7 +618,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2024/12/07/20241207-simple-uiimage-cutout/" class="post-title-link" itemprop="url">简单的UI图片挖口</a>
+            <a href="/2024/12/07/20241207-simple-uiimage-cutout/" class="post-title-link" itemprop="url">UGUI强制引导图片挖口简单版</a>
         </h2>
 
         <div class="post-meta">
@@ -635,7 +635,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-12-09 22:13:52" itemprop="dateModified" datetime="2024-12-09T22:13:52+08:00">2024-12-09</time>
+                <time title="修改时间：2025-09-05 23:48:49" itemprop="dateModified" datetime="2025-09-05T23:48:49+08:00">2025-09-05</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -673,7 +673,8 @@
 <img src="/2024/12/07/20241207-simple-uiimage-cutout/20241207-pic002.gif" class="" title="split">
 <p>试了一下感觉功能可用，调整挖口大小的参考物体无需作为被挖物体的父或子，效果预览非常方便。</p>
 <p>但这个做法有两个比较可惜的点<br>1 此做法只能挖放行的缺口<br>2 当前只挖缺口，没有做柔软处理，估计还得照着 RectMask2D 的思路去做软化</p>
-
+<h1 id="射线放行"><a href="#射线放行" class="headerlink" title="射线放行"></a>射线放行</h1><p>除了给暗色遮罩挖一个口，还需要把UI点集的射线放行。<br>这边需要新建一个脚本挂在遮罩图物体上，把需要给射线放行的方形区域丢进去。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">UIRaycastCutRectSetter</span> : <span class="title">MonoBehaviour</span>, <span class="title">ICanvasRaycastFilter</span></span><br><span class="line">&#123;</span><br><span class="line">    [<span class="meta">SerializeField</span>]</span><br><span class="line">    <span class="keyword">private</span> RectTransform[] _cutRects;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">bool</span> <span class="title">IsRaycastLocationValid</span>(<span class="params">Vector2 screenPoint, Camera eventCamera</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (_cutRects == <span class="literal">null</span> || _cutRects.Length == <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>, length = _cutRects.Length; i &lt; length; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (RectTransformUtility.RectangleContainsScreenPoint(_cutRects[i], screenPoint, eventCamera))</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">// Pass it </span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
       
     </div>
 
