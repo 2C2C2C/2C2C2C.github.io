@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="由于个人发展方向的原因，上个月选择裸辞跑路。跑路前有个任务是把支持动态尺寸元素的循环滚动列表接入(滚动列表可以找插件也可以自己搓)，因为网上找来的感觉接入要时间而且自己原本有简单的半成品(很早以前做的，感觉设计思路和当前在项目中UI框架比较匹配)接入更快所以想自己搓完再接入。结果最后时间活儿还是多又杂，只交了个半成品。跑路以后花了点时间整理一下，感觉也算是差不多能用了，基本的功能都有，这边打算简单">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UGUI简易循环滚动列表">
+<meta property="og:url" content="http://yoursite.com/2025/12/12/20251212-recyclescroll/index.html">
+<meta property="og:site_name" content="FishPlayer">
+<meta property="og:description" content="由于个人发展方向的原因，上个月选择裸辞跑路。跑路前有个任务是把支持动态尺寸元素的循环滚动列表接入(滚动列表可以找插件也可以自己搓)，因为网上找来的感觉接入要时间而且自己原本有简单的半成品(很早以前做的，感觉设计思路和当前在项目中UI框架比较匹配)接入更快所以想自己搓完再接入。结果最后时间活儿还是多又杂，只交了个半成品。跑路以后花了点时间整理一下，感觉也算是差不多能用了，基本的功能都有，这边打算简单">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://github.com/2C2C2C/MuyPicSource/blob/main/MuySimpleRecycleScroll/RecycleGridScroll01.gif">
+<meta property="og:image" content="https://github.com/2C2C2C/MuyPicSource/blob/main/MuySimpleRecycleScroll/RecycleRadialScrollVertical01.gif">
+<meta property="og:image" content="https://github.com/2C2C2C/MuyPicSource/blob/main/MuySimpleRecycleScroll/RecycleOneDirectionScrollChat01.gif">
+<meta property="article:published_time" content="2025-12-12T04:12:12.000Z">
+<meta property="article:modified_time" content="2025-12-11T12:19:10.282Z">
+<meta property="article:author" content="2C2C2C2">
+<meta property="article:tag" content="Unity">
+<meta property="article:tag" content="UGUI">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://github.com/2C2C2C/MuyPicSource/blob/main/MuySimpleRecycleScroll/RecycleGridScroll01.gif">
+
+<link rel="canonical" href="http://yoursite.com/2025/12/12/20251212-recyclescroll/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>UGUI简易循环滚动列表 | FishPlayer</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="FishPlayer" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">FishPlayer</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">一个喜欢摸鱼的废物</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2025/12/12/20251212-recyclescroll/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="2C2C2C2">
+      <meta itemprop="description" content="随便记录一些东西">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FishPlayer">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          UGUI简易循环滚动列表
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-12-12 12:12:12" itemprop="dateCreated datePublished" datetime="2025-12-12T12:12:12+08:00">2025-12-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-12-11 20:19:10" itemprop="dateModified" datetime="2025-12-11T20:19:10+08:00">2025-12-11</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/UGUI/" itemprop="url" rel="index"><span itemprop="name">UGUI</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>由于个人发展方向的原因，上个月选择裸辞跑路。<br>跑路前有个任务是把支持动态尺寸元素的循环滚动列表接入(滚动列表可以找插件也可以自己搓)，因为网上找来的感觉接入要时间而且自己原本有简单的半成品(很早以前做的，感觉设计思路和当前在项目中UI框架比较匹配)接入更快所以想自己搓完再接入。<br>结果最后时间活儿还是多又杂，只交了个半成品。跑路以后花了点时间整理一下，感觉也算是差不多能用了，基本的功能都有，这边打算简单的分享一下。</p>
+<h1 id="理念"><a href="#理念" class="headerlink" title="理念"></a>理念</h1><p>在制作前我也有大概看过诸如 LoopScrollRect 或 FancyScrollView 这些比较成功的插件，他们都实现了一个自己的 Scroller。<br>我浅显的认为，Scroll 的作用是模拟大内容滚动并计算进度。<br>那时的我才刚入行没多久，工程能力比较烂，看到1000多行的 Scroller 直接晕了。最后决定要尽可能直接使用 Unity 自带的 ScrollRect 来完成这个需求。</p>
+<p>在后来的开发过程中，我发现 Unity 自带的 ScrollRect 在功能上确实无法满足我的需求，我选择直接继承它并做了一些小的修改。</p>
+<ul>
+<li>添加一个简单的速度检测器，用于限制移速的最大最小值，防止难以处理的超快速滚和莫修有超低速滚动。</li>
+<li>新增一个属性用于读写 <code>m_ContentStartPosition</code> 这个字段，为了防止修改原滚动物体尺寸和位置后引起的基类内的莫须有运算。</li>
+<li>提供一些滚动相关时机的事件。</li>
+</ul>
+<h1 id="实现思路"><a href="#实现思路" class="headerlink" title="实现思路"></a>实现思路</h1><p>当前仅实现了3种滚动视图，因为这3种都是项目里要用的。都是用我自认为比较简单移动的思路去实现的。<br>不过在实际实现的时候，还是遇到了不少不好处理的麻烦，搞了一些不是很清晰的处理方法。</p>
+<h2 id="Grid-scroll"><a href="#Grid-scroll" class="headerlink" title="Grid scroll"></a>Grid scroll</h2><p><img src="https://github.com/2C2C2C/MuyPicSource/blob/main/MuySimpleRecycleScroll/RecycleGridScroll01.gif" alt="GridSample"></p>
+<p>这个功能就相当于在原本的 ScrollRect Content 里使用 GridLayout，用简单的做法做应该就会简单。<br>我的实现思路是这样</p>
+<ul>
+<li>开放滚动配置以及网格布局给让交互/程序。</li>
+<li>根据填的布局配置和数据源的数据量来计算滚动内容的尺寸，并把这个尺寸直接赋给 Unity ScrollRect 的滚动内容。</li>
+<li>根据滚动内容的位置的去计算当前应该显示哪行哪列的哪些 Grid。</li>
+<li>把缓存着的 Grid 摆到 Content 中。</li>
+</ul>
+<p>在这个思路下，难点或说麻烦的点应该是自己实现 Grid 的布局排布。既然是内置的 Grid 布局计算，跳转到特定元素时也能很方便算出对应的横纵滚动进度。</p>
+<h2 id="Radial-scroll"><a href="#Radial-scroll" class="headerlink" title="Radial scroll"></a>Radial scroll</h2><p><img src="https://github.com/2C2C2C/MuyPicSource/blob/main/MuySimpleRecycleScroll/RecycleRadialScrollVertical01.gif" alt="VerticalSample"></p>
+<p>这个功能的思路和上一个基本一致</p>
+<ul>
+<li>开放配置滚动和弧形布局相关的参数给交互/程序。</li>
+<li>根据弧形布局的参数和数据源的数据量来计算滚动内容的尺寸(这里用的弦长)以及圆弧总共需要滚动的角度综合。</li>
+<li>根据 ScrollRect 的滚动进度的去旋转圆弧，根据旋转的角度来计算圆弧中需要显示的元素序列。</li>
+<li>把缓存着的元素根据弧形布局参数摆到一个专门用来放置元素的 Transform 下。</li>
+</ul>
+<p>这个功能本身就比较简单，但如果没有在代码中把弧形布局相关的一些处理写清晰的话，处理元素跳转的时候会比较麻烦。</p>
+<h2 id="Single-direction-scroll"><a href="#Single-direction-scroll" class="headerlink" title="Single direction scroll"></a>Single direction scroll</h2><p><img src="https://github.com/2C2C2C/MuyPicSource/blob/main/MuySimpleRecycleScroll/RecycleOneDirectionScrollChat01.gif" alt="ChatSample"></p>
+<p>这个功能是最复杂最困难的。需要支持尺寸待定的元素(视图层刷新后才能计算出确切尺寸),在使用 Unity ScrollRect和相关的布局组件的情况下，我添加了多且杂乱的处理和检查给ScrollRect Content来尽可能保持看起来正确。<br>基本思路不是很复杂，但是实际是实现的时候真的有比较多的细节需要处理</p>
+<ul>
+<li>开放非常简单的滚动和布局配置给交互/程序(仅有滚动方向和间隔)。</li>
+<li>根据视口的尺寸大小以及当前的滚动内容来检测是需要从滚动内容的头/尾回收元素或是添加新元素。回收和添加都是分开两轮的操作，每轮操作完后要及时计算并调整滚动内容的尺寸(不等帧末的布局计算)。</li>
+<li>滚动条和滚动进度的计算方式和前两种不同(滚动条和滚动进度无法从 ScrollRect中获得),根据滚动内容里的元素的位置和自定义的相对位置来计算滚动进度和滚动条值。</li>
+</ul>
+<p>这个思路最麻烦的点就是要根据视口尺寸和当前滚动内容的位置和尺寸来增减元素，处理首尾以及单帧内多次增减会变得非常繁琐。<br>当前的做法不太好，我原本预想的是仅根据滚动内容的位置和自己维护的一个虚拟的尺寸来做检测和调整，但这是我快做完了才想到，因为赶着给前同事一个差不多能用的版本所以暂时还没改。</p>
+<p>除此之外，滚动进度的计算也很麻烦。因为元素尺寸是待定的，所以无法再预先计算完整的滚动内容尺寸。为了尽可能避免进度条反复跳动(使用LoopScrollRect和待定尺寸元素的情况下会出现反复跳动)，我换了一种计算进度的方法。<br>我选择计算元素和其相对参考线的位置。<br>什么是相对参考线呢，举个简单的例子，对于顶部往下排的布局，视口的最高点就是相对参考线，此时的元素自身的参考线也是元素的最高点。<br>那么对于数据源里的最后一个元素，视口的底部就是它的参考线，其元素参自身的考线则是这个元素的最低点。<br>对于数据源的中间的元素(如果有的话)，视口的中间就是它的参考线，元素自身的参考线是元素的中间。</p>
+<p>当元素的参考线和视口里的参考线重合时，以上三个情况分别对应滚动进度的 0, 0.5, 1。如果数据量为n,则滚动进度则是从0~1里切n-1个格子。滚动进度则是根据当前显示的元素与其参考线的距离来计算。<br>元素跳转则是上面这个进度计算的相反计算。<br>说起来比较抽象难懂，但是我代码写得更抽象还是不直接贴出来了，大概就是这么个思路。总之这样是尽量避免了滚动条的反复跳动，但内容的滚动速度看起来就不线性了。</p>
+<h1 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h1><p>最后放上仓库。<br>现在还是个比较简陋的状态，对这套功能我也暂时没有别的目标。<br>以后应该还是会逐步完善功能，然后把一些简单的通用功能也尽可能补上。</p>
+<p><a href="https://github.com/2C2C2C/MuySimpleRecycleScroll" target="_blank" rel="noopener">SimpleRecycScroll</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Unity/" rel="tag"># Unity</a>
+              <a href="/tags/UGUI/" rel="tag"># UGUI</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/08/24/20250824-ugui-polygon-button/" rel="prev" title="UGUI不规则形状按钮">
+      <i class="fa fa-chevron-left"></i> UGUI不规则形状按钮
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#理念"><span class="nav-number">1.</span> <span class="nav-text">理念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实现思路"><span class="nav-number">2.</span> <span class="nav-text">实现思路</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Grid-scroll"><span class="nav-number">2.1.</span> <span class="nav-text">Grid scroll</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Radial-scroll"><span class="nav-number">2.2.</span> <span class="nav-text">Radial scroll</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Single-direction-scroll"><span class="nav-number">2.3.</span> <span class="nav-text">Single direction scroll</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#结尾"><span class="nav-number">3.</span> <span class="nav-text">结尾</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="2C2C2C2"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">2C2C2C2</p>
+  <div class="site-description" itemprop="description">随便记录一些东西</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/2C2C2C" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;2C2C2C" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">2C2C2C2</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

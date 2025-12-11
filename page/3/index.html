@@ -152,6 +152,107 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/08/14/20220814-unity-recttransform/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="2C2C2C2">
+      <meta itemprop="description" content="随便记录一些东西">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="FishPlayer">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2022/08/14/20220814-unity-recttransform/" class="post-title-link" itemprop="url">Unity RectTransform 小笔记</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2022-08-14 10:55:21" itemprop="dateCreated datePublished" datetime="2022-08-14T10:55:21+08:00">2022-08-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-09-12 16:00:32" itemprop="dateModified" datetime="2022-09-12T16:00:32+08:00">2022-09-12</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Unity/" itemprop="url" rel="index"><span itemprop="name">Unity</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>之前看了一些关于RectTransform的文章，但是最终记忆都不是很深刻。而且要用的时候重新找还挺麻烦的。<br>干脆把别人的笔记抄来一些好了，以后也方便就着自己的笔记和UXUI同学解释。</p>
+<h1 id="Pivot"><a href="#Pivot" class="headerlink" title="Pivot"></a>Pivot</h1><p>中心点，是UI元素旋转/缩放的中心点。使用归一化Vector2表示。</p>
+<h1 id="Anchor"><a href="#Anchor" class="headerlink" title="Anchor"></a>Anchor</h1><p>其实是由两个点组成的(AnchorMin, AnchorMax)。并使用归一化Vector2来表示。<br>数值代表了在父类X轴和Y轴方向的百分比。</p>
+<h2 id="绝对布局"><a href="#绝对布局" class="headerlink" title="绝对布局"></a>绝对布局</h2><blockquote>
+<p>当anchorMax与anchorMin相等时，Anchor呈现为一个点，称之为锚点<br>在使用锚点的情况下，anchoredPosition是元素Pivot到Anchor的距离</p>
+</blockquote>
+<p>此时会有4个重要的属性。</p>
+<ul>
+<li>PosX, posY : 中心点到锚点的参数，实际像素值</li>
+<li>Width, Height : UI 元素的尺寸</li>
+</ul>
+<p>绝对布局的情况下无论分辨率是多少，父物体多大，该UI元素的大小是恒定的。</p>
+<h2 id="相对布局"><a href="#相对布局" class="headerlink" title="相对布局"></a>相对布局</h2><blockquote>
+<p>当anchorMax与anchorMin不相等时，Anchor呈现为一个框，称之为锚框<br>在使用锚框的情况下，anchoredPosition是元素Pivot到锚框中心点的距离</p>
+</blockquote>
+<p>这种情况下UI元素的四个角，距离四个对应的锚点的距离是不变的，在这种情况下RectTransform的属性又变为了Left,Top,Right,Bottom。</p>
+<ul>
+<li>Left,Top,Right,Bottom : 四个点的数值分别是(Left,Top,Right,Bottom)锚点到实际的rect的这4个位置的点的距离。</li>
+</ul>
+<h1 id="SizeDelta"><a href="#SizeDelta" class="headerlink" title="SizeDelta"></a>SizeDelta</h1><h2 id="OffsetMin-OffsetMax"><a href="#OffsetMin-OffsetMax" class="headerlink" title="OffsetMin/OffsetMax"></a>OffsetMin/OffsetMax</h2><p>min是实际UI原素相对于AnchorMin的偏移，另外一个不言而喻.</p>
+<p>sizeDelta就是offsetMax - offsetMin的值。</p>
+<blockquote>
+<p>所以这个属性之所以叫做sizeDelta，是因为在锚点情况下其表征的是size（大小），在锚框的情况下其表征的是Delta（UI元素实际的属性值与锚框的差值）</p>
+</blockquote>
+<h1 id="Rect"><a href="#Rect" class="headerlink" title="Rect"></a>Rect</h1><p>rect中的属性，不与UI元素所在的位置有关，只和其自身属性相关。根据rect中提供的width和height可以得到UI元素实际的尺寸大小。</p>
+<p>rect.position指的是以Pivot为原点，UI元素左下角的坐标。(right,up 为正方向)</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a href="https://zhuanlan.zhihu.com/p/194317677" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/194317677</a><br><a href="https://blog.csdn.net/jmu201521121014/article/details/105725175" target="_blank" rel="noopener">https://blog.csdn.net/jmu201521121014/article/details/105725175</a></p>
+<p>顺便推荐一下在线画图小工具，不方便贴图的时候用这个还挺不错的。<br><a href="https://asciiflow.com/#/" target="_blank" rel="noopener">https://asciiflow.com/#/</a><br><a href="https://textik.com/" target="_blank" rel="noopener">https://textik.com/</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/08/10/20220810-unity-video-url-delay/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -747,90 +848,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/03/13/20220313-recycle-grid-scrollview/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="2C2C2C2">
-      <meta itemprop="description" content="随便记录一些东西">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="FishPlayer">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/03/13/20220313-recycle-grid-scrollview/" class="post-title-link" itemprop="url">Unity UGUI 简单循环滚动列表</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-03-13 23:35:12" itemprop="dateCreated datePublished" datetime="2022-03-13T23:35:12+08:00">2022-03-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-11-11 19:44:05" itemprop="dateModified" datetime="2025-11-11T19:44:05+08:00">2025-11-11</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Unity/" itemprop="url" rel="index"><span itemprop="name">Unity</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>之前做了一个自带简单 GridLayout 的循环滚动列表。但是基于继承的思路做的。导师指出了其不便使用的一些情况，而且Unity其实是比较提倡大家使用组合模式的，所以我决定修改一下。</p>
-<h1 id="循环滚动"><a href="#循环滚动" class="headerlink" title="循环滚动"></a>循环滚动</h1><h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>因为交互侧没有无限滚动的需求，所以我打算直接用简单明确的思路做一个简单凑合能跑的版本。</p>
-<p>首先根据视口大小计算出实际需要使用到的 GridElement 数量，通过比较灵活的接口去申请/释放 GridElement 物体(老实说我感觉我没有特别好的方法去计算一个准确的值。所以就按着 (row + 2) <em> (column </em> 2) 来计算了，虽然有一点浪费内存，但在我当前设置的滚动速度下是够用的。)。</p>
-<p>再着，这个做法之所以很简单，是因为我无需做滚动相关的输入处理。这个方案需要与 UGUI ScrollRect 一同使用。<br>我会根据数据量计算并应用content的大小,这样就能够让 ScrollRect 照常处理滚动。</p>
-<p>当每一次 ScrollRect 的滚动位置处理完毕后，先用 Viewport 的测试出能显示的 GridElement 物体，然后才根据 Content 位置来拜访 GridElement，并发出通知告知 GridElement 对应的数据序列号变更.</p>
-<p>这个做法非常的简单易懂，但也有个明显的缺点，就是当位置变更时我需要根据数据量去频繁测试每个数据对应 GridElement 的可见性，感觉优一点的做法应该是缓存了当前可见的数据范围，再根据每次移动的距离来决定是做少量测试或是大量测试。</p>
-<h1 id="配合实际显示组件使用"><a href="#配合实际显示组件使用" class="headerlink" title="配合实际显示组件使用"></a>配合实际显示组件使用</h1><p>我定义了一个简单的接口用于描述什么样的列表逻辑便于使用这个滚动列表。<br>但其实直接继承滚动列表也是一种可行的做法。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IListView</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> DataElementCount &#123; <span class="keyword">get</span>; &#125;</span><br><span class="line">    <span class="function">RectTransform <span class="title">AddElement</span>(<span class="params">RectTransform parent</span>)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">RemoveElement</span>(<span class="params">RectTransform element</span>)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">InitElement</span>(<span class="params">RectTransform element, <span class="keyword">int</span> index</span>)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">UnInitElement</span>(<span class="params">RectTransform element</span>)</span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">OnElementIndexChanged</span>(<span class="params">RectTransform element, <span class="keyword">int</span> prevIndex, <span class="keyword">int</span> nextIndex</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>其实这个功能丢尽项目里后用的地方不是特别多，所以都是隔几个月修一下，每次都要看自己写的垃圾代码好久，属实头痛了。<br>总算是用起来比以前方便不少了。接下来就把一些小问题修一修好了。</p>
-<p>回头再看已经和自己做的那个初版完全不一样了，个人认为思路比以前那个好多了。</p>
-<p><a href="https://github.com/2C2C2C/MuySimpleRecycleScrollGrid" target="_blank" rel="noopener">完整代码</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/08/31/20210831-raycast-padding/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -925,17 +942,23 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-06-06 22:33:16 / 修改时间：22:59:28" itemprop="dateCreated datePublished" datetime="2021-06-06T22:33:16+08:00">2021-06-06</time>
+              <time title="创建时间：2021-06-06 22:33:16" itemprop="dateCreated datePublished" datetime="2021-06-06T22:33:16+08:00">2021-06-06</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-12-11 15:17:12" itemprop="dateModified" datetime="2025-12-11T15:17:12+08:00">2025-12-11</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Unity/" itemprop="url" rel="index"><span itemprop="name">Unity</span></a>
+                  <a href="/categories/UGUI/" itemprop="url" rel="index"><span itemprop="name">UGUI</span></a>
                 </span>
             </span>
 
