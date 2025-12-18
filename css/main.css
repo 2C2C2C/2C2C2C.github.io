@@ -448,6 +448,13 @@ pre {
 .gist table td,
 .gist .blob-data tr,
 .gist .line,
+.gist .blob-wrapper tr:nth-child(odd) td,
+.gist .blob-wrapper tr:nth-child(even) td,
+.gist table tr:nth-child(odd) td,
+.gist table tr:nth-child(even) td {
+  background: transparent !important;
+  background-image: none !important;
+}
 .gist .line-data {
   background: transparent !important;
   background-image: none !important;
