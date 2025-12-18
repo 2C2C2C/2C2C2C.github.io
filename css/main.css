@@ -442,6 +442,24 @@ pre {
   line-height: 1.6;
   margin: 0 auto 20px;
 }
+.gist table tr,
+.gist table tr:nth-child(odd),
+.gist table tr:nth-child(even),
+.gist table td,
+.gist .blob-data tr,
+.gist .line,
+.gist .line-data {
+  background: transparent !important;
+  background-image: none !important;
+}
+.gist .hljs,
+.gist pre.hljs {
+  background: transparent !important;
+}
+.gist td[style] {
+  background: transparent !important;
+  background-image: none !important;
+}
 pre,
 code {
   font-family: consolas, Menlo, monospace, "PingFang SC", "Microsoft YaHei";
@@ -1228,7 +1246,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #6bb812;
+  background: #0bffff;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
